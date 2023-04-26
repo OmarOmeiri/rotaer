@@ -14,6 +14,7 @@ import getQueryClient from '@/frameworks/react-query/getQueryClient';
 function Providers({ children }: React.PropsWithChildren) {
   const [queryClient] = useState(getQueryClient());
   const dehydratedState = dehydrate(queryClient);
+  console.log(process.env);
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={dehydratedState}>
