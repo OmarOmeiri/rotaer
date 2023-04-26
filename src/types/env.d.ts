@@ -17,7 +17,7 @@ declare global {
       readonly AWS_BUCKET_URL: string;
       readonly AWS_BUCKET_NAME: string;
       // API
-      readonly API_URL: string;
+      readonly NEXT_PUBLIC_API_URL: string;
       // MISC
       readonly SENTRY_URI: string;
       readonly EXTEND_ESLINT: string;

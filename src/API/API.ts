@@ -77,7 +77,7 @@ class Api<CT extends keyof typeof ContentTypes> {
     private url: url,
   ) {
     if (!url.startsWith('http')) {
-      this.url = `${process.env.API_URL}/api/${
+      this.url = `${process.env.NEXT_PUBLIC_API_URL}/api/${
         this.url
           .replace(/^(\/)?api/, '')
           .replace(/^\//, '')
