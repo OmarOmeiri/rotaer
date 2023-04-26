@@ -1,0 +1,18 @@
+@keyframes rotate {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
+
+.InfoAnim{
+  animation: rotate 250ms cubic-bezier(0.88, 0.75, 0, 1.04) forwards;
+}
+
+.InfoBtn * {
+  stroke: var(--infoIconColor);
+  fill: var(--infoIconColor);
+}
+
+.InfoImportant path{
+  stroke: var(--infoImportantIconColor);
+  fill: var(--infoImportantIconColor);
+}

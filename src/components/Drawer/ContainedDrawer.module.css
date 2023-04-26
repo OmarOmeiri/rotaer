@@ -1,0 +1,55 @@
+.Container {
+  position: sticky;
+  height: 100%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  overflow: visible;
+  z-index: 3;
+}
+
+.Wrapper {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transition: width 0.2s ease, opacity 0.2s ease;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  z-index: 3;
+}
+
+.Open {
+  opacity: 1;
+}
+
+.Closed {
+  pointer-events: none;
+  opacity: 0;
+  transition-delay: 0.2s;
+  width: 0;
+}
+
+
+.CloseBtnDiv {
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.CloseBtn {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  padding: 0;
+  color: black;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.CloseBtn svg {
+  stroke-width: 2px;
+}

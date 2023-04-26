@@ -1,0 +1,88 @@
+.Slider {
+  position: relative;
+}
+
+.SliderTrack,
+.SliderRange {
+  border-radius: 3px;
+  height: 5px;
+  position: absolute;
+}
+
+.SliderTrack {
+  background-color: #ced4da;
+  width: 100%;
+  z-index: 1;
+}
+
+.SliderRange {
+  background-color: #2600ff;
+  z-index: 2;
+}
+
+/* Removing the default appearance */
+.Thumb,
+.Thumb::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+
+.Thumb {
+  pointer-events: none;
+  position: absolute;
+  height: 0;
+  outline: none;
+}
+
+.ThumbLeft{
+  z-index: 3;
+}
+
+.ThumbRight {
+  z-index: 4;
+}
+
+/* For Chrome browsers */
+.Thumb::-webkit-slider-thumb {
+  background-color: #f1f5f7;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 1px 1px #ced4da;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+}
+
+/* For Firefox browsers */
+.Thumb::-moz-range-thumb {
+  background-color: #f1f5f7;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 1px 1px #ced4da;
+  cursor: pointer;
+  height: 18px;
+  width: 18px;
+  margin-top: 4px;
+  pointer-events: all;
+  position: relative;
+}
+
+.SliderLeftValue,
+.SliderRightValue {
+  color: var(--secondaryText);
+  font-size: 12px;
+  margin-top: -6.5px;
+  z-index: 2;
+  position: absolute;
+}
+
+.SliderLeftValue {
+  left: -18px;
+}
+
+.SliderRightValue {
+  right: -19px;
+}

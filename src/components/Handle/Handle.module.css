@@ -1,0 +1,30 @@
+.Handle {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-shadow: inset 0px 5px 3px -3px rgb(50 50 50 / 75%)
+}
+
+.DragHandle{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-shadow: inset 0px 5px 3px -3px rgb(50 50 50 / 75%);
+  transform: rotate(180deg)
+}
+
+.HandleBack{}
+
+.Btn {
+ padding: 0;
+ background: none;
+ border: none;
+}
+
+.Btn * {
+  pointer-events: none;
+}
+
+.Chevron {
+  transition: opacity 0.3s ease;
+}

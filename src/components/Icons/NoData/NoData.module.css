@@ -1,0 +1,13 @@
+.Btn{
+  border: none;
+  display: block;
+  padding: 0;
+  background: transparent !important;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.Btn:active{
+  transform: scale(1.2, 1.2)
+}

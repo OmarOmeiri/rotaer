@@ -1,0 +1,14 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 104 104.2" style="enable-background:new 0 0 104 104.2;" xml:space="preserve">
+  <style type="text/css">
+  .st0{stroke-width:6;stroke-linecap:round;stroke-miterlimit:10;}
+  .st1{stroke-width:6;stroke-linejoin:round;stroke-miterlimit:10;}
+  .st2{stroke-width:2;stroke-miterlimit:10;}
+  .st3{stroke-linejoin:round;stroke-miterlimit:10;}
+  .st4{stroke-linejoin:round;stroke-miterlimit:10;}
+  </style>
+  <polyline stroke="currentColor" fill="none" class="st0" points="2.2,2.2 2.2,102.2 9.7,102.2 102.2,102.2 "/>
+  <path stroke="currentColor" class="st1" fill-opacity="0.6" fill="currentColor" d="M52.2,23.8c-21.9,0-30.1,75.6-42.9,78.3h85.8C82.3,99.5,74,23.8,52.2,23.8"/>
+  <path stroke="currentColor" class="st2" fill="none" d="M52.2,23.8"/>
+  <!-- <polygon stroke="currentColor" class="st3" fill="#000" fill-opacity="0.4" points="31.5,100.6 31.9,53 37.9,38.3 37.3,100.6 "/> -->
+  <path stroke="currentColor" class="st4" fill="currentColor" d="M40.6,113.9"/>
+</svg>

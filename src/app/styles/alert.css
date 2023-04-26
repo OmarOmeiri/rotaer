@@ -1,0 +1,16 @@
+.alert-overlay {
+  position: fixed;
+  z-index: 10000;
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .alert-overlay {
+    align-items: flex-start;
+  }
+}

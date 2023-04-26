@@ -1,0 +1,23 @@
+.TableWrapper {
+  overflow: scroll;
+  max-width: 100%;
+  width: 100%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.Table {
+  min-width: 100%;
+  width: fit-content;
+  position: relative;
+  border-collapse: collapse;
+  background-color: transparent;
+  overflow: scroll;
+}
+
+
+.TableWrapper::-webkit-scrollbar {
+  display: none;
+}
+
+

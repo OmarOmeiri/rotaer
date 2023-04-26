@@ -1,0 +1,1 @@
+type NODE_ENV = Exclude<NodeJS.ProcessEnv['NODE_ENV'], undefined>

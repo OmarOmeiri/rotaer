@@ -1,0 +1,107 @@
+.Btn{
+  border: none;
+  display: block;
+  padding: 0;
+  background: transparent !important;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.Btn * {
+  pointer-events: none;
+}
+
+.Btn:active{
+  transform: scale(1.2, 1.2)
+}
+
+.GreyBtn *{
+  stroke: rgb(170, 170, 170);
+  fill: rgb(170, 170, 170);
+}
+
+.TableBtn {
+  stroke: var(--tableHeaderColor);
+  fill: var(--tableHeaderColor);
+}
+
+.Animate *{
+  transition: transform 200ms ease, opacity 200ms ease ;
+
+}
+
+.TranslateDownInit {
+  transform: translate(13.93px,98.993706px)
+}
+
+.RotatePositiveInit {
+  transform: rotate(0deg)
+}
+
+
+.TranslateUpInit {
+  transform: translate(14.129px,169.12705px)
+}
+
+.RotateNegativeInit {
+  transform: rotate(0deg)
+}
+
+.ScaleYInit {
+  opacity: 1;
+  transform: scaleY(1);
+  transform-origin: center;
+}
+
+
+
+.TranslateDown {
+  transform: translate(-40.841095px,148.715881px)
+}
+
+.RotatePositive {
+  transform: rotate(45deg)
+}
+
+
+.TranslateUp {
+  transform: translate(10.231133px,98.852992px)
+}
+
+.RotateNegative {
+  transform: rotate(-45deg)
+}
+
+.ScaleY{
+  opacity: 0;
+  transform-origin: center;
+  transform: scaleY(0);
+}
+
+
+@keyframes rotateXAnim {
+  0% {transform: rotateX(0deg)}
+  100% {transform: rotateX(90deg)}
+}
+
+@keyframes translateDownAnim {
+  0% {transform: translate(13.93px,98.993706px)}
+  100% {transform: translate(-40.841095px,148.715881px)}
+}
+
+@keyframes rotateAnim {
+ 0% {transform: rotate(0deg)}
+ 100% {transform: rotate(45deg)}
+}
+
+@keyframes translateUpAnim {
+ 0% {transform: translate(14.129px,169.12705px)}
+ 100% {transform: translate(10.231133px,98.852992px)}
+}
+
+@keyframes rotate2Anim {
+ 0% {transform: rotate(0deg)}
+ 100% {transform: rotate(-45deg)}
+}
+

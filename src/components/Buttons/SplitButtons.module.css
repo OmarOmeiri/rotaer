@@ -1,0 +1,8 @@
+.SelectedItemWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.SelectedItemWrapper span {
+  padding: 0.5rem;
+}

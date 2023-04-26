@@ -1,0 +1,28 @@
+.Btn{
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  background: transparent !important;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.Btn * {
+  pointer-events: none !important;
+}
+
+.Btn:active{
+  transform: scale(1.2, 1.2)
+}
+
+.GreyBtn *{
+  stroke: rgb(170, 170, 170);
+  fill: rgb(170, 170, 170);
+}
+
+.TableBtn {
+  stroke: var(--tableHeaderColor);
+  fill: var(--tableHeaderColor);
+}

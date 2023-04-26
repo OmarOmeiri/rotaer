@@ -1,0 +1,145 @@
+
+.CheckBoxWrapperOuter {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.CheckBoxWrapper {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.CheckBoxWrapperWithLabel{
+  width: unset;
+}
+
+.Input {
+  visibility: hidden;
+}
+
+.LabelText{
+  /* position: absolute; */
+  position: relative;
+  left: 10px;
+  /* pointer-events: none; */
+  /* top: -5px; */
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.LabelTextDummy {
+  position: relative;
+  left: 10px;
+  display: none;
+  cursor: pointer;
+}
+
+.CheckBoxWrapper input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.CheckBoxWrapper:hover:not(.CheckBoxDisabled) {
+  cursor: pointer;
+}
+
+.CheckBoxDisabled {
+  cursor: not-allowed;
+}
+
+
+.Checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: var(--checkBoxBackgroundColor);
+  border-radius: var(--checkBoxBorderRadius);
+  box-shadow: var(--checkBoxBoxShadow);
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.CheckBoxWrapper:hover input ~ .Checkmark {
+  background-color: var(--checkBoxHoverBackgroundColor);
+}
+
+.CheckBoxWrapper input:checked ~ .Checkmark {
+  background-color: var(--checkBoxCheckedBackgroundColor);
+}
+
+.CheckBoxWrapper input:disabled ~ .Checkmark {
+  background-color: var(--checkBoxDisabledBackgroundColor);
+}
+
+.CheckmarkX:after {
+  content: "";
+  mask: url('./X.svg') no-repeat 50% 50%;
+  -webkit-mask: url('./X.svg') no-repeat 50% 50%;
+  background-color: var(--checkBoxXColor);
+}
+
+.CheckmarkV:after {
+  content: "";
+  mask: url('./check-solid.svg') no-repeat 50% 50%;
+  -webkit-mask: url('./check-solid.svg') no-repeat 50% 50%;
+  /* custom */
+  background-color: var(--checkBoxVColor);
+}
+
+.Checkmark:after {
+  position: absolute;
+  opacity: 0;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+.CheckBoxWrapper input:not(:checked) + .Checkmark:after {
+  opacity: 0;
+  -webkit-transform: scale(0) rotate(45deg);
+  transform: scale(0) rotate(45deg);
+}
+
+.CheckBoxWrapper input:checked + .Checkmark:after {
+  opacity: 1;
+  -webkit-transform: scale(1) rotate(0);
+  transform: scale(1) rotate(0);
+}
+
+.CheckBoxWrapper input:checked ~ .Checkmark:after {
+  display: block;
+}
+
+.CheckBoxWrapper .Checkmark:after {
+  left: 0px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
+}
+
+.SelectableLabel{
+  width: calc(100% - 2em);
+  height: 28px;
+  top: 0;
+  right: 0;
+  position: absolute
+}

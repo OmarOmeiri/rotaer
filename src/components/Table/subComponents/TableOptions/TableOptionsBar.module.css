@@ -1,0 +1,8 @@
+.Right {
+  margin-left: auto;
+}
+
+.Btn {}
+.Btn * {
+  pointer-events: none;
+}

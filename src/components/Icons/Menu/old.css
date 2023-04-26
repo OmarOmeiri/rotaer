@@ -1,0 +1,177 @@
+.Btn{
+  border: none;
+  display: block;
+  padding: 0;
+  background: transparent !important;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.Btn * {
+  pointer-events: none;
+}
+
+.Btn:active{
+  transform: scale(1.2, 1.2)
+}
+
+.Animate *{
+  transition: transform 200ms ease, opacity 200ms ease ;
+
+}
+
+.SweepLeftOut {
+  animation: SweepLeftTranslate 3000ms linear 1 normal forwards
+}
+
+.SweepLeftIn {
+  animation: SweepLeftScale 3000ms linear 1 normal forwards
+}
+
+.SweepRightOut {
+  animation: SweepRightTranslate 3000ms linear 1 normal forwards
+}
+
+.SweepRightIn {
+  animation: SweepRightScale 3000ms linear 1 normal forwards
+}
+
+.BarTopOut {
+  animation: BarTopTranslate 3000ms linear 1 normal forwards
+}
+
+.BarTopIn1 {
+  animation: BarTopRotate 3000ms linear 1 normal forwards
+}
+
+.BarTopIn2 {
+  animation: BarTopScale 3000ms linear 1 normal forwards
+}
+
+.BarMiddle {
+  animation: BarMiddleScale 3000ms linear 1 normal forwards
+}
+
+.BarBottomOut {
+  animation: BarBottomTranslate 3000ms linear 1 normal forwards
+}
+
+.BarBottomIn1 {
+  animation: BarBottomRotate 3000ms linear 1 normal forwards
+}
+
+.BarBottomIn2 {
+  animation: BarBottomScale 3000ms linear 1 normal forwards
+}
+
+@keyframes SweepLeftTranslate {
+  0% {
+    transform: translate(342.679438px, 279.343513px)
+  }
+
+  100% {
+    transform: translate(342.679437px, 299.20498px)
+  }
+}
+
+@keyframes SweepLeftScale {
+  0% {
+    transform: scale(1, 1)
+  }
+
+  100% {
+    transform: scale(1, 0)
+  }
+}
+
+@keyframes SweepRightTranslate {
+  0% {
+    transform: translate(467.696365px, 319.053497px)
+  }
+
+  100% {
+    transform: translate(467.708363px, 299.20498px)
+  }
+}
+
+@keyframes SweepRightScale {
+  0% {
+    transform: scale(1, 1)
+  }
+
+  100% {
+    transform: scale(1, 0)
+  }
+}
+
+@keyframes BarTopTranslate {
+  0% {
+    transform: translate(322.071694px, 353.452964px)
+  }
+
+  100% {
+    transform: translate(344.954036px, 380.027422px)
+  }
+}
+
+@keyframes BarTopRotate {
+  0% {
+    transform: rotate(-180deg)
+  }
+
+  100% {
+    transform: rotate(-225deg)
+  }
+}
+
+@keyframes BarTopScale {
+  0% {
+    transform: scale(-0.75, 0.75)
+  }
+
+  100% {
+    transform: scale(-0.9, 0.75)
+  }
+}
+
+
+@keyframes BarMiddleScale {
+  0% {
+    transform: translate(405.193879px, 299.195912px) rotate(-180deg) scale(-0.75, 0.75)
+  }
+
+  100% {
+    transform: translate(405.193879px, 299.195912px) rotate(-180deg) scale(0, 1)
+  }
+}
+
+@keyframes BarBottomTranslate {
+  0% {
+    transform: translate(405.2716px, 259.321827px)
+  }
+
+  100% {
+    transform: translate(405.19388px, 299.20498px)
+  }
+}
+
+@keyframes BarBottomRotate {
+  0% {
+    transform: rotate(-180deg)
+  }
+
+  100% {
+    transform: rotate(-135deg)
+  }
+}
+
+@keyframes BarBottomScale {
+  0% {
+    transform: scale(-0.75, 0.75)
+  }
+
+  100% {
+    transform: scale(-0.9, 0.75)
+  }
+}

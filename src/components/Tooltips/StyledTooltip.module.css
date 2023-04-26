@@ -1,0 +1,9 @@
+.TooltipTitle {
+  background-color: var(--app-dark);
+  color: var(--app-green);
+}
+
+.TooltipContent {
+  background-color: var(--app-darklight);
+  color: var(--app-white);
+}

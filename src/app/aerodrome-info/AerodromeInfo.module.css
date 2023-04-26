@@ -1,0 +1,51 @@
+.Title {
+  display: flex;
+  align-items: center;
+  gap: 3em;
+  margin-left: 1em;
+}
+
+.Card {
+  background-color: var(--app-darklight);
+  color: var(--app-white);
+}
+
+.CardTitle {
+  background-color: var(--app-dark);
+  color: var(--app-green);
+}
+
+.MainInfoTable tr td:first-child {
+ padding-right: 1em;
+ vertical-align: top;
+}
+
+.ChartsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 1rem;
+}
+
+.ChartsLink {
+  margin-left: 0.5em;
+}
+
+.RunwayContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 2rem;
+}
+
+.RunwayContainer table {
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse:separate;
+}
+
+.RunwayContainer thead {
+  background-color: var(--app-dark);
+}
+
+.TableLights td {
+ text-align: center;
+}

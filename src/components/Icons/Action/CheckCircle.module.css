@@ -1,0 +1,12 @@
+
+.CheckCircle {
+}
+
+.CircleAnim {
+  stroke-dashoffset: 364.67;
+  transition: all 0.5s ease
+}
+
+.CheckCircle:hover .CircleAnim {
+  stroke-dashoffset: 0;
+}

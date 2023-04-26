@@ -1,0 +1,28 @@
+@keyframes click {
+  0% {
+    fill: black
+  }
+  50% {
+    fill: rgb(89, 0, 255);
+    transform: scale(1.2, 1.2)
+  }
+  100% {
+    fill: black
+  }
+}
+
+.Button{
+  cursor: pointer;
+  display: flex;
+  outline: none;
+  border: none;
+  background-color: transparent;
+  /* transition: color 0.3s ease ; */
+  padding: 0;
+  transform-origin: center;
+}
+
+.Button:active{
+  outline: none;
+  animation: click 0.3s;
+}

@@ -1,0 +1,4 @@
+.Wrapper {
+  transition: opacity 300ms ease-in;
+  opacity: 0;
+}

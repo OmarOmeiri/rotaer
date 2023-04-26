@@ -1,0 +1,8 @@
+.gm-style-iw-c,
+.gm-style-iw-tc::after {
+  background-color: #282828 !important;
+}
+
+.gm-ui-hover-effect>span {
+  background-color: white !important;
+}

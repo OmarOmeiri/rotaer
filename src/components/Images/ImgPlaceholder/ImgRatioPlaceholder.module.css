@@ -1,0 +1,9 @@
+.Ratio {
+  display: grid;
+  align-items: center;
+}
+
+.Ratio > * {
+  grid-area: 1/1;
+}
+

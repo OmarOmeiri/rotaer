@@ -1,0 +1,76 @@
+.Btn{
+  border: none;
+  display: block;
+  padding: 0;
+  background: transparent !important;
+  transition: transform 0.3s ease;
+  transform-origin: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.Btn * {
+  pointer-events: none;
+}
+
+.Burger *{
+  transition: transform 300ms ease;
+}
+
+.Burger .BarMiddle {
+  transition: transform 200ms ease;
+}
+
+.Sweeps{
+  transition: opacity 300ms ease;
+  opacity: 1;
+}
+
+.SweepLeft {
+  transform: translate(342.679438px, 279.343513px) scale(1, 1);
+}
+
+.SweepRight {
+  transform: translate(467.696365px, 319.053497px) scale(1, 1);
+}
+
+.BarTop {
+  transform: translate(322.071694px, 353.452964px) rotate(-180deg) scale(-0.75, 0.75);
+}
+
+.BarMiddle {
+  transform: translate(405.193879px, 299.195912px) rotate(-180deg) scale(-0.75, 0.75);
+}
+
+.BarBottom {
+  transform: translate(405.2716px, 259.321827px) rotate(-180deg) scale(-0.75, 0.75);
+}
+
+
+.Animate .Sweeps {
+  opacity: 0;  
+}
+
+.Animate .SweepLeft {
+  transform: translate(342.679437px, 299.20498px);
+}
+
+.Animate .SweepRight {
+  transform: translate(467.708363px, 299.20498px);
+}
+
+.Animate .BarTop {
+  transform: translate(344.954036px, 380.027422px) rotate(-225deg) scale(-0.9, 0.75);
+}
+
+.Animate .BarMiddle {
+  transform: translate(405.193879px, 299.195912px) rotate(-180deg) scale(0, 1);
+}
+
+.Animate .BarBottom {
+  transform: translate(405.19388px, 299.20498px) rotate(-135deg) scale(-0.9, 0.75);
+}
+
+
+

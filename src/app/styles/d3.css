@@ -1,0 +1,136 @@
+.d3-svg {
+  overscroll-behavior: contain;
+}
+
+.d3-axis-label-bottom,
+.d3-axis-label-top,
+.d3-axis-label-left,
+.d3-axis-label-right{
+  font-size: 1.1em;
+  color: white;
+  fill: white;
+}
+
+.d3-chart-title {
+  font-size: 1.2em;
+  fill: white;
+}
+
+.d3-axis-line-h,
+.d3-axis-line-v {
+  stroke-dasharray: 3 3;
+}
+
+.d3-axis-tick-left {
+  transform: rotate(-30deg)
+}
+
+.d3-axis-label-left {
+  transform: translate(10, 0)
+}
+
+.d3-tooltip {
+  /* transition: top 0.1s ease, left 0.1s ease; */
+}
+
+.d3-hover {
+  stroke: white;
+  animation: addHoverStroke 0.1s forwards;
+}
+
+.d3-line {
+  filter: 
+  drop-shadow(0px 0px 1px white) 
+  drop-shadow(0px 0px 1px white);
+}
+
+@keyframes addHoverStroke {
+  from {
+    stroke-width: 0;
+  }
+
+  to {
+    stroke-width: 2px;
+  }
+}
+
+.d3-tick {
+  color: #666666;
+}
+
+.d3-tick text {
+  font-size: 1.5em;
+}
+
+.d3-tick.hidden {
+ opacity: 0 !important;
+}
+
+.d3-axis-x-tooltip,
+.d3-axis-y-tooltip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 35px;
+  background-color: white;
+  color: black;
+  border-radius: 2px;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+
+.d3-axis-y-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 99%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+.d3-axis-x-tooltip::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+.d3-axis-x-tooltip span,
+.d3-axis-y-tooltip span {
+  display: inline-grid;
+  align-items: center;
+  text-align: center;
+  padding: 0 0.5em;
+  white-space: nowrap;
+  width: fit-content;
+  min-width: 50px;
+}
+
+.d3-axis-x-f-obj,
+.d3-axis-y-f-obj {
+  overflow: visible;
+}
+
+.d3-brush-handle-l,
+.d3-brush-handle-r {
+  color: #666
+}
+
+.d3-chart-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+}
+
+.d3-chart-overlay * {
+  pointer-events: auto;
+}

@@ -1,0 +1,23 @@
+.CheckboxList {
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.CheckboxListButton {}
+.CheckboxListButton > * {
+  pointer-events: none !important;
+}
+
+/* width */
+.CheckboxList::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+}
+
+/* Track */
+.CheckboxList::-webkit-scrollbar-track {
+  display: none;
+}
+

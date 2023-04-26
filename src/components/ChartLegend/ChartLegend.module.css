@@ -1,0 +1,51 @@
+.Wrapper {
+  display: flex;
+  position: relative;
+}
+
+.LegendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+  padding-bottom: 0.3em;
+  text-align: start;
+  cursor: pointer;
+}
+
+.LegendItemActive svg *[data-fillable] {
+  fill: currentColor !important;
+}
+
+.Icon {
+  width: 20px;
+  min-width: 20px;
+}
+
+.CategoryButtonWrapper {
+  min-width: max-content;
+  width: 100%;
+}
+.CategoryButtonWrapper > * {
+  border-bottom: 1px solid rgb(109, 109, 109);
+}
+
+
+.CategoryButton {
+  padding: 0.2em 1em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.CategoryButton:hover {
+  color: white !important;
+}
+
+.CategoryItemsWrapper {
+  height: 0;
+  transition: height 200ms ease;
+  overflow: hidden;
+}

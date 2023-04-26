@@ -1,0 +1,11 @@
+.X {
+  stroke: black;
+  transition: opacity 0.2s ease, stroke 0.2s ease, transform 0.5s ease;
+  cursor: pointer;
+}
+
+.X:hover svg {
+  stroke: rgb(138, 1, 1) !important;
+  transform: scale(1.1);
+  transform-origin: center;
+}

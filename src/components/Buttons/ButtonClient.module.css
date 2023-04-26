@@ -1,0 +1,19 @@
+.Button{
+  border: none;
+  background: linear-gradient(#0000, rgb(0 0 0/25%)) top/100% 800%;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.Button:hover{
+  background-position: bottom;
+}

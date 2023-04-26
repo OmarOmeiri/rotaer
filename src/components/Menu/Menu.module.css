@@ -1,0 +1,7 @@
+.BackDropPointerEvts {
+  pointer-events: none;
+}
+
+.BackDropPointerEvts > * {
+  pointer-events: all;
+}

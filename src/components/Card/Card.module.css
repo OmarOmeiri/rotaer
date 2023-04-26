@@ -1,0 +1,94 @@
+.CardWithTitle,
+.Card {
+  margin: 1rem;
+  outline: 1px solid #eaeaea;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.CardWithTitle {
+  overflow: hidden;
+}
+
+.Card {
+  padding: 1.5rem;
+}
+
+
+.CardWithTitleContent {
+  margin: 1.5rem;
+  overflow-x: auto;
+  position: relative;
+}
+
+.CardWithTitleContent.CollapsibleContent {
+  margin: 1.5rem 1.5rem 0;
+}
+
+.CardWithTitleContent.CollapsedContent {
+  overflow-y: hidden;
+}
+
+.CardTitle {
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.5rem 0.5rem 0.5rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.IconWrapper {
+  width: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.CollapsibleWrapper {
+  position: relative;
+}
+
+.CollapsibleWrapper::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 90px;
+  /* background-color: #eaeaea; */
+  bottom: -90px;
+  z-index: 1;
+  box-shadow: 0 0px 0px 0px #000000;
+  transition: box-shadow 0.2s ease;
+  pointer-events: none;
+}
+
+.CollapsibleWrapper.Collapsed::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 90px;
+  /* background-color: #eaeaea; */
+  bottom: -90px;
+  z-index: 1;
+  box-shadow: 0 -25px 90px 60px #000000;
+  pointer-events: none;
+}
+
+.CollapseBtn {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.CollapseBtn button {
+  background-color: transparent;
+  border: none;
+  width: 25px;
+  height: 25px;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #e5e1e1;
+}

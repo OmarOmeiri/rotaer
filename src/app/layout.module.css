@@ -1,0 +1,24 @@
+.Nav {
+  padding: 0.5em 0 0.5em 0;
+  background-color: #282828;
+  display: flex;
+}
+
+.NavRight {
+  width: 50%;
+}
+
+.NavRightIcon {
+  width: 40px;
+  margin-left: 1em;
+}
+
+.NavLeft {
+  width: 50%;
+}
+
+.NavLeftAssetSearch {
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 1em;
+}

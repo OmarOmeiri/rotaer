@@ -1,0 +1,4 @@
+.CenterIcon :global(.react-datepicker__input-container) {
+  display: flex;
+  justify-content: center;
+}

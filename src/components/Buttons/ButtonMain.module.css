@@ -1,0 +1,74 @@
+.Button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 10px;
+  margin: 10px;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: all ease 0.4s;
+  display: flex;
+  height: var(--btnHeight);
+  align-items: center;
+}
+
+.Button *{
+  transition: fill 0.1s ease;
+}
+
+.Button.Success:hover{
+  background-color: rgb(215, 247, 211);
+  box-shadow: inset 0px 0px 1px 1px rgb(5, 161, 26), 1px 1px 3px 2px rgb(167, 193, 171);
+}
+
+.Button.Danger:hover{
+  background-color: rgb(255, 188, 188);
+  box-shadow: inset 0px 0px 1px 1px rgb(196, 0, 0), 1px 1px 3px 2px rgb(255, 85, 85);
+}
+
+.Success {
+  color: #5C9210;
+}
+
+.Danger {
+  color: #944317;
+}
+
+.Button.Main {
+  background-color: var(--mainBtnBackgroundColor);
+  color: var(--mainBtnTextColor);
+}
+
+.Button.Main *{
+  fill: var(--mainBtnTextColor)
+}
+
+.Button.Main:hover {
+  background-color: var(--mainBtnHoverBackgroundColor);
+  color: var(--mainBtnHoverTextColor);
+}
+
+.Button.Main:hover * {
+  fill: var(--mainBtnHoverTextColor)
+}
+
+.Button.Btn {
+  background-color: var(--btnBackgroundColor);
+  color: var(--btnTextColor);
+}
+
+.Button.Btn *{
+  fill: var(--btnTextColor)
+}
+
+.Button.Btn:hover {
+  background-color: var(--btnHoverBackgroundColor);
+  color: var(--btnHoverTextColor);
+}
+
+.Button.Btn:hover * {
+  fill: var(--btnHoverTextColor)
+}

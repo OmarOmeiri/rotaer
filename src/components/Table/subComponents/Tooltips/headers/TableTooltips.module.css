@@ -1,0 +1,26 @@
+.Wrapper {
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
+}
+
+.Wrapper:hover {
+  transition: background-color 0.1s ease-in;
+  background-color: rgba(255,255,255,0.1);
+}
+
+.Tip {
+  z-index: 2;
+  border: 1px solid #7d7d7d;
+  border-radius: 5px;
+}
+
+.DensityChart {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.ChartWrapper {
+  height: 150px;
+  width: 245px;
+}
+

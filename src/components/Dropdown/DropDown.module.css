@@ -1,0 +1,37 @@
+.MultiDropDownChip {
+  border-radius: 16px;
+  height: 32px;
+  font-size: 0.95rem;
+  padding: 0 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.MultiDropDownChip * {
+  pointer-events: none;
+}
+
+.MultiDropDownChip:hover .DeleteIcon {
+  opacity: 1;
+}
+
+.DeleteIcon {
+  width: 10px;
+  margin-left: 5px;
+  color: rgb(249, 86, 86);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.DeleteIcon svg {
+  stroke-width: 2px;
+}
+
+.BackDropPointerEvts {
+  pointer-events: none;
+}
+
+.BackDropPointerEvts > * {
+  pointer-events: all;
+}

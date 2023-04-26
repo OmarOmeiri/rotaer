@@ -1,0 +1,98 @@
+.searchbar {
+  display: flex;
+  margin: auto;
+  border-radius: 200px;
+  align-items: center;
+  justify-content: center;
+}
+
+.fadeInWidth {
+  animation: 0.2s cubic-bezier(0.4, 0, 0.2, 1) fadeInWidth;
+}
+
+.fadeOutWidth {
+  animation: 0.2s cubic-bezier(0.4, 0, 0.2, 1) fadeOutWidth;
+}
+
+.fadeIn {
+  animation: 0.8s cubic-bezier(0.4, 0, 0.2, 1) fadeIn;
+}
+.fadeOut {
+  animation: 1s cubic-bezier(0.4, 0, 0.2, 1) fadeOut;
+}
+
+.searchInput {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: none;
+  padding: 0 0 0 15px;
+  transition: width 0.4s linear;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+}
+
+
+.searchIcon {
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: small;
+}
+
+.iconBg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 20px;
+}
+.iconBg:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.Active .iconBg:hover{
+  cursor:text;
+}
+
+@keyframes fadeInWidth {
+  0% {
+    width: 30px;
+  }
+  100% {
+    width: 200px;
+  }
+}
+@keyframes fadeOutWidth {
+  0% {
+    width: 200px;
+  }
+  100% {
+    width: 30px;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

@@ -1,0 +1,149 @@
+
+.Form {
+  width: 50px;
+  height: 25px;
+  text-align: left;
+  /* margin: -4px -2px;  */
+  /* border-radius: 500px; */
+  /* background: linear-gradient(#ffbd00, #ca7900); */
+  /* box-shadow: 0 1px 5px hsla(41, 100%, 40%, 0.3),
+         -3px 25px 25px hsla(41, 100%, 35%, 0.5),
+         -6px 50px 50px hsla(41, 100%, 30%, 0.3),
+         -9px 65px 65px hsla(41, 100%, 20%, 0.3); */
+}
+
+.Toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 25px;
+  background: var(--toggleBtnBackgroundColor);
+  border-radius: 500px;
+  border: solid 1px transparent;
+  background-clip: padding-box;
+  cursor: pointer;
+}
+
+.ToggleWrapper {
+  width: 50px;
+  height: 25px;
+  margin: -4px -2px; 
+  border-radius: 500px;
+  background: linear-gradient(var(--toggleBtnBackgroundColor)), hsla(39, 100%, 42%, 0.1));
+  /* box-shadow: 0px 0.2px 0px 1px hsl(41deg 100% 57% / 70%);s */
+}
+
+.ToggleBg {
+  width: 50px;
+  height: 24.5px;
+  background: var(--toggleBtnOnBackgroundColor);
+  background: linear-gradient(to right, var(--toggleBtnOnBackgroundColor) 50%, var(--toggleBtnOffBackgroundColor) 50% 100%);
+  background-size: 200% 100%;
+  background-position: 75%;
+  border-radius: 500px;
+  border: solid 2px transparent;
+  background-clip: padding-box;
+  box-shadow: inset 0px 30px 50px 15px hsla(0, 0%, 0%, 0.30);
+  transition: all 0.4s ease-in-out;
+}
+
+.ToggleSphere {
+  position: relative;
+  height: 19px;
+  width: 19px;
+  background: hsla(18, 100%, 62%, 1);
+  background: 
+    linear-gradient(to right, var(--toggleBtnOnBackgroundColor) 50%, var(--toggleBtnOffBackgroundColor) 50% 100%);
+  border-radius: 50%;
+  transform-origin: top left;
+  transform: translate(1px, 1px);
+  box-shadow:  
+    2px 0px 5px 1px hsla(18, 77%, 15%, 0.05), 
+    0px 10px 10px 1px hsla(18, 77%, 15%, 0.2), 
+    -1px 0px 3px 1px hsl(0deg 0% 0% / 75%);
+  transition: all 0.4s ease-in-out;
+}
+
+.ToggleSphere:before, 
+.ToggleSphere:after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 2px);
+  height: 1px;
+  width: 4px;
+  background: hsla(0, 0%, 0%, 0.25);
+  border-radius: 50%;
+  box-shadow: 0px 0px 10px 0px hsl(0deg 0% 0% / 25%);
+}
+
+.ToggleSphere:before {
+  top: -2px;
+}
+
+.ToggleSphere:after {
+  bottom: -1px;
+}
+
+.ToggleSphereOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border-radius: 50%;
+  box-shadow: inset 0px -30px 30px 15px hsla(0, 0%, 0%, 0.1)
+}
+
+.ToggleSphereBg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  border-radius: 50%;
+  transition: transform 0.4s ease-in-out;
+}
+
+.ToggleSphereBg:before, 
+.ToggleSphereBg:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.ToggleSphereBg:before {
+  background-color: var(--toggleBtnOffBackgroundColor);
+  border-radius: 50%;
+}
+
+.ToggleSphereBg:after {
+  background-color: var(--toggleBtnOnBackgroundColor);
+  transform: rotateY(180deg);
+  border-radius: 50%;
+}
+
+.Input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.Input:checked + .ToggleBg {
+  background-position: 25%;
+}
+
+.Input:checked + .ToggleBg .ToggleSphere {
+  transform: translateX(26px) translateY(1px);
+  box-shadow: -2px 0px 5px 1px hsl(18deg 77% 15% / 5%), 0px 10px 10px 1px hsl(18deg 77% 15% / 20%), 1px 0px 3px 1px hsl(0deg 0% 0% / 75%);
+}
+
+.Input:checked + .ToggleBg .ToggleSphereBg {
+  transform: rotateY(180deg);
+}
+
+

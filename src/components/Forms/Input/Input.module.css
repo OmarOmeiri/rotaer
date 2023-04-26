@@ -1,0 +1,22 @@
+.Input {
+  outline: none;
+  height: 35px;
+  font-size: 0.9rem;
+}
+
+.Input:-webkit-autofill,
+.Input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+}
+.Input[data-autocompleted] {
+    background-color: transparent !important;
+}
+
+.ValidationMsg {
+  color: rgb(172, 0, 0);
+  font-size: 0.8rem;
+}
+
+.Invalid .Input{
+  border: 1px solid rgb(172, 0, 0);
+}

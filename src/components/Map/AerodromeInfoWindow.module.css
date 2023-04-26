@@ -1,0 +1,25 @@
+.Wrapper {
+  color: white;
+}
+
+.Main {
+  margin: 0.5em 0 0.5em 0;
+}
+
+.Main > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2em;
+}
+
+.Title {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.Title > div {
+  width: 15px;
+  color: rgb(185 185 185 / 40%);
+}

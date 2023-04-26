@@ -1,0 +1,21 @@
+.GridWithLegend {
+  display: flex;
+  overflow-y: scroll;
+  height: 100%;
+  position: relative;
+}
+
+.BtnContainer {
+  margin: 1em;
+  position: sticky;
+  top: 0;
+}
+
+.Btn {
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

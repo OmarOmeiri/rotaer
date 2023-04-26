@@ -1,0 +1,197 @@
+.THead {
+  display: flex;
+  align-items: stretch;
+}
+
+.THead > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.THead > div:last-child {
+  border-right: none
+}
+
+.Th {
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  padding: 8px;
+}
+
+.ThSticky {
+  position: sticky;
+  z-index: 1;
+  left: 0;
+}
+
+.RowSelectHeader {
+  align-items: center;
+}
+
+.HeaderText {
+  white-space: nowrap;
+  display: inline-block;
+  text-overflow: ellipsis;
+  width: calc(80%);
+  overflow: hidden;
+}
+
+.Th > div,
+.Th > div > div {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.ThControls {
+  flex-grow: 1;
+  justify-content: end;
+}
+
+.ThControls > div {
+  justify-content: center;
+  height: 25px;
+  width: 20px
+}
+
+.ThControls svg {
+}
+
+.ThControls > div:not(:last-child) {
+  margin-right: 5px;
+}
+
+.Sortable {
+  cursor: pointer;
+}
+
+
+.SortedAsc::after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: calc(100% - 9px);
+  left: calc(50% - 5px);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  z-index: 1;
+}
+
+.SortedDesc::after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 100%;
+  left: calc(50% - 5px);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  z-index: 1;
+}
+
+.DropIndicator {
+  position: absolute;
+  right: -1px;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: transparent;
+  cursor: col-resize;
+  user-select: none;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.Resizer {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+.Resizer:hover {
+  opacity: 1;
+}
+
+.DragHandle {
+  display: flex;
+  padding: 4px;
+  cursor: grab;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  align-items: stretch;
+  color: #a4a4a4;
+  touch-action: none;
+}
+
+.ColumnPin {
+  width: 7px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.ColumnPin:hover {
+  transition: background-color 0.1s ease-in;
+  background-color: rgba(255,255,255,0.1);
+}
+
+.ColumnPin *{
+  pointer-events: none;
+}
+
+.DragHandle svg {
+  width: 100%;
+}
+
+.DragOverlay {
+  opacity: 0.5;
+  cursor: grabbing;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.Sticky {
+  position: sticky;
+  top: -1px;
+}
+
+.HeaderTooltip {
+  z-index: 2;
+  max-width: 200px;
+  padding: 0 1em;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  word-break: break-word;
+  border-radius: 4px;
+  border: 1px solid white;
+}
+
+.HeaderTooltip h4 {
+  margin: 1em 0;
+  pointer-events: none;
+}
+
+.HeaderTooltip p {
+  font-size: 0.9rem;
+}

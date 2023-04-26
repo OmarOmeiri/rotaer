@@ -1,0 +1,93 @@
+.Tippy[data-animation=fade][data-state=hidden] {
+  opacity: 0
+}
+
+.Tippy {
+  position: relative;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  outline: 0;
+  transition-property: transform, visibility, opacity
+}
+
+.Tippy > * {
+  text-align: center;
+}
+
+.Tippy[data-placement^=bottom]>.TippyArrow {
+  bottom: 0;
+  left: calc(50% - 8px)
+}
+
+.Tippy[data-placement^=bottom]>.TippyArrow:before {
+  bottom: -7px;
+  left: 0;
+  border-width: 8px 8px 0;
+  border-top-color: initial;
+  transform-origin: center top
+}
+
+.Tippy[data-placement^=top]>.TippyArrow {
+  top: 0;
+  left: calc(50% - 8px);
+}
+
+.Tippy[data-placement^=top]>.TippyArrow:before {
+  top: -7px;
+  left: 0;
+  border-width: 0 8px 8px;
+  border-bottom-color: initial;
+  transform-origin: center bottom
+}
+
+.Tippy[data-placement^=right]>.TippyArrow {
+  right: 0;
+  top: calc(50% - 8px);
+}
+
+.Tippy[data-placement^=right]>.TippyArrow:before {
+  border-width: 8px 0 8px 8px;
+  border-left-color: initial;
+  right: -7px;
+  transform-origin: center left
+}
+
+.Tippy[data-placement^=left]>.TippyArrow {
+  top: calc(50% - 8px);
+  left: 0
+}
+
+.Tippy[data-placement^=left]>.TippyArrow:before {
+  left: -7px;
+  border-width: 8px 8px 8px 0;
+  border-right-color: initial;
+  transform-origin: center right
+}
+
+.Tippy[data-inertia][data-state=visible] {
+  transition-timing-function: cubic-bezier(.54, 1.5, .38, 1.11)
+}
+
+.TippyArrow {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: #333
+}
+
+.TippyArrow:before {
+  content: "";
+  position: absolute;
+  border-color: transparent;
+  border-style: solid
+}
+
+.TippyContent {
+  position: relative;
+  padding: 5px 9px;
+  z-index: 1
+}
