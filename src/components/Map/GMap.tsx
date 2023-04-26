@@ -33,7 +33,7 @@ const mapOptions: google.maps.MapOptions = {
     lng: -55,
   },
   zoom: 5,
-  mapId: process.env.GMAPS_MAP_ID,
+  mapId: process.env.NEXT_PUBLIC_GMAPS_MAP_ID,
 };
 
 const getMarkerDataUri = (m: TAerodromPrelimInfo) => {

@@ -18,7 +18,7 @@ function Providers({ children }: React.PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={dehydratedState}>
-        <GMapWrapper apiKey={process.env.GMAPS_API_KEY} version='beta' libraries={['marker']}>
+        <GMapWrapper apiKey={process.env.NEXT_PUBLIC_GMAPS_API_KEY} version='beta' libraries={['marker']}>
           <>
             { children }
           </>

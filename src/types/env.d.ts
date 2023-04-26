@@ -22,8 +22,8 @@ declare global {
       readonly SENTRY_URI: string;
       readonly EXTEND_ESLINT: string;
       readonly BUILD_PATH: string;
-      readonly GMAPS_API_KEY: string;
-      readonly GMAPS_MAP_ID: string;
+      readonly NEXT_PUBLIC_GMAPS_API_KEY: string;
+      readonly NEXT_PUBLIC_GMAPS_MAP_ID: string;
     }
     interface ProcessEnv extends Env {}
   }
