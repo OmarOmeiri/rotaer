@@ -133,12 +133,13 @@ const AssetSearch = ({ disableScroll }: {disableScroll?: boolean}) => {
     }
   });
 
-  const query = useQuery<any>({
-    queryKey: ['aerodrome-search', debouncedValue],
-    queryFn: () => fetchAerodrome({ id: value }),
-    enabled,
-    cacheTime: 0,
-  });
+  const query: any = {};
+  // useQuery<any>({
+  //   queryKey: ['aerodrome-search', debouncedValue],
+  //   queryFn: () => fetchAerodrome({ id: value }),
+  //   enabled,
+  //   cacheTime: 0,
+  // });
 
   const closeTooltip = useCallback(() => {
     if (document.activeElement !== searchInputRef.current) {

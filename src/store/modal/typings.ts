@@ -1,5 +1,3 @@
-
-
 const AuthModals = [
   'logIn',
   'changePassword',

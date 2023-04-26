@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   dehydrate,
   Hydrate,
@@ -12,13 +12,15 @@ import getQueryClient from '@/frameworks/react-query/getQueryClient';
 
 /** */
 function Providers({ children }: React.PropsWithChildren) {
-  const queryClient = getQueryClient();
+  const [queryClient] = useState(getQueryClient());
   const dehydratedState = dehydrate(queryClient);
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={dehydratedState}>
         <GMapWrapper apiKey={process.env.GMAPS_API_KEY} version='beta' libraries={['marker']}>
-          {children}
+          <>
+            { children }
+          </>
         </GMapWrapper>
       </Hydrate>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -27,3 +29,4 @@ function Providers({ children }: React.PropsWithChildren) {
 }
 
 export default Providers;
+

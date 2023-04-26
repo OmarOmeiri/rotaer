@@ -34,7 +34,6 @@ export default function warnHelper(warning: warn): void {
       'background-color: #ffb029; color: black; font-weight: bold',
     );
 
-
     if (logMsg) console.warn(logMsg);
     if (stack) console.warn(stack);
     if (save) console.warn({ save });
@@ -49,6 +48,4 @@ export default function warnHelper(warning: warn): void {
     const { setAlert } = alertStore.getState();
     setAlert({ msg: message, type: 'warning', timeout: timeOut });
   }
-
-
 }

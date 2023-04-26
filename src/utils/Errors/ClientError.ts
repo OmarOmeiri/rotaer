@@ -20,17 +20,17 @@ export class ClientError extends Error {
   public data?: Record<string, any>;
 
   constructor(err: string, errData?: Omit<ErrData, 'message'>) {
-      super(err);
-      this.type = errData?.type || 'error';
-      this.timeOut = errData?.timeOut;
-      this.logMsg = errData?.logMsg;
-      this.save = errData?.save;
-      this.code = errData?.code;
-      this.res = errData?.res;
-      this.silent = errData?.silent;
-      this.stack = errData?.stack;
-      this.data = errData?.data;
-      if (!this.stack) Error.captureStackTrace(this, this.constructor);
+    super(err);
+    this.type = errData?.type || 'error';
+    this.timeOut = errData?.timeOut;
+    this.logMsg = errData?.logMsg;
+    this.save = errData?.save;
+    this.code = errData?.code;
+    this.res = errData?.res;
+    this.silent = errData?.silent;
+    this.stack = errData?.stack;
+    this.data = errData?.data;
+    if (!this.stack) Error.captureStackTrace(this, this.constructor);
 
     if (this.type === 'warn') {
       warnHelper(this);

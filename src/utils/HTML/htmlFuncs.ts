@@ -1,9 +1,9 @@
 import { objHasProp } from 'lullo-utils/Objects';
 import React from 'react';
+import type csstype from 'csstype';
 import { getCssVariable } from '../Styles/styleFuncs';
 
 // eslint-disable-next-line import/no-unresolved
-import type csstype from 'csstype';
 /**
  * Creates a hidden element in the dom and returns it
  * @param param0

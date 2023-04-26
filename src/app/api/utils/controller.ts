@@ -42,7 +42,7 @@ export function controller() {
               throw new ServerError('Invalid HTTP verb', {
                 status: 500,
                 req,
-                code: ErrorCodes.notAllowedError
+                code: ErrorCodes.notAllowedError,
               });
             }
             const result = await originalMethod({
@@ -60,7 +60,7 @@ export function controller() {
                 headers: { 'Content-Type': 'application/json' },
                 status: error.status || 500,
               },
-            )
+            );
           }
         };
       }

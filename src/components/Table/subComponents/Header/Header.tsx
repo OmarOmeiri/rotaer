@@ -15,6 +15,8 @@ import {
   HeaderCustom,
   Table,
 } from '@tanstack/react-table';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import type { DraggableAttributes } from '@dnd-kit/core';
 import { useSyncStateRef } from '../../../../hooks/React/useSyncStateRef';
 import { TableStyles } from '../../styles';
 import { StyledTableTooltip } from '../Tooltips/StyledTooltip';
@@ -24,8 +26,6 @@ import {
   getHeaderResizerProps,
 } from './helpers';
 
-import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import type { DraggableAttributes } from '@dnd-kit/core';
 type Props<T extends Record<string, unknown>> = {
   header: HeaderCustom<T, unknown>
   listeners?: SyntheticListenerMap | undefined

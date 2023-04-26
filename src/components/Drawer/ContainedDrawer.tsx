@@ -7,10 +7,10 @@ import React, {
   useState,
 } from 'react';
 import { isForwardRef } from 'react-is';
+import X from '@icons/X.svg';
 import { colors } from '@/config/styles/colors';
 import { useResizeObserver } from '@/hooks/DOM/useResizeObserver';
 import { getElmDimensionsNoContent } from '@/utils/HTML/getElmDimensionsNoContent';
-import X from '@icons/X.svg';
 import classes from './ContainedDrawer.module.css';
 
 type Props = {

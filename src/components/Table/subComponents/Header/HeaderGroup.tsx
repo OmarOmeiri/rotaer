@@ -34,14 +34,6 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {
-  getCanvasFont,
-  getTextWidth,
-} from '../../../../utils/HTML/htmlFuncs';
-import { DraggableTableHeader } from './DraggableHeader';
-import { TableHeader } from './Header';
-import classes from './Header.module.css';
-
 import type {
   ColumnOrderState,
   ColumnResizeMode,
@@ -50,6 +42,14 @@ import type {
   HeaderGroup as TableHeaderGroup,
   Table,
 } from '@tanstack/react-table';
+import {
+  getCanvasFont,
+  getTextWidth,
+} from '../../../../utils/HTML/htmlFuncs';
+import { DraggableTableHeader } from './DraggableHeader';
+import { TableHeader } from './Header';
+import classes from './Header.module.css';
+
 import type { TableStyles } from '../../styles';
 import type { TableHeaderTooltips } from '../../Table';
 

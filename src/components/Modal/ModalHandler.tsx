@@ -6,12 +6,11 @@ import Modal from './Modal';
 
 import type { allModals, modalChildProps } from '../../store/modal/typings';
 import type { IModalProps } from './typings';
+
 export interface IModalHandler {
   beforeModalClose?: () => void,
   modalStyle?: IModalProps['modalStyle']
 }
-
-
 
 const getModal = <T extends allModals>(name: T, propsToChildren: modalChildProps<T>) => {
   switch (name) {

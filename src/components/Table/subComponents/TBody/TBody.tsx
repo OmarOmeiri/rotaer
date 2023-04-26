@@ -16,6 +16,7 @@ import { TableRow } from '../Row/Row';
 import classes from './TBody.module.css';
 
 import type { TableStyles } from '../../styles';
+
 type Props<T extends Record<string, unknown>> = {
   table: Table<T>,
   columnOrder: ColumnOrderState,

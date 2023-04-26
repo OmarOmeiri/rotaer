@@ -22,7 +22,7 @@ export const useClickOutside = ({
   ref,
   isOpen,
   cb,
-  exclude
+  exclude,
 }: useClickOutsideProps, deps?: any[]): void => {
   const handleClick = useCallback((e: MouseEvent) => {
     if ((ref as React.MutableRefObject<any>)?.current) {
@@ -30,8 +30,8 @@ export const useClickOutside = ({
         (ref as React.MutableRefObject<any>)?.current,
       );
       const shouldExclude = !exclude
-      ? false
-      : exclude.current === e.target
+        ? false
+        : exclude.current === e.target;
       if (!withinBoundaries && !shouldExclude) {
         cb(e);
       }

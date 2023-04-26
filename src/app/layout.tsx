@@ -7,7 +7,6 @@ import ClientLayout from '../utils/ClientLayout/ClientLayout';
 import Providers from './Providers';
 import AssetSearch from '../components/AssetSearch/AssetSearch';
 import classes from './layout.module.css';
-import BreadCrumbs from '../components/BreadCrumbs/BreadCrumb';
 
 /** */
 export default function RootLayout({
@@ -25,7 +24,6 @@ export default function RootLayout({
         <div id="overlay-tooltip" />
         <Providers>
           <ClientLayout/>
-          <BreadCrumbs/>
           <nav className={classes.Nav}>
             <div className={classes.NavRight}>
               <div className={classes.NavRightIcon}>

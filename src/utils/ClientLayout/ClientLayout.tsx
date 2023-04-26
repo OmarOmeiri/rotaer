@@ -1,9 +1,11 @@
-'use client'
+'use client';
+
 import React, {
   useCallback,
   useLayoutEffect,
 } from 'react';
 
+/** */
 function ClientLayout() {
   const setPageDims = useCallback(() => {
     const vw = document.documentElement.clientWidth;
@@ -26,8 +28,8 @@ function ClientLayout() {
     setPageDims();
     window.addEventListener('resize', setPageDims);
     return () => {
-      window.removeEventListener('resize', setPageDims)
-    }
+      window.removeEventListener('resize', setPageDims);
+    };
   }, [setPageDims]);
 
   return null;

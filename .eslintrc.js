@@ -14,7 +14,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'next/core-web-vitals',
     'plugin:import/recommended',
-    'plugin:jsx-a11y/recommended'
+    'plugin:jsx-a11y/recommended',
   ],
   'globals': {
     'Atomics': 'readonly',
@@ -133,10 +133,6 @@ module.exports = {
           name: 'lodash',
           importNames: ['range'],
           message: 'Please use the `range` function from lullo-utils.',
-        },
-        {
-          name: 'zustand/shallow',
-          message: 'Please use the `shallow` function from the frameworks directory.',
         },
       ],
     }],
