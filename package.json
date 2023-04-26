@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@deck.gl/google-maps": "^8.9.7",
     "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
     "@dnd-kit/sortable": "^7.0.2",
@@ -32,7 +31,6 @@
     "@tanstack/react-table": "^8.8.5",
     "@tanstack/react-virtual": "^3.0.0-alpha.0",
     "date-fns": "^2.29.3",
-    "deck.gl": "^8.9.7",
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "lullo-common-types": "github:OmarOmeiri/ctypes",
