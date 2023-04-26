@@ -14,6 +14,7 @@ import getQueryClient from '@/frameworks/react-query/getQueryClient';
 function Providers({ children }: React.PropsWithChildren) {
   const [queryClient] = useState(getQueryClient());
   const dehydratedState = dehydrate(queryClient);
+  console.log(process.env);
   console.log('api key', process.env.NEXT_PUBLIC_GMAPS_API_KEY);
   console.log('mapId', process.env.NEXT_PUBLIC_GMAPS_MAP_ID);
   return (
