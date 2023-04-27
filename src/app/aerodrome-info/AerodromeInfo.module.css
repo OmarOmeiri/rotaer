@@ -5,6 +5,18 @@
   margin-left: 1em;
 }
 
+.MainInfoCardContainer {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+}
+
+.MapContainer {
+  flex-grow: 1;
+  min-width: 340px;
+  height: 350px;
+}
+
 .Card {
   background-color: var(--app-darklight);
   color: var(--app-white);

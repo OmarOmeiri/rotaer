@@ -1,15 +1,14 @@
 import { notFound } from 'next/navigation';
-import Windy from '../../components/Windy/Windy';
 import { fetchAerodromeInfo } from '../../API/fetch/aerodrome';
 import classes from './AerodromeInfo.module.css';
 import AssetTypeBadge from '../../components/Badges/AssetTypeBadge';
 import Tabs from '../../components/Tabs/Tabs';
 import { Tab } from '../../components/Tabs/Tab';
-import CardWithTitle from '../../components/Card/CardWithTitle';
 import AerodromeMainInfoTab from './Tabs/MainInfo';
 import AerodromeRunwaysTab from './Tabs/AerodromeRunwaysTab';
 import AerodromeRadioTab from './Tabs/AerodromeRadioTab';
 import AerodromeMetTab from './Tabs/AerodromeMetTab';
+import { fetchAerodromeMETAR } from '../../API/fetch/metar';
 
 type Props = {
   searchParams?: {
@@ -27,6 +26,7 @@ const AerodromeInfo = async ({ searchParams }: Props) => {
   if (!id || info === null) {
     return notFound();
   }
+  const metar = await fetchAerodromeMETAR({ icao: info.icao });
 
   return (
     <div>
@@ -45,14 +45,14 @@ const AerodromeInfo = async ({ searchParams }: Props) => {
             <AerodromeRunwaysTab info={info}/>
           </div>
         </Tab>
-        <Tab label='rádio' className={classes.Tab}>
+        <Tab label='rádio' className={classes.Tab} hidden={!(info.com?.length || info.radioNav?.length)}>
           <div className='container'>
             <AerodromeRadioTab info={info}/>
           </div>
         </Tab>
         <Tab label='met' className={classes.Tab}>
           <div className='container'>
-            <AerodromeMetTab info={info}/>
+            <AerodromeMetTab info={info} metar={metar}/>
           </div>
         </Tab>
       </Tabs>
@@ -61,3 +61,4 @@ const AerodromeInfo = async ({ searchParams }: Props) => {
 };
 
 export default AerodromeInfo;
+

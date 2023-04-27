@@ -3,10 +3,15 @@
 import './styles/globals.css';
 import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
+import styled from 'styled-components';
 import ClientLayout from '../utils/ClientLayout/ClientLayout';
 import Providers from './Providers';
 import AssetSearch from '../components/AssetSearch/AssetSearch';
 import classes from './layout.module.css';
+import Config from '../config';
+
+const Nav = styled.nav`
+height: ${Config.get('styles').navBar.height}px`;
 
 /** */
 export default function RootLayout({
@@ -16,6 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <title>ROTAER</title>
       <body>
         <div id="overlay-alert" className='alert-overlay'/>
         <div id="overlay-modal" />
@@ -24,7 +30,7 @@ export default function RootLayout({
         <div id="overlay-tooltip" />
         <Providers>
           <ClientLayout/>
-          <nav className={classes.Nav}>
+          <Nav className={classes.Nav}>
             <div className={classes.NavRight}>
               <div className={classes.NavRightIcon}>
                 <Link href="/">
@@ -37,7 +43,7 @@ export default function RootLayout({
                 <AssetSearch/>
               </div>
             </div>
-          </nav>
+          </Nav>
           <main>
             {children}
           </main>

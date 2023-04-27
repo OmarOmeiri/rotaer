@@ -24,6 +24,7 @@ declare global {
       readonly BUILD_PATH: string;
       readonly NEXT_PUBLIC_GMAPS_API_KEY: string;
       readonly NEXT_PUBLIC_GMAPS_MAP_ID: string;
+      readonly NEXT_PUBLIC_REDEMET_API_KEY: string;
     }
     interface ProcessEnv extends Env {}
   }

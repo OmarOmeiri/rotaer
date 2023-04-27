@@ -3,19 +3,15 @@
 import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
 import { debounce } from 'lodash';
 import { renderToStaticMarkup } from 'react-dom/server';
-import Link from 'next/link';
 import { TAerodromPrelimInfo } from '../../types/app/aerodrome';
 import { svgToDataURI } from '../../utils/SVG/svgFuncs';
 import Config from '../../config';
 import { MapMarker } from '../Icons/Map/MapMarker';
 import classes from './GMap.module.css';
-import { Marker } from './Marker';
 import BoundingSuperClusterAlgorithm from '../../utils/Map/SuperClusterAlgorithm';
-import { APP_ROUTES } from '../../consts/routes';
 import { smoothlyAnimatePanTo } from '../../utils/Map/smoothPan';
 import AerodromeInfoWindow from './AerodromeInfoWindow';
 
@@ -27,7 +23,7 @@ const mapMarkers = {
   other: svgToDataURI(<MapMarker color={aerodromeColors.other.color}/>),
 };
 
-const mapOptions: google.maps.MapOptions = {
+const DEFAULT_MAP_OPTIONS: google.maps.MapOptions = {
   center: {
     lat: -15.798904316306151,
     lng: -55,
@@ -51,14 +47,13 @@ const getMarkerProps = (m: TAerodromPrelimInfo): google.maps.MarkerOptions => ({
 const makeMarker = (
   m: TAerodromPrelimInfo,
   map: google.maps.Map,
+  infowindow: google.maps.InfoWindow,
 ) => {
   const marker = new google.maps.Marker(getMarkerProps(m));
-  const infowindow = new google.maps.InfoWindow({
-    content: renderToStaticMarkup(AerodromeInfoWindow(m)),
-    ariaLabel: m.icao,
-  });
   marker.addListener('click', (e: any) => {
     smoothlyAnimatePanTo(map, e.latLng);
+    infowindow.setContent(renderToStaticMarkup(AerodromeInfoWindow(m)));
+    infowindow.setOptions({ ariaLabel: m.icao });
 
     infowindow.open({
       anchor: marker,
@@ -71,8 +66,9 @@ const makeMarker = (
 const createMarkers = (
   mkrs: TAerodromPrelimInfo[],
   map: google.maps.Map,
+  infowindow: google.maps.InfoWindow,
 ) => {
-  const markers = mkrs.map((m) => makeMarker(m, map));
+  const markers = mkrs.map((m) => makeMarker(m, map, infowindow));
 
   return new MarkerClusterer({
     markers,
@@ -85,21 +81,25 @@ const updateMarkers = (
   mkrs: TAerodromPrelimInfo[],
   clusterer: MarkerClusterer,
   map: google.maps.Map,
+  infowindow: google.maps.InfoWindow,
 ) => {
-  const markers = mkrs.map((m) => makeMarker(m, map));
+  const markers = mkrs.map((m) => makeMarker(m, map, infowindow));
   // @ts-ignore
   (clusterer.algorithm as BoundingSuperClusterAlgorithm).calculate({ map, markers });
 };
 
 const GMap = ({
   markers = [],
+  mapOptions,
 }: {
-  markers?: TAerodromPrelimInfo[]
+  markers?: TAerodromPrelimInfo[],
+  mapOptions?: google.maps.MapOptions,
 }) => {
   const mapRef = useRef<null | HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [isMapRefSet, setIsMapRefSet] = useState(false);
   const clusterer = useRef<MarkerClusterer | null>(null);
+  const infowindow = useRef(new google.maps.InfoWindow());
   const setMapRef = useCallback((node: HTMLDivElement | null) => {
     if (node) {
       mapRef.current = node;
@@ -113,7 +113,7 @@ const GMap = ({
     map: google.maps.Map,
   ) => {
     if (map && clusterer) {
-      updateMarkers(markers, clusterer, map);
+      updateMarkers(markers, clusterer, map, infowindow.current);
     }
   }, 300));
 
@@ -123,28 +123,40 @@ const GMap = ({
     }
   }, [debouncer, map, clusterer, markers]);
 
+  const onMapClick = useCallback(() => {
+    infowindow.current.close();
+  }, []);
+
   useEffect(() => {
     const ref = mapRef.current;
     if (ref) {
-      setMap(new window.google.maps.Map(ref, mapOptions));
+      setMap(new window.google.maps.Map(ref, {
+        ...DEFAULT_MAP_OPTIONS,
+        ...mapOptions,
+      }));
     }
-  }, [isMapRefSet]);
+  }, [isMapRefSet, mapOptions]);
 
   useEffect(() => {
     let onBoundChangeListener: google.maps.MapsEventListener | null = null;
+    let onMapClickListener: google.maps.MapsEventListener | null = null;
     if (map) {
-      onBoundChangeListener = google.maps.event.addListener(map, 'bounds_changed', onBoundsChange);
+      onBoundChangeListener = google.maps.event.addListener(map, 'drag', onBoundsChange);
+      onMapClickListener = google.maps.event.addListener(map, 'click', onMapClick);
     }
     return () => {
       if (onBoundChangeListener) {
         google.maps.event.removeListener(onBoundChangeListener);
       }
+      if (onMapClickListener) {
+        google.maps.event.removeListener(onMapClickListener);
+      }
     };
-  }, [map, onBoundsChange]);
+  }, [map, onBoundsChange, onMapClick]);
 
   useEffect(() => {
     if (map) {
-      const cluster = createMarkers(markers, map);
+      const cluster = createMarkers(markers, map, infowindow.current);
       clusterer.current = cluster;
     }
   }, [map, markers]);

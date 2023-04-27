@@ -1,5 +1,6 @@
 .Wrapper {
   color: white;
+  padding: 1em;
 }
 
 .Main {
@@ -22,4 +23,8 @@
 .Title > div {
   width: 15px;
   color: rgb(185 185 185 / 40%);
+}
+
+.Link {
+  outline: 2px solid red;
 }

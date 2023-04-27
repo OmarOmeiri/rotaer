@@ -135,7 +135,6 @@ class Api<CT extends keyof typeof ContentTypes> {
 
   @responseHandler()
   async get<T>(): Promise<ApiExternalResponse<T>> {
-    console.log('this.url: ', this.url);
     try {
       return fetch(
         this.url,

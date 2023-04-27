@@ -47,7 +47,7 @@ const navBar = {
     borderRadius: 5,
     borderWidth: 2,
   },
-  height: 75,
+  height: 60,
   fontWeight: 'bold',
   fontSize: '1.1rem',
 };

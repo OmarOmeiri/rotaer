@@ -1,17 +1,13 @@
 import React from 'react';
 import { TabProps } from './Tabs';
 
-export const Tab = ({
-  children,
-  className,
-  style,
-  label,
-}: {
+export const Tab = (props: {
   children: React.ReactNode;
   className?: string,
   style?: React.CSSProperties
+  hidden?: boolean,
 } & TabProps) => (
-  <div style={style} className={className || ''} data-label={label}>
-    {children}
+  <div {...props} className={props.className || ''}>
+    {props.children}
   </div>
 );

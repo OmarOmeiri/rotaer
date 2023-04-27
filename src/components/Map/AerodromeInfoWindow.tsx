@@ -17,7 +17,7 @@ const contentStyle = (m: TAerodromPrelimInfo): React.CSSProperties => ({
 
 const AerodromeInfoWindow = (m: TAerodromPrelimInfo) => (
   <div className={classes.Wrapper}>
-    <Link href={m.icao ? APP_ROUTES.aerodromeInfo(m.icao) : '#'}>
+    <Link href={m.icao ? APP_ROUTES.aerodromeInfo(m.icao) : '#'} className={classes.Link}>
       <div>
         <div className={classes.Main}>
           <div>

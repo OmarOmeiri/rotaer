@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   CSSTransition,
   SwitchTransition,
@@ -21,10 +21,12 @@ interface TabPanelProps {
 
 export type TabProps = {
   label: string;
-  'data-label'?: undefined
+  'data-label'?: undefined;
+  hidden?: boolean,
 } | {
   label?: undefined;
-  'data-label': string
+  'data-label': string;
+  hidden?: boolean,
 }
 
 const { colors } = Config.get('styles');
@@ -64,6 +66,7 @@ const Tabs = ({
   className,
 }: Props) => {
   const [index, setIndex] = React.useState(0);
+  const filteredChildren = useMemo(() => children.filter((c) => !c.props.hidden), [children]);
   const nodeRef = React.useRef<HTMLDivElement | null>(null);
   const onRouteChangeStart = React.useCallback(() => {
     setIndex(0);
@@ -102,10 +105,10 @@ const Tabs = ({
             },
           }}
         >
-          {/* <div>HEY</div> */}
           {
-            React.Children.map(children, (child, i) => {
+            React.Children.map(filteredChildren, (child, i) => {
               if (React.isValidElement(child)) {
+                if (child.props.hidden) return null;
                 return (
                   <Tab key={child.props['data-label'] || child.props.label} label={child.props['data-label'] || child.props.label} {...a11yProps(i)}/>
                 );
@@ -139,7 +142,7 @@ const Tabs = ({
             <div ref={nodeRef}>
               <TabPanel value={index} index={index} dir='ltr'>
                 {
-                  children[index]
+                  filteredChildren[index]
                 }
               </TabPanel>
             </div>

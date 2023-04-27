@@ -238,3 +238,12 @@ export function* iterChildren(elm: Element): Generator<Element, void, unknown> {
   }
 }
 
+/**
+ * @param {String} HTML representing a single element
+ * @return {Element}
+ */
+export function stringToHtmlElement(htmlString: string) {
+  const template = document.createElement('template');
+  template.innerHTML = htmlString.trim();
+  return template.content.firstChild as HTMLElement;
+}

@@ -4,7 +4,7 @@ import {
 } from './styles/styles';
 
 const mainConfig = {
-  name: 'FinWiz',
+  name: 'ROTAER',
   version: '0.0.1',
 };
 
