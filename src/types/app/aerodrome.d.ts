@@ -90,10 +90,12 @@ export type TAerodromeData = {
     light: string;
     meaning: string;
   }[];
-  charts: { [key: string]: {
-    link: string;
-    name: string;
-  }[] };
+  charts: {
+    [key: string]: {
+      link: string;
+      name: string;
+    }[]
+  };
   CMB?: string[] | null;
   SER?: string[] | null;
   RFFS?: {

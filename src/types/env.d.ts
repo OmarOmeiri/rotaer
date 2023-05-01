@@ -25,6 +25,8 @@ declare global {
       readonly NEXT_PUBLIC_GMAPS_API_KEY: string;
       readonly NEXT_PUBLIC_GMAPS_MAP_ID: string;
       readonly NEXT_PUBLIC_REDEMET_API_KEY: string;
+      readonly MONGO_USER: string;
+      readonly MONGO_PASSWORD: string;
     }
     interface ProcessEnv extends Env {}
   }

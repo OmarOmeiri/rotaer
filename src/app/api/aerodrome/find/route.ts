@@ -1,12 +1,17 @@
+import { Db } from 'mongodb';
 import aerodromeList from '@/data/aerodrome_list.json';
 import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
+import MongoClientP from '../../../../db/mongoConnect';
 
 type API = TAPI<'find'>;
 
 @controller()
 class FindAerodrome implements API {
   async GET({ reqData: { id } }: MyRequest<{id: string}>) {
+    console.time();
+    const db = await MongoClientP;
+    console.timeEnd();
     if (!id) return [];
     const idLower = id
       .toLowerCase()
@@ -30,4 +35,5 @@ class FindAerodrome implements API {
   }
 }
 
-export const { GET } = new FindAerodrome();
+const cntrl = new FindAerodrome();
+export const GET = cntrl.GET.bind(cntrl);

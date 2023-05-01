@@ -1,6 +1,7 @@
 'use client';
 
 import './styles/globals.css';
+import { Analytics } from '@vercel/analytics/react';
 import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -49,6 +50,7 @@ export default function RootLayout({
           </main>
         </Providers>
       </body>
+      <Analytics/>
     </html>
   );
 }
