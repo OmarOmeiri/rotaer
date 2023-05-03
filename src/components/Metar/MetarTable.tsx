@@ -160,12 +160,11 @@ export const MetarTable = ({ metar, parsedMetar: pMetar }: Props) => {
                 <div>Tempo significativo</div>
                 {
                   parsedMetar.metar.weather.map((w) => (
-                    <Fragment key={`${w.qualifier}-${w.values.map((v) => v.type).join('')}`}>
+                    <div key={`${w.qualifier}-${w.values.map((v) => v.type).join('')}`}>
                       {w.values.map((v) => v.value)}
-                    </Fragment>
+                    </div>
                   ))
                 }
-                <div>{parsedMetar.metar.type}</div>
               </>
             )
             : null
