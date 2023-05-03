@@ -332,11 +332,13 @@ class METARParser {
         if (c.base < ceil) return c.base;
         return ceil;
       }, null as number | null) || null;
-    if (
+    if ((
       this.visibility
-        && ceiling
         && this.visibility < 5000
+    ) || (
+      ceiling
         && ceiling < 1500
+    )
     ) {
       this.status = 'IMC';
     }
@@ -391,3 +393,5 @@ class METARParser {
 }
 
 export default METARParser;
+
+console.log(new METARParser('METAR SBSM 032200Z 11004KT 080V150 5000 -RA OVC005 17/17 Q1015=').parse().toObject());
