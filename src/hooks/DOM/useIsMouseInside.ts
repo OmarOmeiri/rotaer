@@ -24,6 +24,7 @@ export const useIsMouseInside = (
     return () => {
       window.removeEventListener('mousemove', handleWindowMouseMove);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

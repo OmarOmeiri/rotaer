@@ -6,7 +6,7 @@ export type TMetarClouds = {
 }
 
 class Clouds_ {
-  private CLOUDS = {
+  static cloudIndex = {
     NCD: 'no clouds',
     SKC: 'clear',
     CLR: 'no clouds under 12,000 ft',
@@ -17,11 +17,15 @@ class Clouds_ {
     OVC: 'overcast',
     VV: 'vertical visibility',
   };
-  private startingRe = new RegExp(`^(${Object.keys(this.CLOUDS).join('|')})`);
-  private fullRe = new RegExp(`^(${Object.keys(this.CLOUDS).join('|')})(\\d{3})(CB|TCU)?`);
+  private startingRe = new RegExp(`^(${Object.keys(Clouds_.cloudIndex).join('|')})`);
+  private fullRe = new RegExp(`^(${Object.keys(Clouds_.cloudIndex).join('|')})(\\d{3})(CB|TCU)?`);
 
   isCloud(key: string) {
     return this.fullRe.test(key);
+  }
+
+  cloudIndex() {
+    return Clouds_.cloudIndex;
   }
 
   parse(key: string) {
@@ -33,9 +37,9 @@ class Clouds_ {
         base,
         cbTcu,
       ] = matches;
-      if (Object.keys(this.CLOUDS).includes(cloud)) {
+      if (Object.keys(Clouds_.cloudIndex).includes(cloud)) {
         const result: TMetarClouds = {
-          value: this.CLOUDS[cloud as keyof typeof this.CLOUDS],
+          value: Clouds_.cloudIndex[cloud as keyof typeof Clouds_.cloudIndex],
           base: Number(base) * 100,
         };
         if (cbTcu === 'CB') result.cb = true;

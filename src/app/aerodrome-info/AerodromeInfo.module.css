@@ -1,8 +1,19 @@
 .Title {
   display: flex;
   align-items: center;
-  gap: 3em;
+  gap: 1em;
   margin-left: 1em;
+  flex-wrap: wrap;
+  margin: 1em;
+}
+
+.Title h1 {
+  margin: 0
+}
+
+.TitleBadges {
+  display: flex;
+  gap: 1em
 }
 
 .MainInfoCardContainer {
@@ -14,7 +25,7 @@
 .MapContainer {
   flex-grow: 1;
   min-width: 340px;
-  height: 350px;
+  min-height: 350px;
 }
 
 .Card {
@@ -27,9 +38,24 @@
   color: var(--app-green);
 }
 
+.MainInfoTable {
+  border-collapse: collapse;
+}
+
 .MainInfoTable tr td:first-child {
  padding-right: 1em;
  vertical-align: top;
+}
+
+.MainInfoTable tr {
+  padding: 0.3em 0 0.3em 0;
+  display: block;
+}
+
+.MainInfoTable tr:not(:last-child) {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, #5a5858, transparent);
+  border-image-slice: 1;
 }
 
 .ChartsContainer {

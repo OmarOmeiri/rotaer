@@ -33,13 +33,13 @@ export type TAerodromeData = {
       lat: number;
       lon: number;
     };
-  };
+  } | null;
   elev: number;
   rwys: {
-    rwy?: string;
-    length: number | null;
-    width: number | null;
-    surface: string | null;
+    rwy: string;
+    length: number;
+    width: number;
+    surface: string;
     pcn: {
       maxWeight?: string;
       maxTirePressure?: string;

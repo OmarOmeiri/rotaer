@@ -3,12 +3,14 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#2B4A22;}
-	.st1{opacity:0.5;fill:#2B4A22;}
+	.st0{fill:#6ABD45;}
+	.st1{opacity:0.5;fill:#6ABD45;}
 </style>
 <g>
-	<path class="st0" d="M25,2.9c12.1,0,22,9.9,22,22s-9.9,22-22,22S3,37.1,3,25S12.9,2.9,25,2.9 M25-0.1C11.2-0.1,0,11.1,0,25
-		s11.2,25,25,25s25-11.2,25-25S38.8-0.1,25-0.1L25-0.1z"/>
+	<g>
+		<path class="st0" d="M25,2.9c12.1,0,22,9.9,22,22s-9.9,22-22,22S3,37.1,3,25S12.9,2.9,25,2.9 M25-0.1C11.2-0.1,0,11.1,0,25
+			s11.2,25,25,25s25-11.2,25-25S38.8-0.1,25-0.1L25-0.1z"/>
+	</g>
 </g>
 <g>
 	<path class="st0" d="M32.9,21.7c0,1.3-0.5,2.4-1.2,3.3L50,25C50,11.2,38.8,0,25,0v15.9c2.7,0,4.7,0.5,6,1.6

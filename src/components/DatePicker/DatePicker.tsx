@@ -61,7 +61,7 @@ const DatePicker = ({
       }
     }
     dummyInput.current = input;
-  }, []);
+  }, [name, value]);
 
   useEffect(() => {
     try {

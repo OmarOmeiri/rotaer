@@ -1,7 +1,6 @@
 import UpCaret from '@assets/icons/caret-up-fill.svg';
 import DownCaret from '@assets/icons/caret-down-fill.svg';
 import DashSolid from '@assets/icons/dash-solid.svg';
-import { round as rnd } from 'lullo-utils/Math';
 import styled, { css } from 'styled-components';
 
 type TColors = {

@@ -1,56 +1,9 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable import/no-mutable-exports */
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, Collection } from 'mongodb';
+import type { MongoCollections, MongoDocumentMap } from '../types/app/mongo';
 
 const MONGO_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@rotaer.9yacaq5.mongodb.net/?retryWrites=true&w=majority`;
-// console.log('MONGO_URI: ', MONGO_URI);
-
-// let cachedDb: Db | null = null;
-// let client: MongoClient | null = null;
-
-// export const withMongo = async (dbName = 'rotaer') => {
-//   if (cachedDb) {
-//     console.log('👌 Using existing connection');
-//     return Promise.resolve(cachedDb);
-//   }
-
-//   if (client) {
-//     const db = cachedDb || client.db(dbName);
-//     cachedDb = db;
-//     return cachedDb;
-//   }
-
-//   console.log('🔥 New DB Connection');
-//   client = await MongoClient.connect(MONGO_URI, {
-//     maxIdleTimeMS: 10000,
-//     serverSelectionTimeoutMS: 10000,
-//     socketTimeoutMS: 20000,
-//   });
-//   cachedDb = client.db(dbName);
-//   return cachedDb;
-// };
-
-// export const withMongo = async (dbName = 'rotaer') => {
-//   if (cachedDb) {
-//     console.log('👌 Using existing connection');
-//     return Promise.resolve(cachedDb);
-//   }
-
-//   if (client) {
-//     const db = cachedDb || client.db(dbName);
-//     cachedDb = db;
-//     return cachedDb;
-//   }
-
-//   console.log('🔥 New DB Connection');
-//   client = await MongoClient.connect(MONGO_URI, {
-//     maxIdleTimeMS: 10000,
-//     serverSelectionTimeoutMS: 10000,
-//     socketTimeoutMS: 20000,
-//   });
-//   cachedDb = client.db(dbName);
-//   return cachedDb;
-// };
-
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
@@ -74,6 +27,28 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise;
+export default async function getDb(collection?: undefined): Promise<Db>;
+export default async function getDb<
+C extends typeof MongoCollections[keyof typeof MongoCollections]
+>(collection: C)
+: Promise<Collection<MongoDocumentMap<C['alias']>>>;
+export default async function getDb<
+C extends typeof MongoCollections[keyof typeof MongoCollections]
+>(collection: C[])
+: Promise<{[K in C['alias']]: Collection<MongoDocumentMap<K>> }>;
+export default async function getDb<
+C extends typeof MongoCollections[keyof typeof MongoCollections]
+>(collection?: C | C[])
+: Promise<Db | Collection<MongoDocumentMap<C['alias']>> | {[K in C['alias']]: Collection<MongoDocumentMap<K>> }> {
+  const db = (await clientPromise).db('test');
+  if (collection) {
+    if (Array.isArray(collection)) {
+      return collection.reduce((cls, c) => {
+        cls[c.alias as C['alias']] = db.collection(c.name);
+        return cls;
+      }, {} as {[K in C['alias']]: Collection<MongoDocumentMap<K>> });
+    }
+    return db.collection(collection.name);
+  }
+  return db;
+}

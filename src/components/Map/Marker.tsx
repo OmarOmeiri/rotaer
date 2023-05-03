@@ -1,7 +1,6 @@
 import React, { MouseEventHandler, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Root } from 'react-dom/client';
-import { MarkerClusterer } from '@googlemaps/markerclusterer';
 
 interface IMarkerProps {
   map: google.maps.Map,
@@ -28,7 +27,7 @@ export const Marker = ({
         content: container,
       });
     }
-  }, []);
+  }, [position]);
 
   useEffect(() => {
     let listener: google.maps.MapsEventListener | null = null;

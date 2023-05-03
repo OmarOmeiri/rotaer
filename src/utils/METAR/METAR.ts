@@ -12,7 +12,7 @@ const METAR_TYPES = [
   'SPECI',
 ];
 
-type METARGroupNames =
+export type METARGroupNames =
 | 'header'
 | 'time'
 | 'auto'
@@ -64,6 +64,7 @@ class METARParser {
   private relativeHumidity: number | null = null;
   private baroPressure: number | null = null;
   private groups: Groups = [];
+  private status: 'IMC' | 'VMC' = 'VMC';
 
   constructor(metarString: string) {
     this.metar = metarString.replace(/=(\s)?$/, '').trim();
@@ -322,6 +323,25 @@ class METARParser {
     }
   }
 
+  private parseStatus() {
+    const { BKN, OVC } = cloudMap.cloudIndex();
+    const ceiling = this.clouds
+      ?.filter((c) => [BKN, OVC].includes(c.value))
+      .reduce((ceil, c) => {
+        if (!ceil) return c.base;
+        if (c.base < ceil) return c.base;
+        return ceil;
+      }, null as number | null) || null;
+    if (
+      this.visibility
+        && ceiling
+        && this.visibility < 5000
+        && ceiling < 1500
+    ) {
+      this.status = 'IMC';
+    }
+  }
+
   parse() {
     this.parseType();
     this.parseCorrection();
@@ -338,6 +358,7 @@ class METARParser {
     this.parseTempDewpoint();
     this.parseAltimeter();
     this.parseRecentSignificantWeather();
+    this.parseStatus();
     return this;
   }
 
@@ -362,6 +383,7 @@ class METARParser {
         dewpoint: this.dewpoint,
         relativeHumidity: this.relativeHumidity,
         baroPressure: this.baroPressure,
+        status: this.status,
       },
       groups: this.groups,
     };

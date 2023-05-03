@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  memo,
 } from 'react';
 import { SxProps, Theme } from '@mui/material';
 import { BaseCheckboxList } from './CheckboxListBase';

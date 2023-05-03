@@ -2,7 +2,6 @@ import React, {
   cloneElement,
   forwardRef,
   useCallback,
-  useEffect,
   useLayoutEffect,
   useRef,
 } from 'react';

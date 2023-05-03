@@ -17,8 +17,8 @@ const Windy = ({
 }: WindyProps) => (
   <iframe
     title="windy-widget"
-    width="650"
-    height="450"
+    width={width}
+    height={height}
     src={`https://embed.windy.com/embed2.html?lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&width=${width}&height=${height}&zoom=${zoom}&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=true&calendar=now&pressure=true&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1`}
     frameBorder="0"
   />

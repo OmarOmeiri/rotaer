@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 export class GMapsPopup {
   position: google.maps.LatLng;
   containerDiv: HTMLDivElement;

@@ -1,3 +1,4 @@
+import METARParser from '../../utils/METAR/METAR';
 import redeMetUrl from '../../utils/REDEMET/RedeMetUrl';
 import Api from '../API';
 
@@ -13,5 +14,5 @@ export const fetchAerodromeMETAR = async (args: Parameters<typeof redeMetUrl.met
     return lm;
   }, null as IMETARResponse['data']['data'][number] | null);
 
-  return lastMetar ? lastMetar.mens : null;
+  return lastMetar ? new METARParser(lastMetar.mens).parse().toObject() : null;
 };

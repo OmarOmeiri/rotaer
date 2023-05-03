@@ -1,13 +1,12 @@
 import { roundToMultiple } from 'lullo-utils/Math';
-import dynamic from 'next/dynamic';
 import React, {
   forwardRef,
   memo,
   useCallback,
 } from 'react';
+import Controls from '@assets/icons/controls.svg';
 import MultiRangeSlider from '@/components/RangeSlider/MultiRangeSlider';
 import { TooltipClick } from '@/components/Tooltips/TooltipClick';
-import Controls from '@assets/icons/controls.svg';
 import { TableStyles } from '../../../styles';
 import { StyledTableTip } from './StyledTip';
 import classes from './TableTooltips.module.css';

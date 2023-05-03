@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import { CSSTransition } from 'react-transition-group';
 import { shallow } from 'zustand/shallow';
 import modalStore from '../../store/modal/modalStore';

@@ -5,7 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
+// import Chip from '@mui/material/Chip';
 import styled from 'styled-components';
 import X from '@icons/X.svg';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
@@ -13,8 +13,8 @@ import { DropDownItem } from './DropDown';
 import { colors } from '../../config/styles/colors';
 import classes from './DropDown.module.css';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+// const ITEM_HEIGHT = 48;
+// const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   // PaperProps: {
   //   style: {
@@ -106,7 +106,7 @@ const MultipleSelectChip = ({
     setIsOpen(true);
   }, []);
 
-  const clickAway = React.useCallback((e: MouseEvent | TouchEvent) => {
+  const clickAway = React.useCallback(() => {
     // if (
     //   props.anchorEl !== e.target
     // ) {

@@ -1,10 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
 import errorHelper from '@/utils/Errors/errorHelper';
-import ServerError from '../utils/Errors/ServerError';
 import { ContentTypes } from './types';
 
 type url = string;
-type reqBody<T extends keyof typeof ContentTypes = 'applicationJson'> =
+type _reqBody<T extends keyof typeof ContentTypes = 'applicationJson'> =
 T extends 'textCss'
   ? string
   : T extends 'textCsv'

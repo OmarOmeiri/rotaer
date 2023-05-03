@@ -6,7 +6,6 @@ import React, {
   forwardRef,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { ConditionalWrapper } from '@/utils/JSX';
 import Config from '../../../config';

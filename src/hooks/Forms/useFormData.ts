@@ -129,7 +129,7 @@ export function useFormData<
       ...state,
       [id]: value,
     } as FD));
-  }, []);
+  }, [formAttr]);
 
   const validateFn = (
     value: string | string[],

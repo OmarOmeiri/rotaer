@@ -15,3 +15,13 @@
 .gm-ui-hover-effect>span {
   background-color: white !important;
 }
+
+.gm-style-iw-c button {
+  top: -5px !important;
+  right: 2px !important;
+}
+
+.gm-style-iw-c button span {
+  width: 20px !important;
+  height: 20px !important;
+}

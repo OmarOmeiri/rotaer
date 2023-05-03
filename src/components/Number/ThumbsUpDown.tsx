@@ -1,7 +1,6 @@
 import ThumbsUp from '@assets/icons/thumbs-up.svg';
 import ThumbsDown from '@assets/icons/thumbs-down.svg';
 import DashSolid from '@assets/icons/dash-solid.svg';
-import { round as rnd } from 'lullo-utils/Math';
 import styled, { css } from 'styled-components';
 
 type TColors = {

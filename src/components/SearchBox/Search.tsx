@@ -10,7 +10,6 @@ import styled, { css } from 'styled-components';
 import MagnifyingGlass from '@assets/icons/search-magnifier.svg';
 import Config from '@/config';
 import { useClickOutside } from '@/hooks/DOM/useClickOutside';
-import { useRefWithCallback } from '../../hooks/React/useRefWithCallback';
 import { isChildOfElem } from '../../utils/HTML/htmlFuncs';
 import classes from './Search.module.css';
 

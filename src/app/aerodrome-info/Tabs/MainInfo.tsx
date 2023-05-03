@@ -1,9 +1,8 @@
 import AirportIcon from '@icons/airport-pin.svg';
 import MapIcon from '@icons/map-solid.svg';
 import GoToIcon from '@icons/go-to.svg';
-import LightIcon from '@icons/light-bulb.svg';
 import QuestionIcon from '@icons/question-outline.svg';
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import CardWithTitle from '../../../components/Card/CardWithTitle';
 import { TAerodromeData } from '../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
@@ -16,16 +15,20 @@ import { makeAerodromePrelimInfo } from '../../../utils/Aerodrome/makeAerodromeP
 
 const MAP_OPTIONS = (coords: {lat: number, lon: number}): google.maps.MapOptions => ({
   disableDefaultUI: true,
-  zoom: 10,
+  zoom: 12,
   center: { lat: coords.lat, lng: coords.lon },
   mapTypeId: 'terrain',
 });
 
 const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
-  const { mapMarker, mapOptions } = useMemo(() => ({
-    mapMarker: [makeAerodromePrelimInfo(info)],
-    mapOptions: MAP_OPTIONS(info.coords.decimal),
-  }), [info]);
+  const map = useMemo(() => (
+    info.coords
+      ? {
+        mapMarker: [makeAerodromePrelimInfo(info as PartialRequired<TAerodromeData, 'coords', true>)],
+        mapOptions: MAP_OPTIONS(info.coords.decimal),
+      }
+      : null
+  ), [info]);
   return (
     <>
       <CardWithTitle title='Informações Gerais' Icon={<AirportIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
@@ -52,16 +55,22 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>Localidade</td>
                 <td>{info.city}/{info.uf}</td>
               </tr>
-              <tr>
-                <td>Coordenadas</td>
-                <td>
-                  <div style={{ width: 'fit-content' }}>
-                    <Link to={gMapLink(info.coords.decimal)} openInNewTab>
-                      {info.coords.degMinSec} / {(info.coords.decimal.lat).toFixed(4)}, {(info.coords.decimal.lon).toFixed(4)}
-                    </Link>
-                  </div>
-                </td>
-              </tr>
+              {
+                info.coords
+                  ? (
+                    <tr>
+                      <td>Coordenadas</td>
+                      <td>
+                        <div style={{ width: 'fit-content' }}>
+                          <Link to={gMapLink(info.coords.decimal)} openInNewTab>
+                            {info.coords.degMinSec} / {(info.coords.decimal.lat).toFixed(4)}, {(info.coords.decimal.lon).toFixed(4)}
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                  : null
+              }
               <tr>
                 <td>Distância da cidade</td>
                 <td>
@@ -93,7 +102,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>
                   {
                   info.CMB
-                    ? info.CMB.map((c, index) => (index ? <><br/>{c}</> : <>{c}</>))
+                    ? info.CMB.map((c, index) => (<Fragment key={c}>{index ? <br/> : null}{c}</Fragment>))
                     : '-'
                 }
                 </td>
@@ -103,7 +112,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>
                   {
                   info.SER
-                    ? info.SER.map((s, index) => (index ? <><br/>{s}</> : <>{s}</>))
+                    ? info.SER.map((s, index) => (<Fragment key={s}>{index ? <br/> : null}{s}</Fragment>))
                     : '-'
                 }
                 </td>
@@ -116,6 +125,34 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                     ? `largura máx. ${info.RFFS?.maxWidth}m`
                     : '-'
                 }
+                </td>
+              </tr>
+              <tr>
+                <td>Luzes</td>
+                <td>
+                  {
+                    info.lights && info.lights.length
+                      ? info.lights.map((l, index) => (
+                        <Fragment key={l.light}>
+                          {index ? <br/> : null}
+                          <div>
+                            <TooltipClick tooltip={<StyledTooltip title={l.light}><div style={{ maxWidth: '180px' }}>{l.meaning}</div></StyledTooltip>} placement='right-start'>
+                              <div style={{
+                                width: 'fit-content',
+                                display: 'flex',
+                                gap: '0.3rem',
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                              }}>
+                                {l.light}
+                                <QuestionIcon width='12'/>
+                              </div>
+                            </TooltipClick>
+                          </div>
+                        </Fragment>
+                      ))
+                      : '-'
+                  }
                 </td>
               </tr>
               <tr>
@@ -132,64 +169,36 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
             </tbody>
           </table>
           <div className={classes.MapContainer}>
-            <GMap markers={mapMarker} mapOptions={mapOptions}/>
+            <GMap markers={map?.mapMarker} mapOptions={map?.mapOptions}/>
           </div>
         </div>
       </CardWithTitle>
       {
-      info.lights && info.lights.length
-        ? (
-          <CardWithTitle title='Luzes' Icon={<LightIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
-            <table className={classes.TableLights}>
-              <tbody>
-                {info.lights.map((l) => (
-                  <tr key={l.light} title={l.meaning}>
-                    <>
-                      <td width="50%" style={{ textAlign: 'end' }}>
-                        <TooltipClick tooltip={<StyledTooltip title={l.light}><div style={{ maxWidth: '180px' }}>{l.meaning}</div></StyledTooltip>} placement='right-start'>
-                          <div>{l.light}</div>
-                        </TooltipClick>
-                      </td>
-                      <td style={{ 'textAlign': 'start' }}>
-                        <TooltipClick tooltip={<StyledTooltip title={l.light}><div style={{ maxWidth: '180px' }}>{l.meaning}</div></StyledTooltip>} placement='right-start'>
-                          <QuestionIcon width='12'/>
-                        </TooltipClick>
-                      </td>
-                    </>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </CardWithTitle>
-        )
-        : null
-    }
-      {
-      info.charts && Object.keys(info.charts).length
-        ? (
-          <CardWithTitle title='Cartas' Icon={<MapIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
-            <div className={classes.ChartsContainer}>
-              {
-                Object.entries(info.charts)
-                  .map(([type, charts]) => (
-                    <div key={`${type}-chart`}>
-                      <div>{type}</div>
-                      {
-                        charts.map((c) => (
-                          <div key={c.name} className={classes.ChartsLink}>
-                            <Link to={c.link} openInNewTab>{c.name}</Link>
-                          </div>
+        info.charts && Object.keys(info.charts).length
+          ? (
+            <CardWithTitle title='Cartas' Icon={<MapIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+              <div className={classes.ChartsContainer}>
+                {
+                  Object.entries(info.charts)
+                    .map(([type, charts]) => (
+                      <div key={`${type}-chart`}>
+                        <div>{type}</div>
+                        {
+                          charts.map((c) => (
+                            <div key={c.name} className={classes.ChartsLink}>
+                              <Link to={c.link} openInNewTab>{c.name}</Link>
+                            </div>
 
-                        ))
-                      }
-                    </div>
-                  ))
-              }
-            </div>
-          </CardWithTitle>
-        )
-        : null
-    }
+                          ))
+                        }
+                      </div>
+                    ))
+                }
+              </div>
+            </CardWithTitle>
+          )
+          : null
+      }
 
     </>
   );

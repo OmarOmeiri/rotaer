@@ -9,6 +9,9 @@ import AerodromeRunwaysTab from './Tabs/AerodromeRunwaysTab';
 import AerodromeRadioTab from './Tabs/AerodromeRadioTab';
 import AerodromeMetTab from './Tabs/AerodromeMetTab';
 import { fetchAerodromeMETAR } from '../../API/fetch/metar';
+import MetarStatusBadge from '../../components/Badges/MetarStatusBadge';
+import { TooltipHover } from '../../components/Tooltips/TooltipHover';
+import StyledTooltip from '../../components/Tooltips/StyledTooltip';
 
 type Props = {
   searchParams?: {
@@ -32,7 +35,28 @@ const AerodromeInfo = async ({ searchParams }: Props) => {
     <div>
       <div className={classes.Title}>
         <h1>{info.name} - {info.icao}</h1>
-        <AssetTypeBadge type={info.type}/>
+        <div className={classes.TitleBadges}>
+          <AssetTypeBadge type={info.type}/>
+          {
+            metar?.metar
+              ? (
+                <TooltipHover
+                  tooltip={
+                    <StyledTooltip title={`Condição ${metar.metar.status}`}>
+                      {
+                        metar.metar.status === 'VMC'
+                          ? 'Condições visuais de vôo'
+                          : 'Condições de vôo por instrumentos'
+                      }
+                    </StyledTooltip>
+                  }
+                  placement='bottom'>
+                  <MetarStatusBadge status={metar.metar.status}/>
+                </TooltipHover>
+              )
+              : null
+          }
+        </div>
       </div>
       <Tabs>
         <Tab label='info' className={classes.Tab}>

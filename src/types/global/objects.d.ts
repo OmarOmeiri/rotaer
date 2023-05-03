@@ -125,7 +125,11 @@ type DeepPartial<T> = {
  *
  * Only root properties can be mutated
  */
-type PartialRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+type PartialRequired<T, K extends keyof T, OmitNull extends boolean = false> = Omit<T, K> & Required<
+OmitNull extends true
+? NullRm<Pick<T, K>>
+: Pick<T, K>
+>;
 
 /**
  * Makes at least one property required

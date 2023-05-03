@@ -42,7 +42,7 @@ export function getElmComputedDimension(el: HTMLElement) {
 export function getElmDimension(el: HTMLElement) {
   return {
     width: el.offsetWidth,
-    height: el.offsetWidth,
+    height: el.offsetHeight,
   };
 }
 /**
