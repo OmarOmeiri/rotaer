@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import langStore from './lang/langStore';
+import Translator from '../utils/Translate/Translator';
 
 type Props = {
   lang: Langs
@@ -10,10 +11,15 @@ type Props = {
 /** */
 function LangStoreInitializer({ lang }: Props) {
   const initialized = useRef(false);
-  if (!initialized.current) {
-    langStore().setLang(lang);
-    initialized.current = true;
-  }
+
+  useEffect(() => {
+    if (!initialized.current) {
+      langStore.setState({ lang });
+      Translator.setLang(lang);
+      initialized.current = true;
+    }
+  }, [lang]);
+
   return null;
 }
 

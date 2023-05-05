@@ -36,8 +36,8 @@ export default function RootLayout({
         <div id="overlay-color-picker" />
         <div id="overlay-date-picker" />
         <div id="overlay-tooltip" />
+        <LangStoreInitializer lang={lang} />
         <Providers>
-          <LangStoreInitializer lang={lang} />
           <ClientLayout/>
           <nav className={classes.Nav} style={{ height: `${navBarHeight}px` }}>
             <div className={classes.NavRight}>
