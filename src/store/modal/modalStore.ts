@@ -65,7 +65,7 @@ const setModalContent = <T extends allModals>({
   });
 };
 
-interface IModalStore extends IModalState<allModals> {
+export interface IModalStore extends IModalState<allModals> {
   setModalContent: <T extends allModals>(params: SetModalContent<T>) => void
   setModalLoading: (loading: boolean) => void
   setShowModal: (show: boolean) => void

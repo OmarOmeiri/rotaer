@@ -394,4 +394,3 @@ class METARParser {
 
 export default METARParser;
 
-console.log(new METARParser('METAR SBSM 032200Z 11004KT 080V150 5000 -RA OVC005 17/17 Q1015=').parse().toObject());

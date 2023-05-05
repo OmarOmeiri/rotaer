@@ -1,4 +1,5 @@
 import type { ObjectId } from 'mongodb';
+import { TAerodromeData } from './aerodrome';
 
 export const MongoCollections = {
   aerodrome: { name: 'aerodromes', alias: 'aerodromeDb' },
@@ -15,55 +16,8 @@ C extends 'aerodromeDb'
 ? IAerodromeCoordsSchema
 : never;
 
-export interface IAerodromeSchema {
-  icao: string;
-  type: string;
-  name: string;
-  city: string;
-  uf: string;
-  DAMDT: string;
-  link: string;
-  elev: number;
-  fir: string;
-  com: {
-    name: string;
-    freq?: string[];
-  }[] | null;
-  radioNav: string[] | null;
-  met: {
-    phone: null | string;
-    type: string;
-    met: {
-      index: number;
-      value: string;
-    }[];
-  }[] | null;
-  ais: {
-    ais: string;
-    aisCivil?: string;
-  } | null
-  rmk: { [key: string]: string[] } | null;
-  intl: boolean;
-  airportUtil: string;
-  time: string;
-  operType: { [key: string]: boolean };
-  lights: {
-    light: string;
-    meaning: string;
-  }[];
-  charts: {
-    [key: string]: {
-      link: string;
-      name: string;
-    }[]
-  };
-  CMB?: string[] | null;
-  SER?: string[] | null;
-  RFFS?: {
-    maxWidth: number;
-    cat: number;
-  } | null;
-  cityDistance?: string;
+export type IAerodromeSchema =
+TAerodromeData & {
   rwys: ObjectId[];
   coords: ObjectId;
 }
@@ -74,32 +28,6 @@ export interface IAerodromeCoordsSchema {
   decim: [lon: number, lat: number]
 }
 
-export interface IRwySchema {
+export type IRwySchema = {
   aerodrome: ObjectId;
-  rwy: string;
-  length: number;
-  width: number;
-  surface: string;
-  pcn: {
-    maxWeight?: string;
-    maxTirePressure?: string;
-    PCN?: string;
-    pavement?: string;
-    subGrade?: string;
-    tirePressure?: string;
-    evalMethod?: string;
-  } | null;
-  lights: {
-    light: string;
-    meaning: string;
-  }[];
-  dims?: {
-    RWY: string;
-    'TORA(m)': string;
-    'TODA(m)': string;
-    'ASDA(m)': string;
-    'LDA(m)': string;
-    'ALT. GEOIDAL(m)': string;
-    COORDENADAS: string;
-  };
-}
+} & TAerodromeData['rwys'][number]

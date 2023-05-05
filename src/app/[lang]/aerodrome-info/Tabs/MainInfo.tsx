@@ -3,15 +3,37 @@ import MapIcon from '@icons/map-solid.svg';
 import GoToIcon from '@icons/go-to.svg';
 import QuestionIcon from '@icons/question-outline.svg';
 import { Fragment, useMemo } from 'react';
-import CardWithTitle from '../../../components/Card/CardWithTitle';
-import { TAerodromeData } from '../../../types/app/aerodrome';
+import CardWithTitle from '../../../../components/Card/CardWithTitle';
+import { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
-import Link from '../../../components/Navigation/Link/Link';
-import { gMapLink } from '../../../utils/Map/GMapsLink';
-import { TooltipClick } from '../../../components/Tooltips/TooltipClick';
-import StyledTooltip from '../../../components/Tooltips/StyledTooltip';
-import GMap from '../../../components/Map/GMap';
-import { makeAerodromePrelimInfo } from '../../../utils/Aerodrome/makeAerodromePrelimInfo';
+import Link from '../../../../components/Navigation/Link/Link';
+import { gMapLink } from '../../../../utils/Map/GMapsLink';
+import StyledTooltip from '../../../../components/Tooltips/StyledTooltip';
+import GMap from '../../../../components/Map/GMap';
+import { makeAerodromePrelimInfo } from '../../../../utils/Aerodrome/makeAerodromePrelimInfo';
+import Translator from '../../../../utils/Translate/Translator';
+import langStore from '../../../../store/lang/langStore';
+import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
+import { TooltipHover } from '../../../../components/Tooltips/TooltipHover';
+import rotaerFuelAndServicesTranslator from '../../../../utils/Translate/RotaerFuelAnsServicesTranslator';
+
+const translator = new Translator({
+  mainInfo: { 'pt-BR': 'Informações Gerais', 'en-US': 'General Information' },
+  charts: { 'pt-BR': 'Cartas', 'en-US': 'Charts' },
+  utility: { 'pt-BR': 'Utilidade', 'en-US': 'Utility' },
+  location: { 'pt-BR': 'Localidade', 'en-US': 'Location' },
+  type: { 'pt-BR': 'Tipo', 'en-US': 'Type' },
+  intl: { 'pt-BR': 'Internacional', 'en-US': 'International' },
+  coords: { 'pt-BR': 'Coordenadas', 'en-US': 'Coordinates' },
+  cityDistance: { 'pt-BR': 'Distância da cidade', 'en-US': 'City distance' },
+  time: { 'pt-BR': 'Horário', 'en-US': 'Local time' },
+  altitude: { 'pt-BR': 'Altitude', 'en-US': 'Altitude' },
+  fuel: { 'pt-BR': 'Combustível', 'en-US': 'Fuel' },
+  services: { 'pt-BR': 'Serviços', 'en-US': 'Services' },
+  lights: { 'pt-BR': 'Luzes', 'en-US': 'Lights' },
+  rffsValue: { 'pt-BR': 'largura máx. da fuselagem', 'en-US': 'Max. fuselage width.' },
+
+});
 
 const MAP_OPTIONS = (coords: {lat: number, lon: number}): google.maps.MapOptions => ({
   disableDefaultUI: true,
@@ -20,7 +42,25 @@ const MAP_OPTIONS = (coords: {lat: number, lon: number}): google.maps.MapOptions
   mapTypeId: 'terrain',
 });
 
+const getAerodromeType = (intl: boolean, lang: Langs) => {
+  if (intl && lang === 'pt-BR') return 'Internacional';
+  if (intl && lang === 'en-US') return 'International';
+  if (!intl && lang === 'pt-BR') return 'Doméstico';
+  if (!intl && lang === 'en-US') return 'Domestic';
+  return 'Doméstico';
+};
+
+const translateBoolean = (bool: boolean, lang: Langs) => {
+  if (bool && lang === 'pt-BR') return 'Sim';
+  if (bool && lang === 'en-US') return 'Yes';
+  if (!bool && lang === 'pt-BR') return 'Não';
+  if (!bool && lang === 'en-US') return 'No';
+  return 'Doméstico';
+};
+
 const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
+  const { lang } = langStore.getState();
+  Translator.setLang(lang);
   const map = useMemo(() => (
     info.coords
       ? {
@@ -31,7 +71,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
   ), [info]);
   return (
     <>
-      <CardWithTitle title='Informações Gerais' Icon={<AirportIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+      <CardWithTitle title={translator.translate('mainInfo')} Icon={<AirportIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
         <div className={classes.MainInfoCardContainer}>
           <table className={classes.MainInfoTable}>
             <tbody>
@@ -40,7 +80,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>{info.icao}</td>
               </tr>
               <tr>
-                <td>Utilidade</td>
+                <td>{translator.translate('utility')}</td>
                 <td>{info.airportUtil}</td>
               </tr>
               <tr>
@@ -48,18 +88,18 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>{info.fir}</td>
               </tr>
               <tr>
-                <td>Tipo</td>
-                <td>{info.intl ? 'Internacional' : 'Doméstico'}</td>
+                <td>{translator.translate('type')}</td>
+                <td>{getAerodromeType(info.intl, lang)}</td>
               </tr>
               <tr>
-                <td>Localidade</td>
+                <td>{translator.translate('location')}</td>
                 <td>{info.city}/{info.uf}</td>
               </tr>
               {
                 info.coords
                   ? (
                     <tr>
-                      <td>Coordenadas</td>
+                      <td>{translator.translate('coords')}</td>
                       <td>
                         <div style={{ width: 'fit-content' }}>
                           <Link to={gMapLink(info.coords.decimal)} openInNewTab>
@@ -72,7 +112,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                   : null
               }
               <tr>
-                <td>Distância da cidade</td>
+                <td>{translator.translate('cityDistance')}</td>
                 <td>
                   {
                 info.cityDistance
@@ -82,37 +122,39 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 </td>
               </tr>
               <tr>
-                <td>Horário</td>
+                <td>{translator.translate('time')}</td>
                 <td>GMT+{info.time}</td>
               </tr>
               <tr>
-                <td>Elevação</td>
+                <td>{translator.translate('altitude')}</td>
                 <td>{info.elev}m</td>
               </tr>
               <tr>
                 <td>VFR</td>
-                <td>{info.operType.vfr ? 'Sim' : 'Não'}</td>
+                <td>{translateBoolean(info.operType.vfr, lang)}</td>
               </tr>
               <tr>
                 <td>IFR</td>
-                <td>{info.operType.ifr ? 'Sim' : 'Não'}</td>
+                <td>{translateBoolean(info.operType.ifr, lang)}</td>
               </tr>
               <tr>
-                <td>Combustível</td>
+                <td>{translator.translate('fuel')}</td>
                 <td>
                   {
                   info.CMB
-                    ? info.CMB.map((c, index) => (<Fragment key={c}>{index ? <br/> : null}{c}</Fragment>))
+                    ? info.CMB.map((c, index) => (
+                      <Fragment key={c}>{index ? <br/> : null}{rotaerFuelAndServicesTranslator.fuel.translate(c)}</Fragment>
+                    ))
                     : '-'
                 }
                 </td>
               </tr>
               <tr>
-                <td>Serviços</td>
+                <td>{translator.translate('services')}</td>
                 <td>
                   {
                   info.SER
-                    ? info.SER.map((s, index) => (<Fragment key={s}>{index ? <br/> : null}{s}</Fragment>))
+                    ? info.SER.map((s, index) => (<Fragment key={s}>{index ? <br/> : null}{rotaerFuelAndServicesTranslator.serv.translate(s)}</Fragment>))
                     : '-'
                 }
                 </td>
@@ -122,21 +164,21 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>
                   {
                   info.RFFS?.maxWidth
-                    ? `largura máx. ${info.RFFS?.maxWidth}m`
+                    ? `${translator.translate('rffsValue')} ${info.RFFS.maxWidth}m`
                     : '-'
                 }
                 </td>
               </tr>
               <tr>
-                <td>Luzes</td>
+                <td>{translator.translate('lights')}</td>
                 <td>
                   {
                     info.lights && info.lights.length
                       ? info.lights.map((l, index) => (
-                        <Fragment key={l.light}>
+                        <Fragment key={l}>
                           {index ? <br/> : null}
                           <div>
-                            <TooltipClick tooltip={<StyledTooltip title={l.light}><div style={{ maxWidth: '180px' }}>{l.meaning}</div></StyledTooltip>} placement='right-start'>
+                            <TooltipHover tooltip={<StyledTooltip title={l}><div style={{ maxWidth: '180px' }}>{rotaerLightsTranslator.translate(l)}</div></StyledTooltip>} placement='right-start'>
                               <div style={{
                                 width: 'fit-content',
                                 display: 'flex',
@@ -144,10 +186,10 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                                 alignItems: 'center',
                                 cursor: 'pointer',
                               }}>
-                                {l.light}
+                                {l}
                                 <QuestionIcon width='12'/>
                               </div>
-                            </TooltipClick>
+                            </TooltipHover>
                           </div>
                         </Fragment>
                       ))
@@ -176,7 +218,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
       {
         info.charts && Object.keys(info.charts).length
           ? (
-            <CardWithTitle title='Cartas' Icon={<MapIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle title={translator.translate('charts')} Icon={<MapIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
               <div className={classes.ChartsContainer}>
                 {
                   Object.entries(info.charts)

@@ -1,27 +1,34 @@
-'use client';
-
-import './styles/globals.css';
+import '../styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
-import styled from 'styled-components';
-import ClientLayout from '../utils/ClientLayout/ClientLayout';
-import Providers from './Providers';
-import AssetSearch from '../components/AssetSearch/AssetSearch';
+import ClientLayout from '../../utils/ClientLayout/ClientLayout';
+import Providers from '../Providers';
+import AssetSearch from '../../components/AssetSearch/AssetSearch';
 import classes from './layout.module.css';
-import Config from '../config';
+import Config from '../../config';
+import langStore from '../../store/lang/langStore';
+import LangStoreInitializer from '../../store/LangStoreInitializer';
+import { LanguageDropDown } from '../../components/Language/LanguageDropDown';
 
-const Nav = styled.nav`
-height: ${Config.get('styles').navBar.height}px`;
+const navBarHeight = Config.get('styles').navBar.height;
+
+type Props = {
+  children: React.ReactNode;
+  params: {
+    lang: Langs
+  }
+};
 
 /** */
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params: { lang },
+}: Props) {
+  langStore.setState({ lang });
+
   return (
-    <html lang="pt-BR">
+    <html lang={lang}>
       <title>ROTAER</title>
       <body>
         <div id="overlay-alert" className='alert-overlay'/>
@@ -30,8 +37,9 @@ export default function RootLayout({
         <div id="overlay-date-picker" />
         <div id="overlay-tooltip" />
         <Providers>
+          <LangStoreInitializer lang={lang} />
           <ClientLayout/>
-          <Nav className={classes.Nav}>
+          <nav className={classes.Nav} style={{ height: `${navBarHeight}px` }}>
             <div className={classes.NavRight}>
               <div className={classes.NavRightIcon}>
                 <Link href="/">
@@ -43,8 +51,11 @@ export default function RootLayout({
               <div className={classes.NavLeftAssetSearch}>
                 <AssetSearch/>
               </div>
+              <div className={classes.NavLeftLanguage}>
+                <LanguageDropDown/>
+              </div>
             </div>
-          </Nav>
+          </nav>
           <main>
             {children}
           </main>

@@ -47,15 +47,12 @@
  vertical-align: top;
 }
 
-.MainInfoTable tr {
-  padding: 0.3em 0 0.3em 0;
-  display: block;
+.MainInfoTable td {
+  padding: 0.3em 0;
 }
 
 .MainInfoTable tr:not(:last-child) {
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, #5a5858, transparent);
-  border-image-slice: 1;
+  border-bottom: 1pt solid #74717133;
 }
 
 .ChartsContainer {
@@ -68,20 +65,37 @@
   margin-left: 0.5em;
 }
 
-.RunwayContainer {
+.RunwayInfoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  row-gap: 2rem;
+  margin: 0.2em 1em;
 }
 
-.RunwayContainer table {
-  border-radius: 10px;
-  overflow: hidden;
-  border-collapse:separate;
+.RunwayInfoGridContainer {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.RunwayContainer thead {
-  background-color: var(--app-dark);
+.RunwayInfoGridContainer > * {
+  width: calc(50% - 1em);
+}
+
+.RunwayInfoGridContainer > * > div:first-child {
+  background-color: #151515;
+  text-align: center;
+}
+
+.RunwayInfoGridContainer > *:nth-child(even) {
+  border-left: 2px solid #363636;
+}
+
+.RunwayLightsContainer {
+  margin: 0.2em 1em;
+}
+
+.RunwayInfoGrid > *,
+.RunwayLightsContainer > * {
+  padding: 0.2em 0;
 }
 
 .TableLights td {

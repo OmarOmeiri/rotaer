@@ -49,10 +49,7 @@ export type TAerodromeData = {
       tirePressure?: string;
       evalMethod?: string;
     } | null;
-    lights: {
-      light: string;
-      meaning: string;
-    }[];
+    lights: string[];
     dims?: {
       RWY:               string;
       "TORA(m)":         string;
@@ -72,10 +69,7 @@ export type TAerodromeData = {
   met: {
     phone: null | string;
     type: string;
-    met: {
-      index: number;
-      value: string;
-    }[];
+    met: number[];
   }[] | null;
   ais: {
     ais: string;
@@ -86,10 +80,7 @@ export type TAerodromeData = {
   airportUtil: string;
   time: string;
   operType: { [key: string]: boolean };
-  lights: {
-    light: string;
-    meaning: string;
-  }[];
+  lights: string[];
   charts: {
     [key: string]: {
       link: string;

@@ -1,4 +1,5 @@
 import Config from '../../config';
+import langStore from '../../store/lang/langStore';
 import classes from './AssetBadge.module.css';
 
 const aerodromeColors = Config.get('styles').colors.aerodromes;
@@ -8,10 +9,13 @@ const getBadge = (key: string) => {
   return aerodromeColors.other;
 };
 
-const AssetTypeBadge = ({ type }: {type: string}) => (
-  <div className={classes.Badge} style={{ backgroundColor: getBadge(type).color }}>
-    <span>{getBadge(type).content}</span>
-  </div>
-);
+const AssetTypeBadge = ({ type }: {type: string}) => {
+  const { lang } = langStore.getState();
+  return (
+    <div className={classes.Badge} style={{ backgroundColor: getBadge(type).color }}>
+      <span>{getBadge(type).content[lang]}</span>
+    </div>
+  );
+};
 
 export default AssetTypeBadge;

@@ -1,7 +1,7 @@
 import WalkieTalkieIcon from '@icons/walkie-talkie-solid.svg';
 import VORIcon from '@icons/vor.svg';
-import CardWithTitle from '../../../components/Card/CardWithTitle';
-import { TAerodromeData } from '../../../types/app/aerodrome';
+import CardWithTitle from '../../../../components/Card/CardWithTitle';
+import { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
 
 const AerodromeRadioTab = ({ info }: {info: TAerodromeData}) => (

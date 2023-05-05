@@ -15,7 +15,7 @@ export interface IAlertState {
   timeout?: number,
 }
 
-interface AlertStore extends IAlertState {
+export interface IAlertStore extends IAlertState {
   setAlert: (payload: Expand<Omit<PartialRequired<IAlertState, 'type'>, 'id'>>) => void
   removeAlert: (id: string) => void
 }
@@ -27,7 +27,7 @@ const initialState: IAlertState = {
   timeout: 0,
 };
 
-const alertStore = create<AlertStore>()(
+const alertStore = create<IAlertStore>()(
   devtools(
     (set, get) => ({
       ...initialState,

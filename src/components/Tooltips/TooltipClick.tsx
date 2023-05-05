@@ -3,6 +3,8 @@
 import {
   cloneElement,
   forwardRef,
+  useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useState,
 } from 'react';
@@ -25,7 +27,8 @@ interface Props {
   placement?: Placement;
   children: React.ReactElement;
   className?: string,
-  onClick?: React.MouseEventHandler
+  onClick?: React.MouseEventHandler,
+  close?: boolean,
 }
 
 export const TooltipClick = forwardRef(({
@@ -34,6 +37,7 @@ export const TooltipClick = forwardRef(({
   placement = 'bottom',
   className,
   onClick = () => {},
+  close,
 }: Props, positioningRef?: React.ForwardedRef<HTMLElement>) => {
   const [open, setOpen] = useState(false);
 
@@ -65,6 +69,10 @@ export const TooltipClick = forwardRef(({
       });
     }
   }, [reference, positioningRef]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [close]);
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     useClick(context),

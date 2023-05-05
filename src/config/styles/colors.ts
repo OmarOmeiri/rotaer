@@ -28,19 +28,19 @@ const aerodrome_colors = {
   aerodromes: {
     AD: {
       color: app_colors.green,
-      content: 'Aeródromo',
+      content: { 'pt-BR': 'Aeródromo', 'en-US': 'Aerodrome' },
     },
     HP: {
       color: '#e2c15d',
-      content: 'Heliponto',
+      content: { 'pt-BR': 'Heliponto', 'en-US': 'Helipad' },
     },
     HD: {
       color: '#5da4e2',
-      content: 'Plataforma',
+      content: { 'pt-BR': 'Plataforma', 'en-US': 'Platform' },
     },
     other: {
       color: '#e2835d',
-      content: 'Plataforma',
+      content: { 'pt-BR': 'Outros', 'en-US': 'Other' },
     },
   },
 };

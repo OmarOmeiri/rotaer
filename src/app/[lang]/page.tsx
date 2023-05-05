@@ -1,6 +1,6 @@
-import { fetchCoordinates } from '../API/fetch/aerodrome';
-import GMap from '../components/Map/GMap';
-import Config from '../config';
+import { fetchCoordinates } from '../../API/fetch/aerodrome';
+import GMap from '../../components/Map/GMap';
+import Config from '../../config';
 
 const { height: navBarHeight } = Config.get('styles').navBar;
 

@@ -13,6 +13,5 @@ declare global {
         },
       }
     }
-    OneSignal: any
   }
 }

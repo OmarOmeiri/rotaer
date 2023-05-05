@@ -1,0 +1,48 @@
+.TooltipContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.ButtonWrapper {
+  background-color: var(--app-grey);
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px 1px #403e3e;
+  overflow: hidden
+}
+
+.ButtonMain,
+.ButtonSelect {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.ButtonMain *,
+.ButtonSelect * {
+  pointer-events: none;
+}
+
+.ButtonMain {
+  width: 32px;
+  height: 25px;
+  border-radius: 3px;
+  justify-content: center;
+  background-color: var(--app-grey);
+}
+
+.ButtonSelect {
+  background-color: transparent;
+  padding: 0.2em 1em;
+  gap: 0.5em;
+  height: 30px;
+  width: 100%;
+}
+
+.ButtonSelect[data-selected="true"] {
+  background-color: var(--app-darklight);
+  color: var(--app-white)
+}
