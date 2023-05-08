@@ -12,9 +12,8 @@ import { fetchAerodromeMETAR } from '../../../API/fetch/metar';
 import MetarStatusBadge from '../../../components/Badges/MetarStatusBadge';
 import { TooltipHover } from '../../../components/Tooltips/TooltipHover';
 import StyledTooltip from '../../../components/Tooltips/StyledTooltip';
-import langStore from '../../../store/lang/langStore';
 import type METARParser from '../../../utils/METAR/METAR';
-import LangStoreInitializer from '../../../store/LangStoreInitializer';
+import AerodromeRMKTab from './Tabs/AerodromeRMKTab';
 
 type Props = {
   searchParams?: {
@@ -45,6 +44,7 @@ const tabNames = {
   runways: { 'pt-BR': 'pistas', 'en-US': 'runways' },
   radio: { 'pt-BR': 'rádio', 'en-US': 'radio' },
   met: { 'pt-BR': 'met', 'en-US': 'met' },
+  rmk: { 'pt-BR': 'rmk', 'en-US': 'rmk' },
 };
 
 const AerodromeInfo = async ({
@@ -64,7 +64,6 @@ const AerodromeInfo = async ({
 
   return (
     <div>
-      {/* <StoreInitializer storeName='lang' lang={lang}/> */}
       <div className={classes.Title}>
         <h1>{info.name} - {info.icao}</h1>
         <div className={classes.TitleBadges}>
@@ -94,7 +93,7 @@ const AerodromeInfo = async ({
         </Tab>
         <Tab label={tabNames.runways[lang]} className={classes.Tab}>
           <div className='container'>
-            <AerodromeRunwaysTab info={info}/>
+            <AerodromeRunwaysTab info={info} metar={metar}/>
           </div>
         </Tab>
         <Tab label={tabNames.radio[lang]} className={classes.Tab} hidden={!(info.com?.length || info.radioNav?.length)}>
@@ -105,6 +104,11 @@ const AerodromeInfo = async ({
         <Tab label={tabNames.met[lang]} className={classes.Tab}>
           <div className='container'>
             <AerodromeMetTab info={info} metar={metar}/>
+          </div>
+        </Tab>
+        <Tab label={tabNames.rmk[lang]} className={classes.Tab} hidden={!(info.rmk && Object.keys(info.rmk).length)}>
+          <div className='container'>
+            <AerodromeRMKTab info={info}/>
           </div>
         </Tab>
       </Tabs>

@@ -1,4 +1,4 @@
 export const APP_ROUTES = {
-  home: '/',
-  aerodromeInfo: (id: string) => `aerodrome-info?id=${id}`,
+  home: (locale: Langs) => `${locale}/`,
+  aerodromeInfo: (id: string, locale: Langs) => `${locale}/aerodrome-info?id=${id}`,
 };

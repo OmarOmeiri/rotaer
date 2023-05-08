@@ -14,6 +14,7 @@ import classes from './GMap.module.css';
 import BoundingSuperClusterAlgorithm from '../../utils/Map/SuperClusterAlgorithm';
 import { smoothlyAnimatePanTo } from '../../utils/Map/smoothPan';
 import AerodromeInfoWindow from './AerodromeInfoWindow';
+import langStore from '../../store/lang/langStore';
 
 const aerodromeColors = Config.get('styles').colors.aerodromes;
 const mapMarkers = {
@@ -48,11 +49,12 @@ const makeMarker = (
   m: TAerodromPrelimInfo,
   map: google.maps.Map,
   infowindow: google.maps.InfoWindow,
+  lang: Langs,
 ) => {
   const marker = new google.maps.Marker(getMarkerProps(m));
   marker.addListener('click', (e: any) => {
     smoothlyAnimatePanTo(map, e.latLng);
-    infowindow.setContent(renderToStaticMarkup(AerodromeInfoWindow(m)));
+    infowindow.setContent(renderToStaticMarkup(AerodromeInfoWindow(m, lang)));
     infowindow.setOptions({ ariaLabel: m.icao });
 
     infowindow.open({
@@ -67,8 +69,9 @@ const createMarkers = (
   mkrs: TAerodromPrelimInfo[],
   map: google.maps.Map,
   infowindow: google.maps.InfoWindow,
+  lang: Langs,
 ) => {
-  const markers = mkrs.map((m) => makeMarker(m, map, infowindow));
+  const markers = mkrs.map((m) => makeMarker(m, map, infowindow, lang));
 
   return new MarkerClusterer({
     markers,
@@ -82,8 +85,9 @@ const updateMarkers = (
   clusterer: MarkerClusterer,
   map: google.maps.Map,
   infowindow: google.maps.InfoWindow,
+  lang: Langs,
 ) => {
-  const markers = mkrs.map((m) => makeMarker(m, map, infowindow));
+  const markers = mkrs.map((m) => makeMarker(m, map, infowindow, lang));
   // @ts-ignore
   (clusterer.algorithm as BoundingSuperClusterAlgorithm).calculate({ map, markers });
 };
@@ -95,6 +99,7 @@ const GMap = ({
   markers?: TAerodromPrelimInfo[],
   mapOptions?: google.maps.MapOptions,
 }) => {
+  const lang = langStore((state) => state.lang);
   const mapRef = useRef<null | HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [isMapRefSet, setIsMapRefSet] = useState(false);
@@ -113,7 +118,7 @@ const GMap = ({
     map: google.maps.Map,
   ) => {
     if (map && clusterer) {
-      updateMarkers(markers, clusterer, map, infowindow.current);
+      updateMarkers(markers, clusterer, map, infowindow.current, lang);
     }
   }, 300));
 
@@ -156,10 +161,10 @@ const GMap = ({
 
   useEffect(() => {
     if (map) {
-      const cluster = createMarkers(markers, map, infowindow.current);
+      const cluster = createMarkers(markers, map, infowindow.current, lang);
       clusterer.current = cluster;
     }
-  }, [map, markers]);
+  }, [map, markers, lang]);
 
   return (
     <div className={classes.MapContainer} ref={setMapRef}/>

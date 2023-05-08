@@ -15,9 +15,9 @@ const contentStyle = (m: TAerodromPrelimInfo): React.CSSProperties => ({
   height: 'fit-content',
 });
 
-const AerodromeInfoWindow = (m: TAerodromPrelimInfo) => (
+const AerodromeInfoWindow = (m: TAerodromPrelimInfo, lang: Langs) => (
   <div className={classes.Wrapper}>
-    <Link href={m.icao ? APP_ROUTES.aerodromeInfo(m.icao) : '#'} className={classes.Link}>
+    <Link href={m.icao ? APP_ROUTES.aerodromeInfo(m.icao, lang) : '#'} className={classes.Link}>
       <div>
         <div className={classes.Main}>
           <div>

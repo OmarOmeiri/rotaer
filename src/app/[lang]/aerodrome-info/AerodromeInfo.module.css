@@ -98,6 +98,38 @@
   padding: 0.2em 0;
 }
 
+.RunwayWindTableContainer {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.RunwayWindTable {
+  border-collapse: collapse;
+}
+
+.RunwayWindTable,
+.RunwayWindTable th,
+.RunwayWindTable td {
+  border: 1px solid #ffffff47;
+  padding: 0.2em 1.2em;
+}
+
 .TableLights td {
  text-align: center;
+}
+
+.RMKList > li {
+  margin-bottom: 1em;
+}
+
+.RMKList > li li{
+  padding-bottom: 0.5em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid #575555;
+}
+
+.RMKList > li > div{
+  padding-bottom: 0.5em;
 }

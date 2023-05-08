@@ -8,6 +8,7 @@ type UnstyledLinkProps = {
   id?: string,
   style?: React.CSSProperties,
   openInNewTab?: boolean,
+  locale?: Langs,
   [key: string]: any
 } | {
   to?: string | '#',
@@ -15,6 +16,7 @@ type UnstyledLinkProps = {
   id?: string,
   style?: React.CSSProperties,
   openInNewTab?: boolean,
+  locale?: Langs,
   [key: string]: any
 } | {
   to?: string | '#',
@@ -22,6 +24,7 @@ type UnstyledLinkProps = {
   id: string,
   style?: React.CSSProperties,
   openInNewTab?: boolean,
+  locale?: Langs,
   [key: string]: any
 }
 
@@ -35,8 +38,8 @@ const formatParams = (params?: {[key: string]: string}) => {
 
 const formatURL = (
   url: string,
-  params?: {[key: string]: string},
-  id?: string,
+  params: {[key: string]: string} | undefined,
+  id: string | undefined,
 ) => {
   if (!params && !id) return url;
   return `${

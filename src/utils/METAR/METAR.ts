@@ -25,6 +25,8 @@ export type METARGroupNames =
 
 type Groups = [METARGroupNames, string[]][]
 
+export type METARObject = ReturnType<METARParser['toObject']>
+
 class METARParser {
   private metar: string;
   private fields: string[];
@@ -324,9 +326,8 @@ class METARParser {
   }
 
   private parseStatus() {
-    const { BKN, OVC } = cloudMap.cloudIndex();
     const ceiling = this.clouds
-      ?.filter((c) => [BKN, OVC].includes(c.value))
+      ?.filter((c) => ['BKN', 'OVC'].includes(c.value))
       .reduce((ceil, c) => {
         if (!ceil) return c.base;
         if (c.base < ceil) return c.base;
@@ -394,3 +395,10 @@ class METARParser {
 
 export default METARParser;
 
+// /* TESTAR
+// * METAR SBSM 032300Z 12004KT 3000 -RA OVC004 17/17 Q1015
+// * METAR SBSM 041100Z 09004KT 060V120 1500 R11/P2000 R29/P2000 -DZ BR OVC002 17/17 Q1016
+// */
+
+// const metar = new METARParser('METAR SBSM 041100Z 09004KT 060V120 1500 R11/P2000 R29/P2000 -DZ BR OVC002 17/17 Q1016').parse().toObject();
+// console.log('metar: ', JSON.stringify(metar, null, 2));

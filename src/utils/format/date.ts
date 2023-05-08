@@ -1,8 +1,9 @@
 export const formatDate = (
   date: Date,
-  options: Intl.DateTimeFormatOptions & {locale?: string} = {
-    dateStyle: 'short',
-    timeStyle: 'short',
-    locale: typeof document !== 'undefined' ? document.documentElement.lang : 'pt-BR',
-  },
-) => new Intl.DateTimeFormat(options.locale, options).format(date);
+  locale: string = typeof document !== 'undefined' ? document.documentElement.lang : 'pt-BR',
+) => {
+  if (locale === 'en-US') {
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  }
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+};

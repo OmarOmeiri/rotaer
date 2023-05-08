@@ -16,6 +16,7 @@ import langStore from '../../../../store/lang/langStore';
 import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
 import { TooltipHover } from '../../../../components/Tooltips/TooltipHover';
 import rotaerFuelAndServicesTranslator from '../../../../utils/Translate/RotaerFuelAnsServicesTranslator';
+import coordinatesTranslator from '../../../../utils/Translate/CoordinatesTranslator';
 
 const translator = new Translator({
   mainInfo: { 'pt-BR': 'Informações Gerais', 'en-US': 'General Information' },
@@ -32,7 +33,7 @@ const translator = new Translator({
   services: { 'pt-BR': 'Serviços', 'en-US': 'Services' },
   lights: { 'pt-BR': 'Luzes', 'en-US': 'Lights' },
   rffsValue: { 'pt-BR': 'largura máx. da fuselagem', 'en-US': 'Max. fuselage width.' },
-
+  aisCivilian: { 'pt-BR': 'AIS civil', 'en-US': 'civilian AIS' },
 });
 
 const MAP_OPTIONS = (coords: {lat: number, lon: number}): google.maps.MapOptions => ({
@@ -55,7 +56,17 @@ const translateBoolean = (bool: boolean, lang: Langs) => {
   if (bool && lang === 'en-US') return 'Yes';
   if (!bool && lang === 'pt-BR') return 'Não';
   if (!bool && lang === 'en-US') return 'No';
-  return 'Doméstico';
+  return '-';
+};
+
+const translateCityDistance = (cityDistance: string, lang: Langs) => {
+  const [dis, dir] = cityDistance.split('/').reduce((disDir, val) => {
+    if (!Number.isNaN(Number(val))) return [Number(val), disDir[1]];
+    return [disDir[0], val];
+  }, [] as unknown as [number, string]);
+  if (!dis || !dir) return cityDistance;
+  if (lang === 'en-US') return `${dis}Km to ${coordinatesTranslator.translate(dir)}`;
+  return `${dis}Km ao ${coordinatesTranslator.translate(dir)}`;
 };
 
 const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
@@ -116,7 +127,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                 <td>
                   {
                 info.cityDistance
-                  ? info.cityDistance
+                  ? translateCityDistance(info.cityDistance, lang)
                   : '-'
                 }
                 </td>
@@ -131,7 +142,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
               </tr>
               <tr>
                 <td>VFR</td>
-                <td>{translateBoolean(info.operType.vfr, lang)}</td>
+                <td>{translateBoolean(true, lang)}</td>
               </tr>
               <tr>
                 <td>IFR</td>
@@ -197,6 +208,30 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
                   }
                 </td>
               </tr>
+              {
+                info?.ais?.ais
+                  ? (
+                    <tr>
+                      <td>AIS</td>
+                      <td>
+                        {info.ais.ais}
+                      </td>
+                    </tr>
+                  )
+                  : null
+              }
+              {
+                info?.ais?.aisCivil
+                  ? (
+                    <tr>
+                      <td>{translator.capitalize().translate('aisCivilian')}</td>
+                      <td>
+                        {info.ais.aisCivil}
+                      </td>
+                    </tr>
+                  )
+                  : null
+              }
               <tr>
                 <td>
                   <div style={{ width: 'fit-content' }}>

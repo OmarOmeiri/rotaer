@@ -10,6 +10,7 @@ import Config from '../../config';
 import langStore from '../../store/lang/langStore';
 import LangStoreInitializer from '../../store/LangStoreInitializer';
 import { LanguageDropDown } from '../../components/Language/LanguageDropDown';
+import { APP_ROUTES } from '../../consts/routes';
 
 const navBarHeight = Config.get('styles').navBar.height;
 
@@ -42,7 +43,7 @@ export default function RootLayout({
           <nav className={classes.Nav} style={{ height: `${navBarHeight}px` }}>
             <div className={classes.NavRight}>
               <div className={classes.NavRightIcon}>
-                <Link href="/">
+                <Link href={APP_ROUTES.home(lang)}>
                   <RotaerIcon width="40"/>
                 </Link>
               </div>

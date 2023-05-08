@@ -13,10 +13,6 @@ const translator = new Translator({
   forecast: { 'pt-BR': 'Previsão', 'en-US': 'Forecast' },
 });
 
-/* TESTAR
-* METAR SBSM 032300Z 12004KT 3000 -RA OVC004 17/17 Q1015
-* METAR SBSM 041100Z 09004KT 060V120 1500 R11/P2000 R29/P2000 -DZ BR OVC002 17/17 Q1016
-*/
 const AerodromeMetTab = ({ info, metar }: {info: TAerodromeData, metar: ReturnType<METARParser['toObject']> | null}) => {
   const { lang } = langStore.getState();
   return (

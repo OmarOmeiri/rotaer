@@ -1,5 +1,6 @@
 import AirplaneArrival from '@icons/plane-arrival-solid.svg';
 import QuestionIcon from '@icons/question-outline.svg';
+import WindIcon from '@icons/wind-solid.svg';
 import { Fragment } from 'react';
 import CardWithTitle from '../../../../components/Card/CardWithTitle';
 import { TAerodromeData } from '../../../../types/app/aerodrome';
@@ -11,6 +12,8 @@ import { TooltipHover } from '../../../../components/Tooltips/TooltipHover';
 import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
 import rotaerPCNTranslator from '../../../../utils/Translate/RotaerPCNTranslator';
 import rotaerRWYSurfaceTranslator from '../../../../utils/Translate/RotaerRwyTranslator';
+import { METARObject } from '../../../../utils/METAR/METAR';
+import { getHeadwindCrossWind } from '../../../../utils/Wind/getHeadwindCrosswind';
 
 const translator = new Translator({
   rwy: { 'pt-BR': 'Pista', 'en-US': 'Runway' },
@@ -34,9 +37,22 @@ const translator = new Translator({
   LDA: { 'pt-BR': 'LDA', 'en-US': 'LDA' },
   'ALT. GEOIDAL': { 'pt-BR': 'Altitude', 'en-US': 'Altitude' },
   COORDENADAS: { 'pt-BR': 'Coordenadas', 'en-US': 'Coordinates' },
+  crosswind: { 'pt-BR': 'componente de través', 'en-US': 'crossWind' },
+  headwind: { 'pt-BR': 'componente de proa', 'en-US': 'headwind' },
+  wind: { 'pt-BR': 'ventos', 'en-US': 'wind' },
 });
 
-const AerodromeRunwaysTab = ({ info }: {info: TAerodromeData}) => (
+const getHeadWindArrow = (headwind: number) => {
+  if (headwind > 0) return '↑';
+  if (headwind < 0) return '↓';
+};
+
+const getCrossWindArrow = (crosswind: number) => {
+  if (crosswind > 0) return '←';
+  if (crosswind < 0) return '→';
+};
+
+const AerodromeRunwaysTab = ({ info, metar }: {info: TAerodromeData, metar?: METARObject | null}) => (
   <>
     {
       info.rwys.reduce((nodes, rwy) => {
@@ -50,10 +66,10 @@ const AerodromeRunwaysTab = ({ info }: {info: TAerodromeData}) => (
                   <div className={classes.RunwayInfoGrid}>
                     <div>{translator.capitalize().translate('surface')}</div>
                     <div>{rotaerRWYSurfaceTranslator.translate(rwy.surface)}</div>
-                    <div>{translator.capitalize().translate('length')}m</div>
-                    <div>{rwy.length}</div>
-                    <div>{translator.capitalize().translate('width')}m</div>
-                    <div>{rwy.width}</div>
+                    <div>{translator.capitalize().translate('length')}</div>
+                    <div>{rwy.length}m</div>
+                    <div>{translator.capitalize().translate('width')}</div>
+                    <div>{rwy.width}m</div>
                   </div>
                 </div>
                 {
@@ -166,6 +182,43 @@ const AerodromeRunwaysTab = ({ info }: {info: TAerodromeData}) => (
 
         return nodes;
       }, [] as JSX.Element[])
+    }
+    {
+      metar?.metar.wind.speed && metar?.metar.wind.direction && metar?.metar.wind.direction !== 'VRB'
+        ? (
+          <CardWithTitle title={translator.capitalize().translate('wind')} Icon={<WindIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <div className={classes.RunwayWindTableContainer}>
+              <table className={classes.RunwayWindTable}>
+                <thead>
+                  <tr>
+                    <th>{translator.capitalize().translate('rwy')}</th>
+                    <th>{translator.capitalize().translate('headwind')}</th>
+                    <th>{translator.capitalize().translate('crosswind')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    info.rwys.map((rwy) => {
+                      const { headwind, crosswind } = getHeadwindCrossWind(
+                        metar.metar.wind.speed,
+                        Number(metar.metar.wind.direction),
+                        Number(`${rwy.rwy}0`),
+                      );
+                      return (
+                        <tr key={rwy.rwy}>
+                          <td>{rwy.rwy}</td>
+                          <td>{`${getHeadWindArrow(headwind)} ${Math.abs(headwind)}`}kt</td>
+                          <td>{`${getCrossWindArrow(crosswind)} ${Math.abs(crosswind)}`}kt</td>
+                        </tr>
+                      );
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </CardWithTitle>
+        )
+        : null
     }
   </>
 );

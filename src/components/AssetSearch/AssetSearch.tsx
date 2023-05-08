@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import React, {
   Fragment,
   useCallback,
@@ -25,6 +25,7 @@ import UnstyledLink from '../Navigation/Link/UnstyledLink';
 import Search from '../SearchBox/Search';
 import { Tooltip } from '../Tooltips/Tooltip';
 import { TAerodrome } from '../../types/app/aerodrome';
+import langStore from '../../store/lang/langStore';
 
 const SEARCH_MIN_LENGTH = 3;
 
@@ -58,6 +59,7 @@ const AssetSearchTooltip = ({
 }: {
   items: TAerodrome[],
 }) => {
+  const locale = langStore((state) => state.lang);
   const [height, setHeight] = useState<0 | 'auto'>(0);
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -71,7 +73,7 @@ const AssetSearchTooltip = ({
         items.length
           ? items.map((item) => (
             <Fragment key={item.icao}>
-              <StyledLink to={item.icao ? APP_ROUTES.aerodromeInfo(item.icao) : '#'} style={{ width: '100%' }}>
+              <StyledLink to={item.icao ? APP_ROUTES.aerodromeInfo(item.icao, locale) : '#'} style={{ width: '100%' }}>
                 <div style={{ width: '80%', padding: '0px 2em 0px 1em' }}>
                   <div className='text-ellipsis' style={{ width: '100%' }}>
                     <strong>{item.icao}</strong>&nbsp;-&nbsp;{item.name}
@@ -121,6 +123,7 @@ const AssetSearch = ({ disableScroll }: {disableScroll?: boolean}) => {
   const [value, setValue] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const pathName = usePathname();
+  const searchParams = useSearchParams().toString();
   const debouncedValue = useDebouncedState(value, 200);
   const [enabled, setEnabled] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -209,7 +212,7 @@ const AssetSearch = ({ disableScroll }: {disableScroll?: boolean}) => {
 
   useEffect(() => {
     closeTooltip();
-  }, [pathName, closeTooltip]);
+  }, [pathName, searchParams, closeTooltip]);
 
   return (
     <>
