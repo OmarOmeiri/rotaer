@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
+import { NextWebVitalsMetric } from 'next/app';
 import ClientLayout from '../../utils/ClientLayout/ClientLayout';
 import Providers from '../Providers';
 import AssetSearch from '../../components/AssetSearch/AssetSearch';
@@ -11,6 +12,7 @@ import langStore from '../../store/lang/langStore';
 import LangStoreInitializer from '../../store/LangStoreInitializer';
 import { LanguageDropDown } from '../../components/Language/LanguageDropDown';
 import { APP_ROUTES } from '../../consts/routes';
+import { MainMenu } from '../../components/MainMenu/MainMenu';
 
 const navBarHeight = Config.get('styles').navBar.height;
 
@@ -20,6 +22,13 @@ type Props = {
     lang: Langs
   }
 };
+
+/** */
+export function reportWebVitals(metric: NextWebVitalsMetric) {
+  if (metric.label === 'custom') {
+    console.log(metric);
+  }
+}
 
 /** */
 export default function RootLayout({
@@ -55,9 +64,12 @@ export default function RootLayout({
               <div className={classes.NavLeftLanguage}>
                 <LanguageDropDown/>
               </div>
+              <div className={classes.NavLeftMenu}>
+                <MainMenu lang={lang}/>
+              </div>
             </div>
           </nav>
-          <main>
+          <main className={classes.Main}>
             {children}
           </main>
         </Providers>

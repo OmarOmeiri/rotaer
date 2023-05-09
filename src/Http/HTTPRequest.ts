@@ -84,8 +84,8 @@ class Api<CT extends keyof typeof ContentTypes> {
     }
   }
 
-  public body(body: BodyInit): this {
-    this.request.body = body;
+  public body(body: BodyInit | object): this {
+    this.request.body = typeof body === 'object' ? JSON.stringify(body) : body;
     return this;
   }
 

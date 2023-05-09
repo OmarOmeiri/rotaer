@@ -45,11 +45,13 @@ const translator = new Translator({
 const getHeadWindArrow = (headwind: number) => {
   if (headwind > 0) return '↑';
   if (headwind < 0) return '↓';
+  return '';
 };
 
 const getCrossWindArrow = (crosswind: number) => {
   if (crosswind > 0) return '←';
   if (crosswind < 0) return '→';
+  return '';
 };
 
 const AerodromeRunwaysTab = ({ info, metar }: {info: TAerodromeData, metar?: METARObject | null}) => (

@@ -5,6 +5,7 @@ export const MongoCollections = {
   aerodrome: { name: 'aerodromes', alias: 'aerodromeDb' },
   rwy: { name: 'runways', alias: 'runwayDb' },
   coord: { name: 'aerodrome-coords', alias: 'aerodromeCoordsDb' },
+  acft: { name: 'aircrafts', alias: 'acftsDb' },
 } as const;
 
 export type MongoDocumentMap<C extends typeof MongoCollections[keyof typeof MongoCollections]['alias']> =
@@ -14,6 +15,8 @@ C extends 'aerodromeDb'
 ? IRwySchema
 : C extends 'aerodromeCoordsDb'
 ? IAerodromeCoordsSchema
+: C extends 'acftsDb'
+? IAcft
 : never;
 
 export type IAerodromeSchema =

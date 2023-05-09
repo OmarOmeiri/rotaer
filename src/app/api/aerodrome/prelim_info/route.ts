@@ -3,7 +3,7 @@ import { controller } from '../../utils/controller';
 import { TAerodromPrelimInfo } from '../../../../types/app/aerodrome';
 import { TAPI } from '../../../../types/API';
 
-type API = TAPI<'coordinates'>;
+type API = TAPI<'aerodrome', 'coordinates'>;
 
 @controller()
 class GetCoordinates implements API {

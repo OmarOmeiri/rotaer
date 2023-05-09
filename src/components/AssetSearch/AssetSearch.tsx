@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import LogoAbducted from '@assets/icons/logo-abducted.svg';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryState } from '@/hooks/react-query/useQueryState';
-import { fetchAerodrome } from '../../API/fetch/aerodrome';
+import { fetchAerodrome } from '../../Http/requests/aerodrome';
 import { colors } from '../../config/styles/colors';
 import { APP_ROUTES } from '../../consts/routes';
 import { useClickOutside } from '../../hooks/DOM/useClickOutside';

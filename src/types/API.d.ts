@@ -1,6 +1,31 @@
+import { UserOmitPassword } from "../models/user/userModels"
 import { TAerodromeData, TAerodromPrelimInfo } from "./app/aerodrome"
 
-export type TAPIRoutes = {
+type UserRoutes = {
+  logIn: {
+    POST: {
+      req: IAuthRequest,
+      res: IAuthResponse | null
+    }
+  },
+  load: {
+    POST: {
+      req?: undefined,
+      res: UserOmitPassword | null
+    }
+  },
+}
+
+type AircraftRoutes = {
+  find: {
+    GET: {
+      req: {id: string},
+      res: any
+    }
+  },
+}
+
+type AerodromeRoutes = {
   find: {
     GET: {
       req: {id: string},
@@ -24,11 +49,19 @@ export type TAPIRoutes = {
   }
 }
 
-
-export type TAPI<Group extends keyof TAPIRoutes> = {
-  [Route in keyof TAPIRoutes[Group]]: (req: MyRequest<TAPIRoutes[Group][Route]['req']>) => Promise<TAPIRoutes[Group][Route]['res']>
+export type TAPIRoutes = {
+  user: UserRoutes,
+  aerodrome: AerodromeRoutes,
+  acft: AircraftRoutes
 }
 
-export type TFetch<Group extends keyof TAPIRoutes> = {
-  [Route in keyof TAPIRoutes[Group]]: (req: TAPIRoutes[Group][Route]['req']) => Promise<TAPIRoutes[Group][Route]['res']>
+
+export type TAPI<Group extends keyof TAPIRoutes, Route extends keyof TAPIRoutes[Group]> = {
+  [R in keyof TAPIRoutes[Group][Route]]: (req: MyRequest<TAPIRoutes[Group][Route][R]['req']>) => Promise<TAPIRoutes[Group][Route][R]['res']>
 }
+
+export type TRequest<Group extends keyof TAPIRoutes, Route extends keyof TAPIRoutes[Group]> = {
+  [R in keyof TAPIRoutes[Group][Route]]: (req: TAPIRoutes[Group][Route][R]['req']) => Promise<TAPIRoutes[Group][Route][R]['res']>
+}
+
+

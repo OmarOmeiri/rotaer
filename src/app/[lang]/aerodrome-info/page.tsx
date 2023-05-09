@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { fetchAerodromeInfo } from '../../../API/fetch/aerodrome';
+import { fetchAerodromeInfo } from '../../../Http/requests/aerodrome';
 import classes from './AerodromeInfo.module.css';
 import AssetTypeBadge from '../../../components/Badges/AssetTypeBadge';
 import Tabs from '../../../components/Tabs/Tabs';
@@ -8,7 +8,7 @@ import AerodromeMainInfoTab from './Tabs/MainInfo';
 import AerodromeRunwaysTab from './Tabs/AerodromeRunwaysTab';
 import AerodromeRadioTab from './Tabs/AerodromeRadioTab';
 import AerodromeMetTab from './Tabs/AerodromeMetTab';
-import { fetchAerodromeMETAR } from '../../../API/fetch/metar';
+import { fetchAerodromeMETAR } from '../../../Http/requests/metar';
 import MetarStatusBadge from '../../../components/Badges/MetarStatusBadge';
 import { TooltipHover } from '../../../components/Tooltips/TooltipHover';
 import StyledTooltip from '../../../components/Tooltips/StyledTooltip';

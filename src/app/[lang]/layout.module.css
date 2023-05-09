@@ -1,3 +1,8 @@
+.Main {
+  background-color: var(--app-white);
+  min-height: calc(var(--vh) - 60px);
+}
+
 .Nav {
   padding: 0.5em 0 0.5em 0;
   background-color: #282828;
@@ -22,9 +27,14 @@
 .NavLeftAssetSearch {
   width: fit-content;
   margin-left: auto;
-  margin-right: 1em;
+  margin-right: 0.5em;
 }
 
 .NavLeftLanguage {
-  margin-right: 1em;
+  margin: 0 0.5em;
+}
+
+.NavLeftMenu {
+  color: white;
+  display: flex;
 }

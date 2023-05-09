@@ -11,6 +11,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: myEnv,
+  experimental: {
+    appDir: true,
+    webVitalsAttribution: ["CLS", "FCP", "FID", "INP", "LCP", "TTFB"],
+  },
   reactStrictMode: true,
   swcMinify: true,
   sassOptions: {
@@ -18,10 +23,6 @@ const nextConfig = {
   },
   compiler: {
     styledComponents: true,
-  },
-  env: myEnv,
-  experimental: {
-    appDir: true,
   },
   webpack(config) {
     config.module.rules.push({

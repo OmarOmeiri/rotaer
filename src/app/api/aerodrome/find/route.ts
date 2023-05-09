@@ -2,7 +2,7 @@ import aerodromeList from '@/data/aerodrome_list.json';
 import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
 
-type API = TAPI<'find'>;
+type API = TAPI<'aerodrome', 'find'>;
 
 @controller()
 class FindAerodrome implements API {

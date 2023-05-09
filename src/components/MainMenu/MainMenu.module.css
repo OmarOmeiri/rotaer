@@ -1,0 +1,60 @@
+.ToggleMenuBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 1em 0 0.5em;
+  width: 25px;
+  height: 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.ToggleMenuBtn:hover {
+  background-color: var(--app-grey);
+}
+
+.Container {
+  background-color: var(--app-grey);
+  color: var(--app-white);
+  box-shadow: 1px 1px 2px 1px #403e3e;
+  border-radius: 3px;
+}
+
+.Container > *:not(:last-child) {
+  border-bottom: 1px solid #ffffff2b;
+}
+
+.MenuBtn {
+  all: unset;
+  width: calc(100% - 2em);
+  display: flex;
+  margin: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  gap: 1.2em;
+  align-items: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.MenuBtn:hover {
+  background-color: var(--app-darklight);
+}
+
+.BtnTextContainer,
+.BtnIconContainer,
+.BtnLinkContainer {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  color: white;
+  font-size: 1em;
+}
+
+
+.BtnIconContainer {
+  width: 15px;
+}

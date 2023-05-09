@@ -1,11 +1,11 @@
-import { TFetch } from '../../types/API';
+import { TRequest } from '../../types/API';
 import { TAerodrome, TAerodromeData, TAerodromPrelimInfo } from '../../types/app/aerodrome';
-import Api from '../API';
+import Api from '../HTTPRequest';
 import { API_ROUTES } from '../routes';
 
-type FindRoutes = TFetch<'find'>
-type CoordRoutes = TFetch<'coordinates'>
-type InfoRoutes = TFetch<'info'>
+type FindRoutes = TRequest<'aerodrome', 'find'>
+type CoordRoutes = TRequest<'aerodrome', 'coordinates'>
+type InfoRoutes = TRequest<'aerodrome', 'info'>
 
 export const fetchAerodrome: FindRoutes['GET'] = async (args) => {
   const { data } = await new Api(API_ROUTES.aerodrome.find)

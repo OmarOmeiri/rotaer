@@ -1,6 +1,6 @@
 import METARParser from '../../utils/METAR/METAR';
 import redeMetUrl from '../../utils/REDEMET/RedeMetUrl';
-import Api from '../API';
+import Api from '../HTTPRequest';
 
 export const fetchAerodromeMETAR = async (args: Parameters<typeof redeMetUrl.metar>[number]) => {
   const { data } = await new Api(redeMetUrl.metar(args))

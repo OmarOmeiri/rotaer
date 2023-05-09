@@ -4,7 +4,7 @@ import { TAPI } from '../../../../types/API';
 import { TAerodromeData } from '../../../../types/app/aerodrome';
 import { MongoCollections } from '../../../../types/app/mongo';
 
-type API = TAPI<'info'>;
+type API = TAPI<'aerodrome', 'info'>;
 
 @controller()
 class AerodromeInfo implements API {
