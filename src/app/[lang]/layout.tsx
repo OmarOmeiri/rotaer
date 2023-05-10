@@ -13,6 +13,7 @@ import LangStoreInitializer from '../../store/LangStoreInitializer';
 import { LanguageDropDown } from '../../components/Language/LanguageDropDown';
 import { APP_ROUTES } from '../../consts/routes';
 import { MainMenu } from '../../components/MainMenu/MainMenu';
+import { Alert } from '../../components/Alert/Alert';
 
 const navBarHeight = Config.get('styles').navBar.height;
 
@@ -47,6 +48,7 @@ export default function RootLayout({
         <div id="overlay-date-picker" />
         <div id="overlay-tooltip" />
         <LangStoreInitializer lang={lang} />
+        <Alert/>
         <Providers>
           <ClientLayout/>
           <nav className={classes.Nav} style={{ height: `${navBarHeight}px` }}>

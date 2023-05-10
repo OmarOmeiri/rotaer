@@ -1,3 +1,4 @@
+import { WithId } from "mongodb"
 import { UserOmitPassword } from "../models/user/userModels"
 import { TAerodromeData, TAerodromPrelimInfo } from "./app/aerodrome"
 
@@ -20,7 +21,7 @@ type AircraftRoutes = {
   find: {
     GET: {
       req: {id: string},
-      res: any
+      res: WithId<IAcft> | null
     }
   },
 }

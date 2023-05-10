@@ -1,0 +1,56 @@
+.InputContainer {
+  display: flex;
+}
+
+.InputLabel {
+  display: flex;
+  flex-direction: column;
+}
+
+.SearchBtn,
+.LoadingIconContainer {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-top: auto;
+  margin-left: 1em;
+  margin-bottom: 5px;
+  overflow: hidden;
+}
+
+.SearchBtn {
+  background-color: var(--app-green);
+}
+
+.Input {
+  background-color: #232222 !important;
+  text-transform: uppercase;
+}
+
+.AcftTable > div:nth-child(odd) {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(0.25turn, transparent, rgb(97, 97, 97));
+  border-image-slice: 1;
+}
+
+.AcftTable > div:nth-child(even) {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(0.25turn, rgb(97, 97, 97), transparent);
+  border-image-slice: 1;
+}
+
+.AcftDataContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+.ImgPlaceholder {
+  align-self: center;
+  height: 225px;
+  width: 400px;
+}

@@ -130,7 +130,7 @@ const Input = forwardRef(({
   if (display === false) return null;
   return (
     <div style={style} className={`${valid === false ? classes.Invalid : ''}${wrapperClassName ? ` ${wrapperClassName}` : ''}`}>
-      <label style={labelStyle} className={labelClassName}>
+      <label style={labelStyle} className={`${labelClassName || ''} ${classes.Label}`}>
         {
           label
             ? (<div style={labelInnerStyle}>

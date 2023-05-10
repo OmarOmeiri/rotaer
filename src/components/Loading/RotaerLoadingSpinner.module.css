@@ -1,0 +1,40 @@
+.WithFill,
+.WithFadedFill {
+  fill:#6ABD45;
+}
+
+.WithFadedFill{
+  opacity:0.5;
+}
+
+@keyframes loading {
+  from {
+      -webkit-transform: rotate(0deg);
+  }
+  to {
+      -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes loading {
+  from {
+      -webkit-transform: rotate(0deg);
+  }
+  to {
+      -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes loading {
+  from {
+      -moz-transform: rotate(0deg);
+  }
+  to {
+      -moz-transform: rotate(360deg);
+  }
+}
+
+.Spinner {
+  animation: loading 1.5s linear infinite;;
+  -webkit-animation: loading 1.5s linear infinite;
+  -moz-animation: loading 1.5s linear infinite;
+}

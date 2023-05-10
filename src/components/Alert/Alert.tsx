@@ -1,3 +1,5 @@
+'use client';
+
 import {
   useEffect,
   useRef,
@@ -5,6 +7,10 @@ import {
 } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { shallow } from 'zustand/shallow';
+import Error from '@icons/exclamation.svg';
+import Info from '@icons/info.svg';
+import Success from '@icons/success.svg';
+import Warning from '@icons/warning.svg';
 import Portal from '@/hoc/portal/Portal';
 import { useIsMouseInside } from '@/hooks/DOM/useIsMouseInside';
 import { useDebounce } from '@/hooks/React/useDebounce';
@@ -12,10 +18,6 @@ import alertStore, {
   IAlertState,
   TAlertType,
 } from '@/store/alert/alertStore';
-import Error from '@assets/icons/exclamation.svg';
-import Info from '@assets/icons/info.svg';
-import Success from '@assets/icons/success.svg';
-import Warning from '@assets/icons/warning.svg';
 import classes from './Alert.module.css';
 
 const TIMEOUT = 500;

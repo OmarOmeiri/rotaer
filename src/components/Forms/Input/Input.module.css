@@ -4,6 +4,11 @@
   font-size: 0.9rem;
 }
 
+.Label {
+  display: flex;
+  flex-direction: column;
+}
+
 .Input:-webkit-autofill,
 .Input:-webkit-autofill:focus {
     transition: background-color 600000s 0s, color 600000s 0s;
@@ -13,10 +18,10 @@
 }
 
 .ValidationMsg {
-  color: rgb(172, 0, 0);
+  color: rgb(223 70 70);
   font-size: 0.8rem;
 }
 
 .Invalid .Input{
-  border: 1px solid rgb(172, 0, 0);
+  border: 1px solid rgb(223 70 70);
 }

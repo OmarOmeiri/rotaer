@@ -1,0 +1,9 @@
+.Card {
+  background-color: var(--app-darklight);
+  color: var(--app-white);
+}
+
+.CardTitle {
+  background-color: var(--app-dark);
+  color: var(--app-green);
+}
