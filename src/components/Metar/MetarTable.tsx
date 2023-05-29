@@ -3,7 +3,7 @@ import METARParser, { METARObject } from '../../utils/METAR/METAR';
 import { formatDate } from '../../utils/format/date';
 import classes from './MetarTable.module.css';
 import StyledTooltip from '../Tooltips/StyledTooltip';
-import { TooltipHover } from '../Tooltips/TooltipHover';
+import TooltipHover from '../Tooltips/TooltipHover';
 import metarTranslator from '../../utils/Translate/Metar';
 import { TMetarRecentWeather, TMetarWeather } from '../../utils/METAR/Weather';
 import { TMetarClouds } from '../../utils/METAR/Clouds';

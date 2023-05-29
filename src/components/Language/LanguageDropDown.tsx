@@ -3,12 +3,14 @@
 import USFlag from '@icons/us-flag.svg';
 import BRFlag from '@icons/br-flag.svg';
 import React, {
-  Fragment, useCallback, useEffect, useState,
+  Fragment,
+  useCallback,
+  useEffect,
 } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import langStore from '../../store/lang/langStore';
 import classes from './LanguageDropDown.module.css';
-import { TooltipClick } from '../Tooltips/TooltipClick';
+import TooltipClick from '../Tooltips/TooltipClick';
 import { LANGS } from '../../types/app/langs';
 
 const flags = {
@@ -34,15 +36,14 @@ const Tooltip = ({ lang, onLanguageChange }: {lang: Langs, onLanguageChange: Rea
 
 export const LanguageDropDown = () => {
   const router = useRouter();
-  const pathName = usePathname();
-  const params = useSearchParams();
+  const pathName = usePathname() || '';
+  const params = useSearchParams()?.toString() || '';
   const lang = langStore((state) => state.lang);
-  const [closeTooltip, setCloseTooltip] = useState(false);
 
   const onLanguageChange = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLButtonElement;
     const lang = target.getAttribute('data-lang') as Langs;
-    const searchParams = params.toString();
+    const searchParams = params;
     const newPath = pathName.replace(new RegExp(`(${LANGS.join('|')})`), lang);
     if (newPath === pathName) return;
     const newPathWithSearchParams = `${newPath}${searchParams ? `?${searchParams}` : ''}`;
@@ -58,7 +59,7 @@ export const LanguageDropDown = () => {
       tooltip={<Tooltip lang={lang} onLanguageChange={onLanguageChange}/>}
       placement='bottom'
       className={classes.TooltipContainer}
-      close={closeTooltip}
+      close={false}
     >
       <button className={classes.ButtonMain}>
         {flags[lang].icon}

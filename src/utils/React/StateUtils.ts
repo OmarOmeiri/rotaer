@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { isObjectLiteral } from 'lullo-utils/Objects';
 import { findIndexes } from 'lullo-utils/Arrays';
 

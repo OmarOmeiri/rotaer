@@ -37,4 +37,6 @@ export const modalStyles: {[K in allModals]: IModalProps['modalStyle']} = {
   resetPassword: BaseModal,
   saveTableColumns: BaseModal,
   deleteTableColumns: BaseModal,
+  deleteAcftModal: BaseModal,
+  editAcftModal: BaseModal,
 };

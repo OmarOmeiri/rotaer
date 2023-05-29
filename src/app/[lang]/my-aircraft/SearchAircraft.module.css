@@ -47,10 +47,49 @@
 .AcftDataContainer {
   display: flex;
   justify-content: space-around;
+  gap: 1em;
+  flex-wrap: wrap;
 }
 
 .ImgPlaceholder {
   align-self: center;
-  height: 225px;
-  width: 400px;
+  flex-grow: 1;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.SaveAcftBtnWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+@media (max-width: 700px) {
+  .AcftTable {
+    display: block !important;
+  }
+
+  .AcftTable > div:nth-child(odd) {
+    border: none;
+  }
+
+  .AcftTable > div:nth-child(odd)::before {
+    content: "";
+    display: inline-flex;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 5px;
+    top: -2px;
+    left: -5px;
+    position: relative;
+  }
+  
+  .AcftTable > div:nth-child(even) {
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(0.25turn, transparent, rgb(97, 97, 97), transparent);
+    border-image-slice: 1;
+    padding-left: 2em !important;
+  }
 }

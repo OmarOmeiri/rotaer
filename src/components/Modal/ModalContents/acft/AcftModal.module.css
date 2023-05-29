@@ -1,0 +1,19 @@
+.Wrapper {
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+}
+
+.Text {
+  margin: 1em;
+  color: var(--app-white)
+}
+
+.EditForm {
+  margin-bottom: 1em;
+}
+
+.ButtonWrapper {
+  display: flex;
+  justify-content: center;
+}

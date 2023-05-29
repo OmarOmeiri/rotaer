@@ -1,23 +1,29 @@
 'use client';
 
 import React, {
-  Fragment,
-  useCallback, useEffect, useRef, useState,
+  useCallback,
+  useRef,
+  useState,
 } from 'react';
-import MagnifierIcon from '@icons/search-magnifier.svg';
-import { WithId } from 'mongodb';
-import langStore from '../../../store/lang/langStore';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { useQueryClient } from '@tanstack/react-query';
 import Translator from '../../../utils/Translate/Translator';
-import { findAircraft } from '../../../Http/requests/acft';
+import { findAircraft, saveAircraft } from '../../../Http/requests/acft';
 import classes from './SearchAircraft.module.css';
-import RotaerLoadingSpinner from '../../../components/Loading/RotaerLoadingSpinner';
-import { Input } from '../../../components/Forms/Input';
-import GridObjectTable from '../../../components/GridObjectTable/GridObjectTable';
-import ImgPlaceholder from '../../../components/Icons/NoData/ImgPlaceholder';
 import alertStore from '../../../store/alert/alertStore';
+import authStore from '../../../store/auth/authStore';
+import { ACFT_IMG_URL } from '../../../consts/urls';
+import { formatAcftRegistration } from '../../../utils/Acft/acft';
+import Input from '../../../components/Forms/Input/Input';
+import RotaerLoadingSpinner from '../../../components/Loading/RotaerLoadingSpinner';
+import { WithStrId } from '../../../types/app/mongo';
+import { API_ROUTES } from '../../../Http/routes';
 
-const formatAcftRegistration = (id: string) => `${id.slice(0, 2)}-${id.slice(2, 5)}`;
-const IMG_URL = (id: string) => `https://rotaer.s3.amazonaws.com/acft-img/${formatAcftRegistration(id)}.jpg`;
+const MagnifierIcon = dynamic(() => import('@icons/search-magnifier.svg')) as SVGComponent;
+const ButtonClient = dynamic(() => import('../../../components/Buttons/ButtonClient'));
+const ImgPlaceholder = dynamic(() => import('../../../components/Icons/NoData/ImgPlaceholder'));
+const GridObjectTable = dynamic(() => import('../../../components/GridObjectTable/GridObjectTable'));
 
 const translator = new Translator({
   regNo: { 'pt-BR': 'Matrícula', 'en-US': 'Registration Nº.' },
@@ -53,12 +59,19 @@ const aircraftTableTranslator = new Translator({
   caValidDate: { 'pt-BR': 'Validade CA', 'en-US': 'CA Expiry date' },
   registrationDate: { 'pt-BR': 'Data de registro', 'en-US': 'Registraton date' },
   gravame: { 'pt-BR': 'GRAVAME', 'en-US': 'GRAVAME' },
-  cancelDate: { 'pt-BR': 'GRAVAME', 'en-US': 'GRAVAME' },
+  cancelDate: { 'pt-BR': 'Data de cancelamento', 'en-US': 'Cancelation date' },
 });
 
-const aircraftTableValueFormatter = <K extends keyof IAcft>(k: K | '_id', v: IAcft[K]): string => (
-  k === 'registration' ? formatAcftRegistration(v) : v
-);
+const alertsTranslator = new Translator({
+  acftNotFound: { 'pt-BR': 'Aeronave não encontrada.', 'en-US': 'Aircraft not found.' },
+  acftSaveMustBeLoggedIn: { 'pt-BR': 'Você deve estar logado para salvar aeronaves', 'en-US': 'You must be logged in to save aircrafts.' },
+});
+
+const aircraftTableValueFormatter = <K extends keyof IAcft>(k: K | '_id', v: IAcft[K]): string => {
+  if (k === 'registration') return formatAcftRegistration(v);
+  if (/^\d{4}-\d{2}-\d{2}/.test(v)) return `${v.slice(8, 10)}/${v.slice(5, 7)}/${v.slice(0, 4)}`;
+  return v;
+};
 const aircraftTableKeyFormatter = <K extends keyof IAcft>(k: K | '_id'): string => (
   k === '_id' ? k : aircraftTableTranslator.capitalize().translate(k)
 );
@@ -69,14 +82,15 @@ const validateInput = (value: string) => {
   return false;
 };
 
-export const AircraftSearch = () => {
-  const lang = langStore((state) => state.lang);
+const AircraftSearch = () => {
+  const queryClient = useQueryClient();
+  const isAuth = authStore((state) => state.isAuthenticated);
   const setAlert = alertStore((state) => state.setAlert);
   const [loading, setLoading] = useState(false);
   const [imgSuccess, setImgSuccess] = useState(true);
   const [inputValid, setInputValid] = useState<undefined | boolean>(undefined);
   const regNoInput = useRef<HTMLInputElement | null>(null);
-  const [acft, setAcft] = useState<WithId<IAcft> | null>(null);
+  const [acft, setAcft] = useState<WithStrId<IAcft> | null>(null);
 
   const onSearchClick = useCallback(async () => {
     if (!regNoInput.current) return;
@@ -90,7 +104,7 @@ export const AircraftSearch = () => {
     setImgSuccess(true);
     const acft = await findAircraft({ id: value });
     if (!acft) {
-      setAlert({ msg: 'Aeronave não encontrada.', type: 'error' });
+      setAlert({ msg: alertsTranslator.translate('acftNotFound'), type: 'error' });
     }
     setLoading(false);
     setAcft(acft);
@@ -103,6 +117,17 @@ export const AircraftSearch = () => {
   const onImgError = useCallback(async () => {
     setImgSuccess(false);
   }, []);
+
+  const onAcftSave = useCallback(async () => {
+    if (!isAuth) {
+      setAlert({ msg: alertsTranslator.translate('acftSaveMustBeLoggedIn'), type: 'error' });
+      return;
+    }
+    if (acft) {
+      await saveAircraft({ id: acft._id });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.aircraft.findUserAcft] });
+    }
+  }, [isAuth, setAlert, acft, queryClient]);
 
   return (
     <div>
@@ -137,20 +162,25 @@ export const AircraftSearch = () => {
             ? (
               <>
                 <GridObjectTable
-                obj={acft}
-                omit={(k, v) => ['_id', '__v'].includes(k) || typeof v === 'undefined' || v === null}
-                keyFormatter={aircraftTableKeyFormatter}
-                valueFormatter={aircraftTableValueFormatter}
-                className={classes.AcftTable}
-              />
+                  obj={acft}
+                  omit={(k, v) => ['_id', '__v'].includes(k) || typeof v === 'undefined' || v === null}
+                  keyFormatter={aircraftTableKeyFormatter}
+                  valueFormatter={aircraftTableValueFormatter}
+                  className={classes.AcftTable}
+                />
                 <div className={classes.ImgPlaceholder}>
                   {
-                    imgSuccess
+                    imgSuccess && !loading
                       ? (
-                        <img
-                          src={IMG_URL(acft.registration)}
+                        <Image
+                          src={ACFT_IMG_URL(acft.registration)}
                           alt={acft.registration}
                           onError={onImgError}
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          style={{ width: '100%', height: 'auto' }}
+                          placeholder='empty'
                         />
                       )
                       : <ImgPlaceholder height={225} width={400}/>
@@ -161,7 +191,19 @@ export const AircraftSearch = () => {
             : null
         }
       </div>
+      {
+        acft
+          ? (
+            <div className={classes.SaveAcftBtnWrapper}>
+              <ButtonClient onClick={onAcftSave}>
+                Salvar
+              </ButtonClient>
+            </div>
+          )
+          : null
+      }
     </div>
   );
 };
 
+export default AircraftSearch;

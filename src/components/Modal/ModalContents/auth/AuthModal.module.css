@@ -1,0 +1,58 @@
+.Wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.Title {
+  height: fit-content;
+  display: flex;
+  padding-bottom: 10px;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.Contents {
+  flex-grow: 1;
+}
+
+.Form {
+  padding-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Form > div {
+  width: 75%;
+}
+
+.InputWrapper {
+  width: 75%;
+  margin-bottom: 20px;
+}
+
+/* .Form > div:first-of-type {
+  padding-bottom: 15px;
+} */
+
+.Form div input {
+  width: 100%;
+}
+
+.TextBtn {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.GoogleBtnWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

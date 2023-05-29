@@ -4,7 +4,7 @@ import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
-import { debounce } from 'lodash';
+import debounce from 'lodash/debounce';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { TAerodromPrelimInfo } from '../../types/app/aerodrome';
 import { svgToDataURI } from '../../utils/SVG/svgFuncs';

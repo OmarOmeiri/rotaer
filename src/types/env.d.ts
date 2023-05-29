@@ -10,6 +10,7 @@ declare global {
       readonly LULLO_ADMIN_PASSWORD: string;
       readonly HASH: string;
       readonly DEFAULT_ENCRYPTION_KEY: string;
+      readonly GOOGLE_OAUTH_ID: string;
       readonly GOOGLE_OAUTH_SECRET: string;
       readonly AUTH_TOKEN_ENCRYPTION_KEY: string;
       // AWS

@@ -1,4 +1,4 @@
-import { isEqual as compare } from 'lodash';
+import compare from 'lodash/isEqual';
 import { useEffect, useRef, useState } from 'react';
 
 export const useIsStateEqual = <T>(state: T): boolean => {

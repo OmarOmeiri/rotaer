@@ -1,3 +1,5 @@
+import { locales } from '../Locale/locale';
+
 class Translator <const T extends Record<string, Record<Langs, string>>, S extends boolean = true> {
   private translator: T;
   private static lang: Langs = 'pt-BR';
@@ -11,7 +13,7 @@ class Translator <const T extends Record<string, Record<Langs, string>>, S exten
   }
 
   static setLang(lang: Langs) {
-    this.lang = lang;
+    if (locales.includes(lang)) this.lang = lang;
   }
 
   capitalize() {
@@ -37,10 +39,10 @@ class Translator <const T extends Record<string, Record<Langs, string>>, S exten
       if (this.lower) return `${trl.charAt(0).toLowerCase()}${trl.slice(1, trl.length)}`;
       return trl;
     } catch (e) {
-      console.log(e);
-      console.log(key);
-      console.log(Translator.lang);
-      console.log(this.translator);
+      console.info(e);
+      console.info(key);
+      console.info(Translator.lang);
+      console.info(this.translator);
       throw e;
     } finally {
       this.capt = undefined;

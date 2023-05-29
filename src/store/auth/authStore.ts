@@ -1,23 +1,22 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { decrypt, encrypt } from 'lullo-utils/Encryption';
 import { getLocalStorage, setLocalStorage, removeLocalStorage } from '../../utils/LocalStorage/localStorage';
-import { IUserModel } from '../../models/user/userModels';
+import { WithStrId } from '../../types/app/mongo';
 
 export interface IAuthState {
   token: string | null,
   loading: boolean,
   isAuthenticated: boolean,
   reloading: boolean,
-  user: Omit<IUserModel, 'password'> | null,
-  expiresIn: null | number
+  user: Omit<WithStrId<IUserSchema>, 'password'> | null,
 }
 
 interface IAuthStore extends IAuthState {
   logOut(): void;
   initToken(): void;
-  setUser(user?: Omit<IUserModel, 'password'>): void;
+  setUser(user?: Omit<IUserSchema, 'password'>): void;
   setAuthData(data: IAuthResponse): void;
+  resetAuthData(): void;
   reloadUser(): void;
 }
 
@@ -27,28 +26,7 @@ const initialState: IAuthState = {
   loading: false,
   reloading: false,
   user: null,
-  expiresIn: null,
 };
-
-const encryptToken = <T extends string | null>(token: T): T => (
-  token
-  // !token
-  //   ? null as T
-  //   : encrypt(
-  //     token,
-  //     process.env.AUTH_TOKEN_ENCRYPTION_KEY,
-  //   ) as T
-);
-
-const decryptToken = <T extends string | null>(token: T): T => (
-  token
-  // !token
-  //   ? null as T
-  //   : decrypt(
-  //     token,
-  //     process.env.AUTH_TOKEN_ENCRYPTION_KEY,
-  //   ) as T
-);
 
 const authLogOut = (set: ZuSet<IAuthStore>) => {
   removeLocalStorage('token');
@@ -60,7 +38,7 @@ const authInitializeToken = (set: ZuSet<IAuthStore>) => {
   set({ token });
 };
 
-const authSetUser = (set: ZuSet<IAuthStore>, user?: Omit<IUserModel, 'password'>) => {
+const authSetUser = (set: ZuSet<IAuthStore>, user?: Omit<WithStrId<IUserSchema>, 'password'>) => {
   if (user) {
     set({
       loading: false,
@@ -85,11 +63,10 @@ const authSetAuthData = (
   }
   setLocalStorage(
     'token',
-    encryptToken(res.token),
+    res.token,
   );
   set(() => ({
     token: res.token || null,
-    expiresIn: res.expiresIn || null,
     loading: true,
   }));
 };
@@ -100,8 +77,9 @@ const authStore = create<IAuthStore>()(
       ...initialState,
       logOut: () => authLogOut(set),
       initToken: () => authInitializeToken(set),
-      setUser: (user?: Omit<IUserModel, 'password'>) => authSetUser(set, user),
+      setUser: (user?: Omit<WithStrId<IUserSchema>, 'password'>) => authSetUser(set, user),
       setAuthData: (res: IAuthResponse) => authSetAuthData(set, get, res),
+      resetAuthData: () => set(initialState),
       reloadUser: () => {
         set({ reloading: true });
       },

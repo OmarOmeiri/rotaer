@@ -4,7 +4,6 @@ import {
   cloneElement,
   forwardRef,
   useEffect,
-  useImperativeHandle,
   useLayoutEffect,
   useState,
 } from 'react';
@@ -31,7 +30,7 @@ interface Props {
   close?: boolean,
 }
 
-export const TooltipClick = forwardRef(({
+const TooltipClick = forwardRef(({
   children,
   tooltip,
   placement = 'bottom',
@@ -121,3 +120,5 @@ export const TooltipClick = forwardRef(({
     </>
   );
 });
+
+export default TooltipClick;

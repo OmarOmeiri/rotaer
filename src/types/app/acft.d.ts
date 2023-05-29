@@ -15,3 +15,19 @@ interface IAcft {
   gravame?: string | null;
   cancelDate?: string | null;
 }
+
+interface IUserAcft {
+  acftId: string,
+  userId: string,
+  registration: string;
+  model?: string | null;
+  type?: string | null;
+  manufacturer?: string | null;
+  ias?: number,
+  climbFuelFlow?: number,
+  descentFuelFlow?: number,
+  cruiseFuelFlow?: number,
+  climbRate?: number,
+  descentRate?: number,
+  usableFuel?: number
+}

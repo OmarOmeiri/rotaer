@@ -1,8 +1,10 @@
-import WalkieTalkieIcon from '@icons/walkie-talkie-solid.svg';
-import VORIcon from '@icons/vor.svg';
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
+import dynamic from 'next/dynamic';
 import { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
+
+const WalkieTalkieIcon = dynamic(() => import('@icons/walkie-talkie-solid.svg')) as SVGComponent;
+const VORIcon = dynamic(() => import('@icons/vor.svg')) as SVGComponent;
+const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
 
 const AerodromeRadioTab = ({ info }: {info: TAerodromeData}) => (
   <>

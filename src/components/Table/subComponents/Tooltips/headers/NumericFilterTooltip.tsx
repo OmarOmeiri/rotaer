@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import Controls from '@assets/icons/controls.svg';
 import MultiRangeSlider from '@/components/RangeSlider/MultiRangeSlider';
-import { TooltipClick } from '@/components/Tooltips/TooltipClick';
+import TooltipClick from '@/components/Tooltips/TooltipClick';
 import { TableStyles } from '../../../styles';
 import { StyledTableTip } from './StyledTip';
 import classes from './TableTooltips.module.css';

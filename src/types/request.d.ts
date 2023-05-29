@@ -1,3 +1,4 @@
-type MyRequest<T> = Request & {
+type MyRequest<T> = {
+  req: Request,
   reqData: T
 }

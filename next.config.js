@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const { parsed: myEnv } = dotenv.config({ path: '.env' });
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: true,
 });
 
 /** @type {import('next').NextConfig} */
@@ -44,6 +44,16 @@ const nextConfig = {
 
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'rotaer.s3.amazonaws.com',
+        port: '',
+        pathname: '/acft-img/*',
+      },
+    ],
+  },
   async headers() {
     return [
       {
@@ -59,4 +69,6 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = process.env.ANALYZE === 'true' 
+  ? withBundleAnalyzer(nextConfig) 
+  : nextConfig

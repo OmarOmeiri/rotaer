@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useCallback, useState } from 'react';
 
 export const useStateByValue = <T>(initialState: T): [

@@ -110,7 +110,7 @@ const Link = ({
   style,
   ...rest
 }: LinkProps) => {
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
   const route = to || pathname;
   return (
     <StyledLink

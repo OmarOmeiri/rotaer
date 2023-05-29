@@ -27,16 +27,16 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-export default async function getDb(collection?: undefined): Promise<Db>;
-export default async function getDb<
+export default async function MongoDb(collection?: undefined): Promise<Db>;
+export default async function MongoDb<
 C extends typeof MongoCollections[keyof typeof MongoCollections]
 >(collection: C)
 : Promise<Collection<MongoDocumentMap<C['alias']>>>;
-export default async function getDb<
+export default async function MongoDb<
 C extends typeof MongoCollections[keyof typeof MongoCollections]
 >(collection: C[])
 : Promise<{[K in C['alias']]: Collection<MongoDocumentMap<K>> }>;
-export default async function getDb<
+export default async function MongoDb<
 C extends typeof MongoCollections[keyof typeof MongoCollections]
 >(collection?: C | C[])
 : Promise<Db | Collection<MongoDocumentMap<C['alias']>> | {[K in C['alias']]: Collection<MongoDocumentMap<K>> }> {

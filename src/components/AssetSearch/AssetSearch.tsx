@@ -123,7 +123,7 @@ const AssetSearch = ({ disableScroll }: {disableScroll?: boolean}) => {
   const [value, setValue] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const pathName = usePathname();
-  const searchParams = useSearchParams().toString();
+  const searchParams = useSearchParams()?.toString();
   const debouncedValue = useDebouncedState(value, 200);
   const [enabled, setEnabled] = useState(false);
   const [loaded, setLoaded] = useState(false);

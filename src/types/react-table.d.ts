@@ -33,6 +33,7 @@ declare module '@tanstack/react-table' {
     stickable?: boolean,
     autoSize?: boolean,
     cell?: string | ((props: CustomCellContext<TData, TValue>) => any)
+    style?: React.CSSProperties
   }
 
   type ColumnDefCustom<TData, TValue = unknown> = DistributiveOmit<ColumnDef<TData, TValue>, 'cell'> & _ColumnDefCustom<TData, TValue>

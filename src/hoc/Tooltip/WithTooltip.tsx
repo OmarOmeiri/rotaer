@@ -1,7 +1,7 @@
 import type { Placement } from '@floating-ui/react-dom-interactions';
 import React, { forwardRef } from 'react';
-import { TooltipClick } from '@/components/Tooltips/TooltipClick';
-import { TooltipHover } from '@/components/Tooltips/TooltipHover';
+import TooltipClick from '@/components/Tooltips/TooltipClick';
+import TooltipHover from '@/components/Tooltips/TooltipHover';
 
 type Props = {
   content: string | JSX.Element;

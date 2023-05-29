@@ -2,9 +2,9 @@ import React, {
   forwardRef,
   memo,
 } from 'react';
-import { Input } from '@/components/Forms/Input';
-import { TooltipClick } from '@/components/Tooltips/TooltipClick';
 import Controls from '@assets/icons/controls.svg';
+import Input from '@/components/Forms/Input';
+import TooltipClick from '@/components/Tooltips/TooltipClick';
 import { TableStyles } from '../../../styles';
 import { StyledTableTip } from './StyledTip';
 import classes from './TableTooltips.module.css';

@@ -1,19 +1,21 @@
 import { notFound } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { fetchAerodromeInfo } from '../../../Http/requests/aerodrome';
 import classes from './AerodromeInfo.module.css';
-import AssetTypeBadge from '../../../components/Badges/AssetTypeBadge';
-import Tabs from '../../../components/Tabs/Tabs';
-import { Tab } from '../../../components/Tabs/Tab';
-import AerodromeMainInfoTab from './Tabs/MainInfo';
-import AerodromeRunwaysTab from './Tabs/AerodromeRunwaysTab';
-import AerodromeRadioTab from './Tabs/AerodromeRadioTab';
-import AerodromeMetTab from './Tabs/AerodromeMetTab';
 import { fetchAerodromeMETAR } from '../../../Http/requests/metar';
-import MetarStatusBadge from '../../../components/Badges/MetarStatusBadge';
-import { TooltipHover } from '../../../components/Tooltips/TooltipHover';
-import StyledTooltip from '../../../components/Tooltips/StyledTooltip';
 import type METARParser from '../../../utils/METAR/METAR';
-import AerodromeRMKTab from './Tabs/AerodromeRMKTab';
+
+const StyledTooltip = dynamic(() => import('../../../components/Tooltips/StyledTooltip'));
+const MetarStatusBadge = dynamic(() => import('../../../components/Badges/MetarStatusBadge'));
+const Tabs = dynamic(() => import('../../../components/Tabs/Tabs'));
+const AssetTypeBadge = dynamic(() => import('../../../components/Badges/AssetTypeBadge'));
+const Tab = dynamic(() => import('../../../components/Tabs/Tab'));
+const TooltipHover = dynamic(() => import('../../../components/Tooltips/TooltipHover'));
+const AerodromeMainInfoTab = dynamic(() => import('./Tabs/MainInfo'));
+const AerodromeRunwaysTab = dynamic(() => import('./Tabs/AerodromeRunwaysTab'));
+const AerodromeRadioTab = dynamic(() => import('./Tabs/AerodromeRadioTab'));
+const AerodromeMetTab = dynamic(() => import('./Tabs/AerodromeMetTab'));
+const AerodromeRMKTab = dynamic(() => import('./Tabs/AerodromeRMKTab'));
 
 type Props = {
   searchParams?: {

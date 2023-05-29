@@ -1,8 +1,12 @@
-import PlaneSearchIcon from '@icons/plane-search.svg';
-import CardWithTitle from '../../../components/Card/CardWithTitle';
+import dynamic from 'next/dynamic';
 import Translator from '../../../utils/Translate/Translator';
-import { AircraftSearch } from './SearchAircraft';
 import classes from './MyAircraft.module.css';
+import AircraftSearch from './SearchAircraft';
+
+const PlaneSearchIcon = dynamic(() => import('@icons/plane-search.svg')) as SVGComponent;
+const PlaneIcon = dynamic(() => import('@icons/plane-solid.svg')) as SVGComponent;
+const CardWithTitle = dynamic(() => import('../../../components/Card/CardWithTitle'));
+const MyAcftTable = dynamic(() => import('./MyAcftTable'));
 
 const translator = new Translator({
   myAircraft: { 'en-US': 'My aircraft', 'pt-BR': 'Minhas aeronaves' },
@@ -17,16 +21,34 @@ type Props = {
 
 const MyAircraft = async ({
   params: { lang },
-}: Props) => (
-  <CardWithTitle
-    title={translator.capitalize().translate('searchAircraft')}
-    Icon={<PlaneSearchIcon width="20"/>}
-    titleClassName={classes.CardTitle}
-    className={classes.Card}
-  >
-    <AircraftSearch/>
-  </CardWithTitle>
-);
+}: Props) => {
+  Translator.setLang(lang);
+
+  return (
+    <div className='container'>
+      <CardWithTitle
+          title={translator.capitalize().translate('searchAircraft')}
+          Icon={<PlaneSearchIcon width="20"/>}
+          titleClassName={classes.CardTitle}
+          className={classes.Card}
+        >
+        <div>
+          <AircraftSearch/>
+        </div>
+      </CardWithTitle>
+      <CardWithTitle
+        title={translator.capitalize().translate('myAircraft')}
+        Icon={<PlaneIcon width="20"/>}
+        titleClassName={classes.CardTitle}
+        className={classes.Card}
+      >
+        <div>
+          <MyAcftTable/>
+        </div>
+      </CardWithTitle>
+    </div>
+  );
+};
 
 export default MyAircraft;
 

@@ -1,7 +1,9 @@
-import InfoIcon from '@icons/info.svg';
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
+import dynamic from 'next/dynamic';
 import { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
+
+const InfoIcon = dynamic(() => import('@icons/info.svg')) as SVGComponent;
+const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
 
 const AerodromeRMKTab = ({ info }: {info: TAerodromeData}) => (
   <>

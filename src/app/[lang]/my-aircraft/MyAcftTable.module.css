@@ -1,0 +1,20 @@
+.TableIcons {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  color: var(--app-grey);
+}
+
+.TableIconBtn {
+  all: unset;
+  cursor: pointer;
+}
+
+.TableIconBtn * {
+  pointer-events: none;
+}
+
+.TableIconBtn:hover svg {
+  color: var(--app-white);
+  transition: color 0.2s ease;
+}

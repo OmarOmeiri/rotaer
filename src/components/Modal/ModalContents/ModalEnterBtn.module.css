@@ -1,0 +1,9 @@
+.Btn {
+  width: 75%;
+  height: 40px;
+  color: var(--app-dark) !important;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: var(--app-green) !important;
+  margin-top: 25px;
+}

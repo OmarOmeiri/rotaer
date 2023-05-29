@@ -1,4 +1,6 @@
-import { merge } from 'lodash';
+'use client';
+
+import merge from 'lodash/merge';
 import dynamic from 'next/dynamic';
 /* eslint-disable require-jsdoc */
 import React, {
@@ -10,7 +12,6 @@ import React, {
 } from 'react';
 import { useInView } from 'react-intersection-observer';
 import styled, { css } from 'styled-components';
-import { getPxFromCssDimensionString } from '@/utils/Styles/unitConvert';
 import {
   ColumnDef,
   ColumnDefCustom,
@@ -23,6 +24,7 @@ import {
   RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
+import { getPxFromCssDimensionString } from '@/utils/Styles/unitConvert';
 import { useDragScroll } from '../../hooks/DOM/useDragScroll';
 import ScrollBar from '../ScrollBar/Scrollbar';
 import { Skeleton } from '../Skeleton/Skeleton';
@@ -87,6 +89,8 @@ interface BaseProps<T extends Record<string, unknown>> {
   onSortingChange?: (e: React.MouseEvent | React.KeyboardEvent, col: CustomColumn<T>) => void,
   onBottomReach?: () => void,
   noData?: boolean
+  noDataMsg?: string,
+  skeletonRows?: number
 }
 
 interface WithRowSelectionProps<T extends Record<string, unknown>> extends BaseProps<T> {
@@ -188,6 +192,8 @@ function Tbl<T extends Record<string, unknown>>({
   headerTooltips,
   tableState,
   noData,
+  noDataMsg,
+  skeletonRows = 10,
   onRowSelect,
   rowId,
   onColumnPin,
@@ -291,7 +297,7 @@ function Tbl<T extends Record<string, unknown>>({
       {
         noData
           ? (
-            <LogoAbducted animate/>
+            <LogoAbducted message={noDataMsg} animate/>
           )
           : null
       }
@@ -320,7 +326,7 @@ function Tbl<T extends Record<string, unknown>>({
         {
           loading || !data.length
             ? (
-              Array(20).fill(null).map((_, i) => (
+              Array(skeletonRows).fill(null).map((_, i) => (
                 <Skeleton
                   key={`tbl-skeleton-${i}`}
                   box={{

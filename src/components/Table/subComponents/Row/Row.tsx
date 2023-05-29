@@ -196,6 +196,7 @@ function RowMemo<T extends Record<string, unknown>>({
                   style={{
                     width: cell.column.getSize(),
                     textAlign: (cell.column.columnDef as ColumnDefCustom<T>).align,
+                    ...(cell.column.columnDef as ColumnDefCustom<T>).style,
                   }}
                   styles={styles}
                 >

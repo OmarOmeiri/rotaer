@@ -5,22 +5,20 @@ import Config from '@config';
 import { decodeJWT } from '@utils/jwt/jwt';
 import authStore from '@store/auth/authStore';
 import { useDebounce } from '@hooks/React/useDebounce';
-import { googleLogIn, loadUser } from '../../Http/requests/user';
-
-type Props = {
-  isAuthenticated: boolean
-}
+import { loadUser } from '../../Http/requests/user';
+import { googleLogIn } from '../../Http/requests/auth';
 
 const clientId = Config.get('keys').googleOAuthID;
 
-const GoogleAuth = ({ isAuthenticated }: Props) => {
+const GoogleAuth = () => {
   const setAuthData = authStore((state) => state.setAuthData);
   const setUser = authStore((state) => state.setUser);
+  const isAuthenticated = authStore((state) => state.isAuthenticated);
 
   const callback: GoogleIDConfig['callback'] = async (gres) => {
     const data = decodeJWT<GAuthResponse>(gres.credential);
     const res = await googleLogIn({
-      email: data.email,
+      username: data.email,
     });
     if (res) {
       setAuthData(res);

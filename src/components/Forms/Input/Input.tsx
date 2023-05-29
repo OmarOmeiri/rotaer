@@ -1,4 +1,4 @@
-import { debounce as dbnc } from 'lodash';
+import dbnc from 'lodash/debounce';
 import React, {
   forwardRef,
   useCallback,

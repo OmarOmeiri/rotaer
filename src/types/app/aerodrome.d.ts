@@ -95,3 +95,21 @@ export type TAerodromeData = {
   } | null;
   cityDistance?: string;
 }
+
+
+export type IAerodromeSchema =
+TAerodromeData & {
+  rwys: ObjectId[];
+  coords: ObjectId;
+}
+
+export interface IAerodromeCoordsSchema {
+  aerodrome: ObjectId;
+  deg: string,
+  decim: [lon: number, lat: number]
+}
+
+export type IRwySchema = {
+  aerodrome: ObjectId;
+} & TAerodromeData['rwys'][number]
+

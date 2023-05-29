@@ -1,7 +1,7 @@
 import React from 'react';
 import { TabProps } from './Tabs';
 
-export const Tab = (props: {
+const Tab = (props: {
   children: React.ReactNode;
   className?: string,
   style?: React.CSSProperties
@@ -11,3 +11,5 @@ export const Tab = (props: {
     {props.children}
   </div>
 );
+
+export default Tab;

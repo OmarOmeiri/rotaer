@@ -1,6 +1,5 @@
 .Button{
   border: none;
-  background: linear-gradient(#0000, rgb(0 0 0/25%)) top/100% 800%;
   display: inline-block;
   text-align: center;
   font-weight: bold;
@@ -16,4 +15,11 @@
 
 .Button:hover{
   background-position: bottom;
+}
+
+.LoadingWrapper {
+  height: 70%;
+  width: 100%;
+  color: var(--app-dark);
+  stroke-width: 8px;
 }

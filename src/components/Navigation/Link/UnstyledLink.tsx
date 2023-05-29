@@ -58,7 +58,7 @@ const UnstyledLink = ({
   style,
   ...rest
 }: UnstyledLinkProps) => {
-  const pathname = usePathname();
+  const pathname = usePathname() || '';
   const route = to || pathname;
   return (
     <NextLink

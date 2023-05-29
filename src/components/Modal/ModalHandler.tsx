@@ -1,26 +1,47 @@
-import { CSSTransition } from 'react-transition-group';
+'use client';
+
 import { shallow } from 'zustand/shallow';
+import dynamic from 'next/dynamic';
 import modalStore from '../../store/modal/modalStore';
-import Modal from './Modal';
-
 import type { allModals, modalChildProps } from '../../store/modal/typings';
-import type { IModalProps } from './typings';
+import TransitionsModal from './Modal';
+import RotaerLoadingSpinner from '../Loading/RotaerLoadingSpinner';
+import DeleteAcftModal from './ModalContents/acft/DeleteAcftModal';
+import EditAcftModal from './ModalContents/acft/EditAcftModal';
 
-export interface IModalHandler {
-  beforeModalClose?: () => void,
-  modalStyle?: IModalProps['modalStyle']
-}
+const ModalLoading = () => (
+  <div>
+    <RotaerLoadingSpinner width={200} opacity={0.3}/>
+  </div>
+);
+
+const AuthModal = dynamic(() => import('./ModalContents/auth/LogInModal'), {
+  ssr: false,
+  loading: ModalLoading,
+});
 
 const getModal = <T extends allModals>(name: T, propsToChildren: modalChildProps<T>) => {
   switch (name) {
+    case 'logIn': {
+      const p = propsToChildren as modalChildProps<'logIn'>;
+      return <AuthModal { ...p ?? {} } />;
+    }
+    case 'deleteAcftModal': {
+      const p = propsToChildren as modalChildProps<'deleteAcftModal'>;
+      return <DeleteAcftModal { ...p ?? {} }/>;
+    }
+    case 'editAcftModal': {
+      const p = propsToChildren as modalChildProps<'editAcftModal'>;
+      return <EditAcftModal { ...p ?? {} }/>;
+    }
     default:
       return null;
   }
 };
 
 /** */
-function ModalHandler({ beforeModalClose, modalStyle }: IModalHandler) {
-  const { modalContent, loading, show } = modalStore((state) => ({
+function ModalHandler() {
+  const { modalContent } = modalStore((state) => ({
     modalContent: state.modalContent,
     loading: state.modalLoading,
     show: state.showModal,
@@ -30,15 +51,9 @@ function ModalHandler({ beforeModalClose, modalStyle }: IModalHandler) {
   const ModalChildren = getModal(name, propsToChildren);
   if (!ModalChildren) return null;
   return (
-    <CSSTransition
-      in={show}
-      timeout={show ? 0 : 500}
-      unmountOnExit
-    >
-      <Modal beforeModalClose={beforeModalClose} modalStyle={modalStyle} show={show} modalContent={modalContent} loading={loading}>
-        {ModalChildren}
-      </Modal>
-    </CSSTransition>
+    <TransitionsModal>
+      {ModalChildren}
+    </TransitionsModal>
   );
 }
 

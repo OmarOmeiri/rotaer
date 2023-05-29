@@ -10,9 +10,15 @@ const tableModals = [
   'deleteTableColumns',
 ] as const;
 
+const acftModals = [
+  'deleteAcftModal',
+  'editAcftModal',
+] as const;
+
 export const allModals = [
   ...AuthModals,
   ...tableModals,
+  ...acftModals,
 ] as const;
 
 export type allModals = ElementType<typeof allModals>

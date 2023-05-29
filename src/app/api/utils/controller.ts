@@ -4,27 +4,44 @@
 import { ErrorCodes } from 'lullo-common-types';
 import { NextResponse } from 'next/server';
 import ServerError from '@/utils/Errors/ServerError';
+import { checkLocale } from '../../../utils/Locale/locale';
+import Translator from '../../../utils/Translate/Translator';
 
-/**
- * Gets all metadata inserted by the other decorators in the routes
- * and generated all router objects with middlewares.
- * @module ControllerDecorator
- * @category Decorators
- */
-
-const paramMap = {
+const paramMap = new Proxy({
   GET: (req: Request) => {
     const { searchParams } = new URL(req.url);
     return Object.fromEntries(searchParams);
   },
-};
+  POST: async (req: Request) => {
+    try {
+      const body = await req.json();
+      return body;
+    } catch {
+      return {};
+    }
+  },
+  DELETE: (req: Request) => {
+    const { searchParams } = new URL(req.url);
+    return Object.fromEntries(searchParams);
+  },
+  PATCH: async (req: Request) => {
+    try {
+      const body = await req.json();
+      return body;
+    } catch {
+      return {};
+    }
+  },
+}, {
+  get: (target, property) => {
+    if (property in target) {
+      return target[property as keyof typeof target];
+    }
+    return () => null;
+  },
+});
 
-/**
- * The Platform controller decorator.
- * It creates all the API routes and adds
- * custom middlewares from the controllers decorators
- * @param routePrefix
- */
+/** */
 export function controller() {
   return function (target: Class): void {
     const keys = Object.getOwnPropertyNames(target.prototype);
@@ -32,12 +49,12 @@ export function controller() {
     for (const propertyName of keys) {
       const descriptor = Object.getOwnPropertyDescriptor(target.prototype, propertyName);
       const originalMethod = descriptor?.value;
-      // const isEnvProtected: TypeOrArrayOfType<NODE_ENV> = Reflect.getMetadata(MetadataKeys.envProtected, target.prototype, propertyName);
-
       if (descriptor?.value instanceof Function) {
         target.prototype[propertyName] = async function (req: Request) {
+          const locale = checkLocale(req.headers.get('lang'));
+          Translator.setLang(locale);
           try {
-            const params = paramMap[req.method as keyof typeof paramMap](req);
+            const params = await paramMap[req.method as keyof typeof paramMap](req);
             if (!params) {
               throw new ServerError('Invalid HTTP verb', {
                 status: 500,
@@ -46,11 +63,12 @@ export function controller() {
               });
             }
             const result = await originalMethod({
-              ...req,
+              req,
               reqData: params,
             });
             return NextResponse.json(result);
           } catch (error) {
+            console.info('error: ', error);
             return new NextResponse(
               JSON.stringify({
                 message: error.message || 'An unknown error has occurred',
@@ -64,9 +82,6 @@ export function controller() {
           }
         };
       }
-
-      // const middlewares = [...Reflect.getMetadata(MetadataKeys.middleware, target.prototype, propertyName) || []];
-      // if (isEnvProtected) middlewares.push(envProtected(isEnvProtected));
     }
   };
 }

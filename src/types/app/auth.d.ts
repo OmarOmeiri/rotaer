@@ -1,5 +1,10 @@
-interface IAuthRequest {
-  email: string;
+type NativeAuthRequest = {
+  username: string,
+  password: string,
+}
+
+type GoogleAuthRequest = {
+  username: string,
 }
 
 /**
@@ -9,7 +14,6 @@ interface IAuthResponse {
   token?: string;
   msg?: string;
   id: string;
-  expiresIn: number;
 }
 
 type JWTPayload = {

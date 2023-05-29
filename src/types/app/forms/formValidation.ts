@@ -1,6 +1,5 @@
-import { IInput } from '@/components/Forms/typings';
-
 import type zd from 'zod';
+import { IInput } from '@/components/Forms/typings';
 
 export type ValidationFunc = (val: string | string[], z: typeof zd) => Primitives | Date | undefined;
 export type IValidate<F extends IFormData<true>> = {

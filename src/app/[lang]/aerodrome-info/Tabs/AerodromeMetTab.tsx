@@ -1,13 +1,15 @@
-import WindIcon from '@icons/wind-solid.svg';
-import WindSockIcon from '@icons/windsock.svg';
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
-import { TAerodromeData } from '../../../../types/app/aerodrome';
+import dynamic from 'next/dynamic';
+import type { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
-import Windy from '../../../../components/Windy/Windy';
 import { MetarTable } from '../../../../components/Metar/MetarTable';
 import METARParser from '../../../../utils/METAR/METAR';
 import langStore from '../../../../store/lang/langStore';
 import Translator from '../../../../utils/Translate/Translator';
+
+const WindIcon = dynamic(() => import('@icons/wind-solid.svg')) as SVGComponent;
+const WindSockIcon = dynamic(() => import('@icons/windsock.svg')) as SVGComponent;
+const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
+const Windy = dynamic(() => import('../../../../components/Windy/Windy'));
 
 const translator = new Translator({
   forecast: { 'pt-BR': 'Previsão', 'en-US': 'Forecast' },

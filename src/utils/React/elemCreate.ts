@@ -18,7 +18,7 @@ function ElemCreate<T extends HTMLElement>({
   cb,
   runCb,
   elemRef,
-}: IElemCreateProps<T>, ref: React.ForwardedRef<T>): JSX.Element | null {
+}: IElemCreateProps<T>): JSX.Element | null {
   useEffect(() => {
     if (runCb && cb) {
       cb();

@@ -6,5 +6,17 @@ export const API_ROUTES = {
   },
   aircraft: {
     find: 'aircraft/find',
+    save: 'aircraft/save-user-acft',
+    findUserAcft: 'aircraft/get-user-acft',
+    deleteUserAcft: 'aircraft/delete-user-acft',
+    editUserAcft: 'aircraft/edit-user-acft',
+  },
+  auth: {
+    authenticate: 'auth/authenticate',
+    gauth: 'auth/g-auth',
+  },
+  user: {
+    create: 'user/create',
+    load: 'user/load',
   },
 };

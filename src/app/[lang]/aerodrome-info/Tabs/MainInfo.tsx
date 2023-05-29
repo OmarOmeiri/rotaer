@@ -1,22 +1,24 @@
-import AirportIcon from '@icons/airport-pin.svg';
-import MapIcon from '@icons/map-solid.svg';
-import GoToIcon from '@icons/go-to.svg';
-import QuestionIcon from '@icons/question-outline.svg';
 import { Fragment, useMemo } from 'react';
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
-import { TAerodromeData } from '../../../../types/app/aerodrome';
+import dynamic from 'next/dynamic';
+import type { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
-import Link from '../../../../components/Navigation/Link/Link';
 import { gMapLink } from '../../../../utils/Map/GMapsLink';
-import StyledTooltip from '../../../../components/Tooltips/StyledTooltip';
-import GMap from '../../../../components/Map/GMap';
 import { makeAerodromePrelimInfo } from '../../../../utils/Aerodrome/makeAerodromePrelimInfo';
 import Translator from '../../../../utils/Translate/Translator';
 import langStore from '../../../../store/lang/langStore';
 import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
-import { TooltipHover } from '../../../../components/Tooltips/TooltipHover';
 import rotaerFuelAndServicesTranslator from '../../../../utils/Translate/RotaerFuelAnsServicesTranslator';
 import coordinatesTranslator from '../../../../utils/Translate/CoordinatesTranslator';
+
+const AirportIcon = dynamic(() => import('@icons/airport-pin.svg')) as SVGComponent;
+const MapIcon = dynamic(() => import('@icons/map-solid.svg')) as SVGComponent;
+const GoToIcon = dynamic(() => import('@icons/go-to.svg')) as SVGComponent;
+const QuestionIcon = dynamic(() => import('@icons/question-outline.svg')) as SVGComponent;
+const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
+const Link = dynamic(() => import('../../../../components/Navigation/Link/Link'));
+const StyledTooltip = dynamic(() => import('../../../../components/Tooltips/StyledTooltip'));
+const GMap = dynamic(() => import('../../../../components/Map/GMap'));
+const TooltipHover = dynamic(() => import('../../../../components/Tooltips/TooltipHover'));
 
 const translator = new Translator({
   mainInfo: { 'pt-BR': 'Informações Gerais', 'en-US': 'General Information' },

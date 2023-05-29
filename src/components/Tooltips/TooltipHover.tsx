@@ -31,7 +31,7 @@ interface Props {
   onOpen?: () => void
 }
 
-export const TooltipHover = forwardRef(({
+const TooltipHover = forwardRef(({
   children,
   tooltip,
   placement = 'bottom',
@@ -140,3 +140,5 @@ export const TooltipHover = forwardRef(({
     </>
   );
 });
+
+export default TooltipHover;

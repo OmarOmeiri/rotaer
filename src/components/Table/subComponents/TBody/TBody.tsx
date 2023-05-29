@@ -54,18 +54,21 @@ function TBodyMemo<T extends Record<string, unknown>>({
 }: Props<T>) {
   const [highlightedRows, setHighLightedRows] = useState<string[]>([]);
   const { rows } = table.getRowModel();
-  const rowVirtualizer = useVirtual({
-    parentRef: tableContainerRef,
-    size: rows.length,
-    overscan: 11,
-    estimateSize: () => Number(styles.body.row.height.replace(/[^\d]/g, '')),
-  });
+  // const rowVirtualizer = useVirtual({
+  //   parentRef: tableContainerRef,
+  //   size: rows.length,
+  //   overscan: 11,
+  //   estimateSize: () => Number(styles.body.row.height.replace(/[^\d]/g, '')),
+  // });
 
-  const { virtualItems, totalSize } = rowVirtualizer;
-  const paddingTop = virtualItems.length > 0 ? virtualItems?.[0]?.start || 0 : 0;
-  const paddingBottom = virtualItems.length > 0
-    ? totalSize - (virtualItems?.[virtualItems.length - 1]?.end || 0)
-    : 0;
+  // const { virtualItems, totalSize } = rowVirtualizer;
+  // const paddingTop = virtualItems.length > 0 ? virtualItems?.[0]?.start || 0 : 0;
+  // const paddingBottom = virtualItems.length > 0
+  //   ? totalSize - (virtualItems?.[virtualItems.length - 1]?.end || 0)
+  //   : 0;
+  const virtualItems = rows;
+  const paddingTop = 0;
+  const paddingBottom = 0;
 
   return (
     <>

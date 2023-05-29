@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import errorHelper from '@/utils/Errors/errorHelper';
 import { ContentTypes } from './types';
+import langStore from '../store/lang/langStore';
+import authStore from '../store/auth/authStore';
 
 type url = string;
 type _reqBody<T extends keyof typeof ContentTypes = 'applicationJson'> =
@@ -36,15 +38,23 @@ const responseHandler = () => (
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const self = this as Api<any>;
       try {
         const response: Response = await originalMethod.apply(this, args);
         const resJson = await response.json();
         if (response.ok) {
+          // eslint-disable-next-line dot-notation
+          const onSuccess = self['onSuccessFn'];
+          if (onSuccess) {
+            onSuccess();
+          }
           return {
             data: resJson,
             status: response.status,
           };
         }
+
         errorHelper({
           message: resJson.message || 'An unknown error has occured',
           code: resJson.code,
@@ -69,8 +79,11 @@ class Api<CT extends keyof typeof ContentTypes> {
   private request: RequestInit = {
     headers: {
       'Content-Type': ContentTypes.applicationJson,
+      'lang': langStore.getState().lang,
+      'x-auth-token': authStore.getState().token || '',
     },
   };
+  private onSuccessFn?: () => void;
 
   constructor(
     private url: url,
@@ -110,6 +123,11 @@ class Api<CT extends keyof typeof ContentTypes> {
     return this;
   }
 
+  public onSuccess(fn: () => void) {
+    this.onSuccessFn = fn;
+    return this;
+  }
+
   public ContentType(ct: CT): this {
     this.request = {
       ...this.request,
@@ -134,44 +152,24 @@ class Api<CT extends keyof typeof ContentTypes> {
 
   @responseHandler()
   async get<T>(): Promise<ApiExternalResponse<T>> {
-    try {
-      return fetch(
-        this.url,
-        {
-          method: 'GET',
-          ...this.request,
-        },
-      ) as unknown as Promise<ApiExternalResponse<T>>;
-    } catch (err) {
-      errorHelper(err);
-      return {
-        data: null,
-        status: err?.response?.data ?? 500,
-      };
-    }
+    return fetch(
+      this.url,
+      {
+        method: 'GET',
+        ...this.request,
+      },
+    ) as unknown as Promise<ApiExternalResponse<T>>;
   }
 
+  @responseHandler()
   async post<T>(): Promise<ApiExternalResponse<T>> {
-    try {
-      const res = await fetch(
-        this.url,
-        {
-          method: 'POST',
-          ...this.request,
-        },
-      );
-
-      return {
-        data: await res.json(),
-        status: res.status,
-      };
-    } catch (err) {
-      errorHelper(err);
-      return {
-        data: null,
-        status: err?.response?.data ?? 500,
-      };
-    }
+    return fetch(
+      this.url,
+      {
+        method: 'POST',
+        ...this.request,
+      },
+    ) as unknown as Promise<ApiExternalResponse<T>>;
   }
 
   async patch<T>(): Promise<ApiExternalResponse<T>> {
@@ -220,27 +218,15 @@ class Api<CT extends keyof typeof ContentTypes> {
     }
   }
 
+  @responseHandler()
   async delete<T>(): Promise<ApiExternalResponse<T>> {
-    try {
-      const res = await fetch(
-        this.url,
-        {
-          method: 'PUT',
-          ...this.request,
-        },
-      );
-
-      return {
-        data: await res.json(),
-        status: res.status,
-      };
-    } catch (err) {
-      errorHelper(err);
-      return {
-        data: null,
-        status: err?.response?.data ?? 500,
-      };
-    }
+    return fetch(
+      this.url,
+      {
+        method: 'DELETE',
+        ...this.request,
+      },
+    ) as unknown as Promise<ApiExternalResponse<T>>;
   }
 }
 

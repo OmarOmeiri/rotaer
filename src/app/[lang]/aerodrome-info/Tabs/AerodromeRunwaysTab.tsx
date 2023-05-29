@@ -1,19 +1,19 @@
-import AirplaneArrival from '@icons/plane-arrival-solid.svg';
-import QuestionIcon from '@icons/question-outline.svg';
-import WindIcon from '@icons/wind-solid.svg';
-import { Fragment } from 'react';
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
-import { TAerodromeData } from '../../../../types/app/aerodrome';
+import dynamic from 'next/dynamic';
+import type { TAerodromeData } from '../../../../types/app/aerodrome';
 import classes from '../AerodromeInfo.module.css';
-import { TooltipClick } from '../../../../components/Tooltips/TooltipClick';
-import StyledTooltip from '../../../../components/Tooltips/StyledTooltip';
 import Translator from '../../../../utils/Translate/Translator';
-import { TooltipHover } from '../../../../components/Tooltips/TooltipHover';
 import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
 import rotaerPCNTranslator from '../../../../utils/Translate/RotaerPCNTranslator';
 import rotaerRWYSurfaceTranslator from '../../../../utils/Translate/RotaerRwyTranslator';
-import { METARObject } from '../../../../utils/METAR/METAR';
+import type { METARObject } from '../../../../utils/METAR/METAR';
 import { getHeadwindCrossWind } from '../../../../utils/Wind/getHeadwindCrosswind';
+
+const AirplaneArrival = dynamic(() => import('@icons/plane-arrival-solid.svg')) as SVGComponent;
+const QuestionIcon = dynamic(() => import('@icons/question-outline.svg')) as SVGComponent;
+const WindIcon = dynamic(() => import('@icons/wind-solid.svg')) as SVGComponent;
+const TooltipHover = dynamic(() => import('../../../../components/Tooltips/TooltipHover'));
+const StyledTooltip = dynamic(() => import('../../../../components/Tooltips/StyledTooltip'));
+const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
 
 const translator = new Translator({
   rwy: { 'pt-BR': 'Pista', 'en-US': 'Runway' },

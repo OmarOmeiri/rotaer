@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import React from 'react';
 import { typedMemo } from '@/utils/React/typedMemo';
 import ResponsiveGrid from '../Grid/Grid';

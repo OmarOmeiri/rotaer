@@ -14,8 +14,11 @@ import { LanguageDropDown } from '../../components/Language/LanguageDropDown';
 import { APP_ROUTES } from '../../consts/routes';
 import { MainMenu } from '../../components/MainMenu/MainMenu';
 import { Alert } from '../../components/Alert/Alert';
+import ModalHandler from '../../components/Modal/ModalHandler';
+import GoogleAuth from '../../components/Auth/GoogleAuth';
+import Auth from '../../components/Auth/Auth';
 
-const navBarHeight = Config.get('styles').navBar.height;
+const styles = Config.get('styles');
 
 type Props = {
   children: React.ReactNode;
@@ -26,8 +29,8 @@ type Props = {
 
 /** */
 export function reportWebVitals(metric: NextWebVitalsMetric) {
-  if (metric.label === 'custom') {
-    console.log(metric);
+  if (metric.label === 'custom' && process.env.NODE_ENV === 'development') {
+    console.info(metric);
   }
 }
 
@@ -41,6 +44,7 @@ export default function RootLayout({
   return (
     <html lang={lang}>
       <title>ROTAER</title>
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
       <body>
         <div id="overlay-alert" className='alert-overlay'/>
         <div id="overlay-modal" />
@@ -50,8 +54,11 @@ export default function RootLayout({
         <LangStoreInitializer lang={lang} />
         <Alert/>
         <Providers>
+          <GoogleAuth/>
+          <Auth/>
           <ClientLayout/>
-          <nav className={classes.Nav} style={{ height: `${navBarHeight}px` }}>
+          <ModalHandler/>
+          <nav className={classes.Nav} style={{ height: `${styles.navBar.height}px` }}>
             <div className={classes.NavRight}>
               <div className={classes.NavRightIcon}>
                 <Link href={APP_ROUTES.home(lang)}>

@@ -15,6 +15,9 @@
   overflow: scroll;
 }
 
+.Table::-webkit-scrollbar {
+  display: none;
+}
 
 .TableWrapper::-webkit-scrollbar {
   display: none;

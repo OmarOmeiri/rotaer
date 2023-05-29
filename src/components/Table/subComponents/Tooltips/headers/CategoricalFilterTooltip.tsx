@@ -1,7 +1,7 @@
 import { forwardRef, memo, useCallback } from 'react';
 import Controls from '@assets/icons/controls.svg';
 import CheckboxList from '../../../../List/CheckboxList';
-import { TooltipClick } from '../../../../Tooltips/TooltipClick';
+import TooltipClick from '../../../../Tooltips/TooltipClick';
 import { StyledTableTip } from './StyledTip';
 import classes from './TableTooltips.module.css';
 import Config from '../../../../../config';
