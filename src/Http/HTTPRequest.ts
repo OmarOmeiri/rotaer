@@ -89,6 +89,7 @@ class Api<CT extends keyof typeof ContentTypes> {
     private url: url,
   ) {
     console.log('url: ', url);
+    console.log('process.env.NEXT_PUBLIC_API_URL: ', process.env.NEXT_PUBLIC_API_URL);
     if (!url.startsWith('http')) {
       this.url = `${process.env.NEXT_PUBLIC_API_URL}/api/${
         this.url
