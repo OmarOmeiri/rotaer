@@ -88,6 +88,7 @@ class Api<CT extends keyof typeof ContentTypes> {
   constructor(
     private url: url,
   ) {
+    console.log('url: ', url);
     if (!url.startsWith('http')) {
       this.url = `${process.env.NEXT_PUBLIC_API_URL}/api/${
         this.url
@@ -95,6 +96,7 @@ class Api<CT extends keyof typeof ContentTypes> {
           .replace(/^\//, '')
       }`;
     }
+    console.log('this.url: ', this.url);
   }
 
   public body(body: BodyInit | object): this {
