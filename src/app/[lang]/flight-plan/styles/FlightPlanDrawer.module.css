@@ -1,0 +1,50 @@
+.DrawerItemsWrapper {
+  width: 250px;
+}
+
+.DrawerItemsWrapper > *:not(:last-child) {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(0.25turn, transparent, rgb(97, 97, 97), transparent);
+  border-image-slice: 1;
+}
+
+.DrawerItemWrapper {
+  all: unset;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  color: var(--app-white);
+  padding: 1em;
+  gap: 15px;
+  align-items: center;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.DrawerItemWrapper:hover {
+  color: var(--app-green);
+}
+
+.DrawerItemLabel {
+  flex-grow: 1;
+}
+
+.DrawerItemIcon {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Selected::before {content: "";
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: var(--app-green);
+  left: 0;
+}
+
+.DrawerBtn {
+  position: absolute;
+  top: 10%;
+}

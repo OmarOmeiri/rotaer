@@ -2,6 +2,7 @@ import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
 import AerodromeService from '../Service';
 import { MongoCollections } from '../../../../types/app/mongo';
+import type { MyRequest } from '../../../../types/request';
 
 type API = TAPI<'aerodrome', 'info'>;
 

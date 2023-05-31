@@ -1,3 +1,4 @@
+import { omit } from 'lullo-utils/Objects';
 import { zodPasswordValidator, zodUserNameValidator } from '../../../frameworks/zod/zodValidators';
 import { MongoCollections } from '../../../types/app/mongo';
 import BaseService from '../utils/BaseService';
@@ -6,7 +7,7 @@ import { getJWT } from '../../../utils/jwt/jwt';
 import { COMMON_API_ERRORS } from '../utils/Errors';
 
 class AuthService extends BaseService {
-  async authenticate({ username, password }: NativeAuthRequest) {
+  async authenticate({ username, password }: Partial<NativeAuthRequest>) {
     try {
       zodUserNameValidator(username);
       zodPasswordValidator(password);
@@ -25,14 +26,9 @@ class AuthService extends BaseService {
     if (!user.password) {
       throw COMMON_API_ERRORS.invalidCredentials();
     }
-    if (await (comparePassword(password, user.password))) {
-      const id = user._id.toString();
-      const token = getJWT(id);
-      return {
-        token,
-        msg: `Bem vindo, ${user.username.split('@')[0]}`,
-        id,
-      };
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (await (comparePassword(password!, user.password))) {
+      return omit(user, 'password');
     }
 
     throw COMMON_API_ERRORS.invalidCredentials();
@@ -47,20 +43,22 @@ class AuthService extends BaseService {
     if (!user) {
       const newUser = await db.userDb.insertOne({ username });
       const userId = newUser.insertedId.toString();
-      const token = getJWT(userId);
+      const { token, expiresAt } = getJWT(userId);
       return {
         token,
         msg: `Bem vindo, ${username.split('@')[0]}`,
         id: userId,
+        expiresAt,
       };
     }
 
     const userId = user._id.toString();
-    const token = getJWT(userId);
+    const { token, expiresAt } = getJWT(userId);
     return {
       token,
       msg: `Bem vindo, ${user.username.split('@')[0]}`,
       id: userId,
+      expiresAt,
     };
   }
 }

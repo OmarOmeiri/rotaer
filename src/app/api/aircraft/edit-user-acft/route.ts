@@ -3,6 +3,7 @@ import { TAPI } from '../../../../types/API';
 import { MongoCollections, WithStrId } from '../../../../types/app/mongo';
 import AcftService from '../Service';
 import { protectedRoute } from '../../utils/protectedRoute';
+import type { MyRequest } from '../../../../types/request';
 
 type API = TAPI<'acft', 'editUserAcft'>;
 

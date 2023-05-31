@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import ListIcon from '@icons/list.svg';
 import { ChartLegend } from '../ChartLegend/ChartLegend';
-import { Drawer } from '../Drawer/ContainedDrawer';
+import { ContainedDrawer } from '../Drawer/ContainedDrawer';
 import classes from './ChartGrid.module.css';
 import { ChartGridButton } from './ChartGridButton';
 import { ChartGridProps, ChartGrid } from './ChartGrid';
@@ -40,12 +40,12 @@ export const ChartGridWithCollapsibleLegend = ({
           <ListIcon />
         </ChartGridButton>
       </div>
-      <Drawer open={legendOpen} setOpen={setLegendOpen}>
+      <ContainedDrawer open={legendOpen} setOpen={setLegendOpen}>
         <ChartLegend
           items={legendItems}
           onClick={onLegendClick}
           type={legendItemType || 'square'} />
-      </Drawer>
+      </ContainedDrawer>
     </div>
   );
 };

@@ -45,11 +45,12 @@ class UserService extends BaseService {
         password: await hashPassword(password),
       });
       const id = newUser.insertedId.toString();
-      const token = getJWT(id);
+      const { token, expiresAt } = getJWT(id);
       return {
         token,
         msg: `Bem vindo, ${username.split('@')[0]}`,
         id,
+        expiresAt,
       };
     } catch (err) {
       throw getError(translator.translate('createUnsuccessful'), 500);

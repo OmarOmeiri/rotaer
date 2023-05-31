@@ -1,19 +1,12 @@
 import withOriginMiddleware from './middlewares/withOrigin';
 import { stackMiddlewares } from './middlewares/stackMiddlewares';
 import withLocaleMiddleware from './middlewares/withLocale';
+import withTokenMiddleware from './middlewares/withToken';
 
 const middlewares = [
   withOriginMiddleware,
   withLocaleMiddleware,
+  withTokenMiddleware,
 ];
-
-// export const middleware = (req: NextRequest) => {
-//   const res = checkOriginMiddleware(req);
-//   return res;
-// };
-
-// export const config = {
-//   matcher: '/api/:path*',
-// };
 
 export default stackMiddlewares(middlewares);

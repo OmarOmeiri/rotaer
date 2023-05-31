@@ -11,6 +11,9 @@ export const API_ROUTES = {
     deleteUserAcft: 'aircraft/delete-user-acft',
     editUserAcft: 'aircraft/edit-user-acft',
   },
+  flightPlan: {
+    getUserFlightPlans: 'flight-plan/get-user-fplans',
+  },
   auth: {
     authenticate: 'auth/authenticate',
     gauth: 'auth/g-auth',

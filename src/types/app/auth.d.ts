@@ -14,6 +14,7 @@ interface IAuthResponse {
   token?: string;
   msg?: string;
   id: string;
+  expiresAt: Date,
 }
 
 type JWTPayload = {

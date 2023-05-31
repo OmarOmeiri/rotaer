@@ -5,6 +5,9 @@ import LogoSm from '@assets/icons/rotaer_icon.svg';
 import Input, { IInput, inputTypes } from '@components/Forms/Input';
 import { zodPasswordValidator, zodUserNameValidator } from '@frameworks/zod/zodValidators';
 import { shallow } from 'zustand/shallow';
+import {
+  useSession, signIn, signOut, SignInResponse,
+} from 'next-auth/react';
 import classes from './AuthModal.module.css';
 import { GoogleLoginBtn } from '../../../Buttons/GoogleLogin/GoogleLoginBtn';
 import authStore from '../../../../store/auth/authStore';
@@ -14,6 +17,8 @@ import { authenticate } from '../../../../Http/requests/auth';
 import { createUser } from '../../../../Http/requests/user';
 import { useForms } from '../../../../hooks/Forms/useForm';
 import ModalEnterBtn from '../ModalEnterBtn';
+import alertStore from '../../../../store/alert/alertStore';
+import { useNextAuth } from '../../../../hooks/Auth/useAuth';
 
 type Props = {
   isLogin?: boolean
@@ -29,6 +34,8 @@ const translator = new Translator({
   username: { 'en-US': 'Username', 'pt-BR': 'Usuário' },
   forgotPasswd: { 'en-US': 'Forgot?', 'pt-BR': 'Esqueceu?' },
   nonMatchingPassword: { 'en-US': 'The passwords do not match', 'pt-BR': 'As senhas não são iguais' },
+  loginSuccess: { 'en-US': 'Welcome', 'pt-BR': 'Bem vindo' },
+  loginFail: { 'en-US': 'There was an error logging you in.', 'pt-BR': 'Houve um erro ao logar' },
 });
 
 const initFormData = {
@@ -123,15 +130,9 @@ const validators = {
 const LogInModal = ({ isLogin }: Props) => {
   const [isLogIn, setIsLogIn] = useState(isLogin !== false);
   const [loading, setLoading] = useState(false);
-  const {
-    isAuthenticated,
-    setAuthData,
-    resetAuthData,
-  } = authStore((state) => ({
-    setAuthData: state.setAuthData,
-    isAuthenticated: state.isAuthenticated,
-    resetAuthData: state.resetAuthData,
-  }), shallow);
+  const setAlert = alertStore((state) => state.setAlert);
+  const session = useNextAuth();
+  console.log('session: ', session);
   const { closeModal, setModalContent } = modalStore((state) => ({
     closeModal: state.closeModal,
     setModalContent: state.setModalContent,
@@ -149,10 +150,10 @@ const LogInModal = ({ isLogin }: Props) => {
   });
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (session.isAuthenticated) {
       closeModal();
     }
-  }, [isAuthenticated, closeModal]);
+  }, [session.isAuthenticated, closeModal]);
 
   const changeFormVisibility = useCallback((state: IInput[], display: boolean) => state.reduce((st, f) => {
     if (f.name === 'passwordConfirm') {
@@ -179,18 +180,35 @@ const LogInModal = ({ isLogin }: Props) => {
     setIsLogIn(false);
   };
 
+  const onLogIn = useCallback((res: SignInResponse | undefined) => {
+    if (res?.error || !res) {
+      setAlert({ msg: res?.error || translator.translate('loginFail'), type: 'error' });
+    } else {
+      setAlert({ msg: translator.translate('loginSuccess'), type: 'success' });
+    }
+  }, [setAlert]);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
     const parsed = validate();
+    console.log('parsed: ', parsed);
     try {
       if (isLogIn && isFormsValid(['username', 'password'])) {
         setLoading(true);
-        const res = await authenticate({
-          password: parsed.password,
+        // const res = await authenticate({
+        //   password: parsed.password,
+        //   username: parsed.username,
+        // });
+        // if (res) setAuthData(res);
+        const res = await signIn('credentials', {
+          redirect: false,
           username: parsed.username,
+          password: parsed.password,
         });
-        if (res) setAuthData(res);
+        console.log('res: ', res);
+        onLogIn(res);
+
         setLoading(false);
       } else if (isFormsValid()) {
         setLoading(true);

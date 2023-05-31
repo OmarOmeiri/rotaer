@@ -3,6 +3,7 @@ import { Analytics } from '@vercel/analytics/react';
 import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
 import { NextWebVitalsMetric } from 'next/app';
+import type { Session } from 'next-auth';
 import ClientLayout from '../../utils/ClientLayout/ClientLayout';
 import Providers from '../Providers';
 import AssetSearch from '../../components/AssetSearch/AssetSearch';
@@ -23,7 +24,8 @@ const styles = Config.get('styles');
 type Props = {
   children: React.ReactNode;
   params: {
-    lang: Langs
+    lang: Langs,
+    session?: Session
   }
 };
 
@@ -37,7 +39,7 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 /** */
 export default function RootLayout({
   children,
-  params: { lang },
+  params: { lang, session },
 }: Props) {
   langStore.setState({ lang });
 
@@ -53,7 +55,7 @@ export default function RootLayout({
         <div id="overlay-tooltip" />
         <LangStoreInitializer lang={lang} />
         <Alert/>
-        <Providers>
+        <Providers session={session}>
           <GoogleAuth/>
           <Auth/>
           <ClientLayout/>

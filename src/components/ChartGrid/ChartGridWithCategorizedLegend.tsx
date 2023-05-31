@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import ListIcon from '@icons/list.svg';
-import { Drawer } from '../Drawer/ContainedDrawer';
+import { ContainedDrawer } from '../Drawer/ContainedDrawer';
 import classes from './ChartGrid.module.css';
 import { ChartGridButton } from './ChartGridButton';
 import { ChartGridProps, ChartGrid } from './ChartGrid';
@@ -40,12 +40,12 @@ export const ChartGridWithCategorizedLegend = ({
           <ListIcon />
         </ChartGridButton>
       </div>
-      <Drawer open={legendOpen} setOpen={setLegendOpen}>
+      <ContainedDrawer open={legendOpen} setOpen={setLegendOpen}>
         <CategorizedChartLegend
           items={legendItems}
           onClick={onLegendClick}
           type={legendItemType || 'square'} />
-      </Drawer>
+      </ContainedDrawer>
     </div>
   );
 };

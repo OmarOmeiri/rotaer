@@ -12,7 +12,7 @@ const pathMatch = (req: NextRequest) => {
   if (path.startsWith('/_next')) return false;
   if (path.startsWith('/api')) return false;
   if (/^\/.*\..+/.test(path)) { // PUBLIC folder
-    if (process.env.NODE_ENV === 'development') console.info(req.nextUrl);
+    // if (process.env.NODE_ENV === 'development') console.info(req.nextUrl);
     return false;
   }
   return true;

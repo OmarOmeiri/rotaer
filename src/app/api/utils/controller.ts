@@ -2,17 +2,20 @@
 /* eslint-disable func-names */
 
 import { ErrorCodes } from 'lullo-common-types';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import ServerError from '@/utils/Errors/ServerError';
 import { checkLocale } from '../../../utils/Locale/locale';
 import Translator from '../../../utils/Translate/Translator';
+import { verifyJwt } from '../../../utils/jwt/jwt';
+import { getCookie } from './cookies';
 
 const paramMap = new Proxy({
-  GET: (req: Request) => {
+  GET: (req: NextRequest) => {
     const { searchParams } = new URL(req.url);
     return Object.fromEntries(searchParams);
   },
-  POST: async (req: Request) => {
+  POST: async (req: NextRequest) => {
     try {
       const body = await req.json();
       return body;
@@ -20,11 +23,11 @@ const paramMap = new Proxy({
       return {};
     }
   },
-  DELETE: (req: Request) => {
+  DELETE: (req: NextRequest) => {
     const { searchParams } = new URL(req.url);
     return Object.fromEntries(searchParams);
   },
-  PATCH: async (req: Request) => {
+  PATCH: async (req: NextRequest) => {
     try {
       const body = await req.json();
       return body;
@@ -41,6 +44,23 @@ const paramMap = new Proxy({
   },
 });
 
+const setLocale = (req: NextRequest) => {
+  const locale = checkLocale(req.headers.get('lang'));
+  Translator.setLang(locale);
+};
+
+const setUserId = (req: NextRequest) => {
+  const token = getCookie(req, 'x-auth-token');
+  console.log('HEEELOOO', cookies().getAll());
+  if (!token) return;
+  try {
+    const { userId } = verifyJwt(token);
+    req.headers.set('user-id', userId);
+  } catch {
+    req.headers.delete('user-id');
+  }
+};
+
 /** */
 export function controller() {
   return function (target: Class): void {
@@ -50,10 +70,12 @@ export function controller() {
       const descriptor = Object.getOwnPropertyDescriptor(target.prototype, propertyName);
       const originalMethod = descriptor?.value;
       if (descriptor?.value instanceof Function) {
-        target.prototype[propertyName] = async function (req: Request) {
-          const locale = checkLocale(req.headers.get('lang'));
-          Translator.setLang(locale);
+        target.prototype[propertyName] = async function (req: NextRequest) {
+          console.log('Controller', req.url);
+          const response = new NextResponse();
           try {
+            setLocale(req);
+            setUserId(req);
             const params = await paramMap[req.method as keyof typeof paramMap](req);
             if (!params) {
               throw new ServerError('Invalid HTTP verb', {
@@ -65,8 +87,10 @@ export function controller() {
             const result = await originalMethod({
               req,
               reqData: params,
+              res: response,
             });
-            return NextResponse.json(result);
+
+            return NextResponse.json(result, response);
           } catch (error) {
             console.info('error: ', error);
             return new NextResponse(

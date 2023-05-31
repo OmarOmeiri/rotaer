@@ -2,7 +2,6 @@
 import errorHelper from '@/utils/Errors/errorHelper';
 import { ContentTypes } from './types';
 import langStore from '../store/lang/langStore';
-import authStore from '../store/auth/authStore';
 
 type url = string;
 type _reqBody<T extends keyof typeof ContentTypes = 'applicationJson'> =
@@ -80,7 +79,6 @@ class Api<CT extends keyof typeof ContentTypes> {
     headers: {
       'Content-Type': ContentTypes.applicationJson,
       'lang': langStore.getState().lang,
-      'x-auth-token': authStore.getState().token || '',
     },
   };
   private onSuccessFn?: () => void;

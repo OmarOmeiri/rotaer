@@ -4,6 +4,7 @@ import {
   IAerodromeSchema,
   IRwySchema,
 } from './aerodrome';
+import { IFlightPlanSchema } from './fPlan';
 
 export const MongoCollections = {
   aerodrome: { name: 'aerodromes', alias: 'aerodromeDb' },
@@ -12,6 +13,7 @@ export const MongoCollections = {
   acft: { name: 'aircrafts', alias: 'acftsDb' },
   userAcft: { name: 'user-aircrafts', alias: 'userAcftsDb' },
   user: { name: 'users', alias: 'userDb' },
+  flightPlan: { name: 'flight-plans', alias: 'flightPlansDb' },
 } as const;
 
 export type MongoDocumentMap<C extends typeof MongoCollections[keyof typeof MongoCollections]['alias']> =
@@ -27,6 +29,8 @@ C extends 'aerodromeDb'
 ? IUserAcft
 : C extends 'userDb'
 ? IUserSchema
+: C extends 'flightPlansDb'
+? IFlightPlanSchema
 : never;
 
 type DbKeys = typeof MongoCollections[keyof typeof MongoCollections]['alias']

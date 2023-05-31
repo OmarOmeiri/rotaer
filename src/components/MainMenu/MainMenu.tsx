@@ -9,6 +9,7 @@ import MainMenuLogIn from './MenuLogIn';
 
 const translator = new Translator({
   myAcft: { 'pt-BR': 'Minhas aeronaves', 'en-US': 'My aircraft' },
+  flightPlans: { 'pt-BR': 'Plano de vôo', 'en-US': 'Flight plan' },
 });
 
 const Menu = ({ lang }: {lang: Langs}) => (
@@ -16,6 +17,9 @@ const Menu = ({ lang }: {lang: Langs}) => (
     <MainMenuLogIn/>
     <MainMenuLink icon={<PlaneIcon/>} href={APP_ROUTES.myAircraft(lang)}>
       {translator.capitalize().translate('myAcft')}
+    </MainMenuLink>
+    <MainMenuLink icon={<PlaneIcon/>} href={APP_ROUTES.flightPlan(lang)}>
+      {translator.capitalize().translate('flightPlans')}
     </MainMenuLink>
   </div>
 );

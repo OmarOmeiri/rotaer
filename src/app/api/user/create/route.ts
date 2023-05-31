@@ -2,6 +2,7 @@ import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
 import { MongoCollections } from '../../../../types/app/mongo';
 import UserService from '../Service';
+import type { MyRequest } from '../../../../types/request';
 
 type API = TAPI<'user', 'create'>;
 

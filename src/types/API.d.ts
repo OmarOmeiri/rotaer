@@ -1,6 +1,7 @@
 import { TAerodromeData, TAerodromPrelimInfo } from "./app/aerodrome"
 import { NextRequest } from "next/server"
 import { WithStrId } from "./app/mongo"
+import { FlightPlan } from "./app/fPlan"
 
 type UserRoutes = {
   load: {
@@ -70,23 +71,36 @@ type AerodromeRoutes = {
     GET: {
       req: {id: string},
       res: TAerodrome[],
-      verb: 'GET'
     }
   }
   coordinates: {
     GET: {
       req?: {id: string},
       res: TAerodromPrelimInfo[],
-      verb: 'GET'
     }
   }
   info: {
     GET: {
       req: {id: string},
       res: TAerodromeData | null,
-      verb: 'GET'
     }
   }
+}
+
+
+type FlightPlanRoutes = {
+  getUserFlightPlans: {
+    GET: {
+      req: undefined,
+      res: FlightPlan[],
+    }
+  },
+  saveUserFlightPlans: {
+    POST: {
+      req: FlightPlan,
+      res: null,
+    }
+  },
 }
 
 export type TAPIRoutes = {
@@ -94,6 +108,7 @@ export type TAPIRoutes = {
   aerodrome: AerodromeRoutes,
   acft: AircraftRoutes,
   auth: AuthRoutes,
+  flightPlan: FlightPlanRoutes
 }
 
 

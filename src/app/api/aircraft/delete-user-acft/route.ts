@@ -4,6 +4,7 @@ import { MongoCollections } from '../../../../types/app/mongo';
 import AcftService from '../Service';
 import { protectedRoute } from '../../utils/protectedRoute';
 import { COMMON_API_ERRORS } from '../../utils/Errors';
+import type { MyRequest } from '../../../../types/request';
 
 type API = TAPI<'acft', 'deleteUserAcft'>;
 

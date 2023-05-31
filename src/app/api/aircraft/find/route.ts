@@ -2,6 +2,7 @@ import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
 import { MongoCollections, WithStrId } from '../../../../types/app/mongo';
 import AcftService from '../Service';
+import type { MyRequest } from '../../../../types/request';
 
 type API = TAPI<'acft', 'find'>;
 

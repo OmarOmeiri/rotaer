@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   cloneElement,
   useCallback,
@@ -24,7 +26,7 @@ const style = {
   backgroundColor: colors.darklight,
 };
 
-export const Drawer = ({
+export const ContainedDrawer = ({
   children,
   open,
   setOpen,

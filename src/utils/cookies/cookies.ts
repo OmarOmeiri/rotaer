@@ -1,11 +1,27 @@
-const addDays = (days: number) => new Date(new Date().getTime() + (days * 1000 * 60 * 60 * 24));
+import { isDate } from 'lullo-utils/Date';
 
-export const setCookie = (name: string, value: string, options?: {expDays?: number, path?: string}) => {
-  document.cookie = `${name}=${value};${
-    typeof options?.expDays === 'number'
-      ? `expires=${addDays(options.expDays)};`
-      : ''
-  }path=${options?.path || '/'}`;
+type SetCookieOptions = {
+  expAt?: Date | string,
+  path?: string
+}
+
+const writeCookie = (name: string, value: string, options?: SetCookieOptions) => {
+  const { expAt, path } = options || {};
+  let exp: string | undefined;
+  if (isDate(expAt)) exp = expAt.toISOString();
+  else if (expAt) exp = expAt;
+  return (
+    `${name}=${value};${
+      exp
+        ? `expires=${exp};`
+        : ''
+    }path=${path || '/'}`
+  );
+};
+
+export const setCookie = (name: string, value: string, options?: SetCookieOptions) => {
+  const ck = writeCookie(name, value, options);
+  document.cookie = ck;
 };
 
 export const getCookies = () => (
@@ -23,7 +39,7 @@ export const getCookie = (name: string) => {
     .split(';')
     .find((c) => c.split('=')[0].trim() === name);
 
-  return cookie?.split('=')[1];
+  return cookie?.split('=')[1] || null;
 };
 
 export const deleteCookie = (name: string) => {

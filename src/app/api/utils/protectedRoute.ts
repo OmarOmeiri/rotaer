@@ -4,7 +4,7 @@
 import { ErrorCodes } from 'lullo-common-types';
 import ServerError from '@/utils/Errors/ServerError';
 import Translator from '../../../utils/Translate/Translator';
-import { verifyJwt } from '../../../utils/jwt/jwt';
+import type { MyRequest } from '../../../types/request';
 
 const translator = new Translator({
   unauthorized: { 'pt-BR': 'Não autorizado', 'en-US': 'Unauthorized' },
@@ -21,16 +21,9 @@ export function protectedRoute() {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (args: MyRequest<any>) {
-      const token = args.req.headers.get('x-auth-token');
-      if (!token) {
-        throw getError();
-      }
-      try {
-        const { userId } = verifyJwt(token);
-        args.req.headers.set('user-id', userId);
-      } catch {
-        throw getError();
-      }
+      console.log('Protected', args.req.url);
+      const userId = args.req.headers.get('user-id');
+      if (!userId) throw getError();
       const result = await originalMethod(args);
       return result;
     };

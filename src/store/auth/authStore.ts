@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { getLocalStorage, setLocalStorage, removeLocalStorage } from '../../utils/LocalStorage/localStorage';
 import { WithStrId } from '../../types/app/mongo';
+import { deleteCookie, getCookie, setCookie } from '../../utils/cookies/cookies';
+import { setServerSideCookie } from '../../utils/cookies/serverCookies';
 
 export interface IAuthState {
   token: string | null,
@@ -21,7 +22,7 @@ interface IAuthStore extends IAuthState {
 }
 
 const initialState: IAuthState = {
-  token: getLocalStorage('token'),
+  token: getCookie('x-auth-token'),
   isAuthenticated: false,
   loading: false,
   reloading: false,
@@ -29,12 +30,12 @@ const initialState: IAuthState = {
 };
 
 const authLogOut = (set: ZuSet<IAuthStore>) => {
-  removeLocalStorage('token');
+  deleteCookie('x-auth-token');
   set({ ...initialState, token: null });
 };
 
 const authInitializeToken = (set: ZuSet<IAuthStore>) => {
-  const token = getLocalStorage('token');
+  const token = getCookie('x-auth-token');
   set({ token });
 };
 
@@ -61,9 +62,10 @@ const authSetAuthData = (
     logOut();
     return;
   }
-  setLocalStorage(
-    'token',
+  setCookie(
+    'x-auth-token',
     res.token,
+    { expAt: res.expiresAt },
   );
   set(() => ({
     token: res.token || null,

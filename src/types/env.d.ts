@@ -28,6 +28,9 @@ declare global {
       readonly NEXT_PUBLIC_REDEMET_API_KEY: string;
       readonly MONGO_USER: string;
       readonly MONGO_PASSWORD: string;
+      // NEXT_AUTH
+      readonly NEXTAUTH_URL: string
+      readonly NEXTAUTH_SECRET: string;
     }
     interface ProcessEnv extends Env {}
   }
