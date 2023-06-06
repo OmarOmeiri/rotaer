@@ -6,14 +6,12 @@ import Input, { IInput, inputTypes } from '@components/Forms/Input';
 import { zodPasswordValidator, zodUserNameValidator } from '@frameworks/zod/zodValidators';
 import { shallow } from 'zustand/shallow';
 import {
-  useSession, signIn, signOut, SignInResponse,
+  signIn, signOut, SignInResponse,
 } from 'next-auth/react';
 import classes from './AuthModal.module.css';
 import { GoogleLoginBtn } from '../../../Buttons/GoogleLogin/GoogleLoginBtn';
-import authStore from '../../../../store/auth/authStore';
 import modalStore from '../../../../store/modal/modalStore';
 import Translator from '../../../../utils/Translate/Translator';
-import { authenticate } from '../../../../Http/requests/auth';
 import { createUser } from '../../../../Http/requests/user';
 import { useForms } from '../../../../hooks/Forms/useForm';
 import ModalEnterBtn from '../ModalEnterBtn';
@@ -132,7 +130,6 @@ const LogInModal = ({ isLogin }: Props) => {
   const [loading, setLoading] = useState(false);
   const setAlert = alertStore((state) => state.setAlert);
   const session = useNextAuth();
-  console.log('session: ', session);
   const { closeModal, setModalContent } = modalStore((state) => ({
     closeModal: state.closeModal,
     setModalContent: state.setModalContent,
@@ -149,12 +146,6 @@ const LogInModal = ({ isLogin }: Props) => {
     validation: validators,
   });
 
-  useEffect(() => {
-    if (session.isAuthenticated) {
-      closeModal();
-    }
-  }, [session.isAuthenticated, closeModal]);
-
   const changeFormVisibility = useCallback((state: IInput[], display: boolean) => state.reduce((st, f) => {
     if (f.name === 'passwordConfirm') {
       return [
@@ -170,11 +161,22 @@ const LogInModal = ({ isLogin }: Props) => {
 
   useEffect(() => {
     if (!isLogIn) {
-      setInputs(changeFormVisibility(inputs, true));
+      setInputs((i) => changeFormVisibility(i, true));
     } else {
-      setInputs(changeFormVisibility(inputs, false));
+      setInputs((i) => changeFormVisibility(i, false));
     }
   }, [isLogIn, changeFormVisibility, inputs, setInputs]);
+
+  useEffect(() => {
+    if (
+      session.isAuthenticated
+      && !session.isLoading
+      && session.user?.username
+    ) {
+      closeModal();
+      setAlert({ msg: `${translator.translate('loginSuccess')} ${session.user.username.split('@')[0]}`, type: 'success' });
+    }
+  }, [session.isAuthenticated, session.isLoading, session.user, setAlert, closeModal]);
 
   const changeToSignUp = () => {
     setIsLogIn(false);
@@ -183,44 +185,48 @@ const LogInModal = ({ isLogin }: Props) => {
   const onLogIn = useCallback((res: SignInResponse | undefined) => {
     if (res?.error || !res) {
       setAlert({ msg: res?.error || translator.translate('loginFail'), type: 'error' });
-    } else {
-      setAlert({ msg: translator.translate('loginSuccess'), type: 'success' });
     }
   }, [setAlert]);
+
+  const logIn = useCallback(async ({ username, password }: {
+    username: string,
+    password: string
+  }) => {
+    setLoading(true);
+    const res = await signIn('credentials', {
+      redirect: false,
+      username,
+      password,
+    });
+    onLogIn(res);
+    setLoading(false);
+  }, [onLogIn]);
+
+  const create = useCallback(async ({ username, password }: {
+    username: string,
+    password: string
+  }) => {
+    setLoading(true);
+    const res = await createUser({
+      password,
+      username,
+    });
+    if (res) logIn({ username, password });
+    else setLoading(false);
+  }, [logIn]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (loading) return;
     const parsed = validate();
-    console.log('parsed: ', parsed);
     try {
       if (isLogIn && isFormsValid(['username', 'password'])) {
-        setLoading(true);
-        // const res = await authenticate({
-        //   password: parsed.password,
-        //   username: parsed.username,
-        // });
-        // if (res) setAuthData(res);
-        const res = await signIn('credentials', {
-          redirect: false,
-          username: parsed.username,
-          password: parsed.password,
-        });
-        console.log('res: ', res);
-        onLogIn(res);
-
-        setLoading(false);
+        logIn(parsed);
       } else if (isFormsValid()) {
-        setLoading(true);
-        const res = await createUser({
-          password: parsed.password,
-          username: parsed.username,
-        });
-        if (res) setAuthData(res);
-        setLoading(false);
+        create(parsed);
       }
     } catch (error) {
-      resetAuthData();
+      signOut();
       setLoading(false);
     }
   };

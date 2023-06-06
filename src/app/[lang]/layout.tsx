@@ -16,8 +16,7 @@ import { APP_ROUTES } from '../../consts/routes';
 import { MainMenu } from '../../components/MainMenu/MainMenu';
 import { Alert } from '../../components/Alert/Alert';
 import ModalHandler from '../../components/Modal/ModalHandler';
-import GoogleAuth from '../../components/Auth/GoogleAuth';
-import Auth from '../../components/Auth/Auth';
+import GoogleAuth from '../../components/GoogleAuth/GoogleAuth';
 
 const styles = Config.get('styles');
 
@@ -57,7 +56,6 @@ export default function RootLayout({
         <Alert/>
         <Providers session={session}>
           <GoogleAuth/>
-          <Auth/>
           <ClientLayout/>
           <ModalHandler/>
           <nav className={classes.Nav} style={{ height: `${styles.navBar.height}px` }}>

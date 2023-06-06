@@ -178,7 +178,7 @@ class METARParser {
     const unitMatch = this.current.match(/KT|MPS|KPH|SM$/);
     const [unit] = (unitMatch || []);
     if (unit === 'KT') this.wind.speed = Math.round(speed);
-    else if (unit === 'MPS') this.wind.speed = Math.round(SpeedConverter.mps(speed).toKt());
+    else if (unit === 'MPS') this.wind.speed = Math.round(SpeedConverter.ms(speed).toKt());
     else if (unit === 'KPH') this.wind.speed = Math.round(SpeedConverter.kmh(speed).toKt());
     else if (unit === 'SM') this.wind.speed = Math.round(SpeedConverter.mph(speed).toKt());
 

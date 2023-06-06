@@ -4,7 +4,7 @@ import {
   IAerodromeSchema,
   IRwySchema,
 } from './aerodrome';
-import { IFlightPlanSchema } from './fPlan';
+import type { IFlightPlanSchema } from './fPlan';
 
 export const MongoCollections = {
   aerodrome: { name: 'aerodromes', alias: 'aerodromeDb' },

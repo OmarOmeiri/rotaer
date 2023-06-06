@@ -28,15 +28,15 @@ const BaseModal = {
   },
 };
 
-export const modalStyles: {[K in allModals]: IModalProps['modalStyle']} = {
-  logIn: {
-    ...modalBaseStyle,
-  },
-  changePassword: BaseModal,
-  forgotPassword: BaseModal,
-  resetPassword: BaseModal,
-  saveTableColumns: BaseModal,
-  deleteTableColumns: BaseModal,
-  deleteAcftModal: BaseModal,
-  editAcftModal: BaseModal,
-};
+// export const modalStyles: {[K in allModals]: IModalProps['modalStyle']} = {
+//   logIn: {
+//     ...modalBaseStyle,
+//   },
+//   changePassword: BaseModal,
+//   forgotPassword: BaseModal,
+//   resetPassword: BaseModal,
+//   saveTableColumns: BaseModal,
+//   deleteTableColumns: BaseModal,
+//   deleteAcftModal: BaseModal,
+//   editAcftModal: BaseModal,
+// };

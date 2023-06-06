@@ -10,7 +10,7 @@ const AerodromeRMKTab = ({ info }: {info: TAerodromeData}) => (
     {
         info.rmk && Object.keys(info.rmk).length
           ? (
-            <CardWithTitle title='Remarks' Icon={<InfoIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle title='Remarks' Icon={<InfoIcon width="20"/>} styled>
               <ul className={classes.RMKList}>
                 {
                   Object.entries(info.rmk).map(([k, vals]) => (

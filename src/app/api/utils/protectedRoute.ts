@@ -2,9 +2,11 @@
 /* eslint-disable func-names */
 
 import { ErrorCodes } from 'lullo-common-types';
+import { getServerSession } from 'next-auth';
 import ServerError from '@/utils/Errors/ServerError';
 import Translator from '../../../utils/Translate/Translator';
 import type { MyRequest } from '../../../types/request';
+import { authOptions } from '../auth/[...nextauth]/route';
 
 const translator = new Translator({
   unauthorized: { 'pt-BR': 'Não autorizado', 'en-US': 'Unauthorized' },
@@ -21,9 +23,9 @@ export function protectedRoute() {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (args: MyRequest<any>) {
-      console.log('Protected', args.req.url);
-      const userId = args.req.headers.get('user-id');
-      if (!userId) throw getError();
+      const session = await getServerSession(authOptions);
+      if (!session || !session.user?._id) throw getError();
+      args.req.headers.set('user-id', session.user._id);
       const result = await originalMethod(args);
       return result;
     };

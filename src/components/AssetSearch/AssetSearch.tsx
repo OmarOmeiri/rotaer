@@ -12,9 +12,7 @@ import React, {
 import AnimateHeight from 'react-animate-height';
 import styled from 'styled-components';
 import LogoAbducted from '@assets/icons/logo-abducted.svg';
-import { useQuery } from '@tanstack/react-query';
 import { useQueryState } from '@/hooks/react-query/useQueryState';
-import { fetchAerodrome } from '../../Http/requests/aerodrome';
 import { colors } from '../../config/styles/colors';
 import { APP_ROUTES } from '../../consts/routes';
 import { useClickOutside } from '../../hooks/DOM/useClickOutside';
@@ -26,6 +24,7 @@ import Search from '../SearchBox/Search';
 import { Tooltip } from '../Tooltips/Tooltip';
 import { TAerodrome } from '../../types/app/aerodrome';
 import langStore from '../../store/lang/langStore';
+import { useAerodromeQuery } from '../../frameworks/react-query/queries/aerodrome';
 
 const SEARCH_MIN_LENGTH = 3;
 
@@ -136,12 +135,7 @@ const AssetSearch = ({ disableScroll }: {disableScroll?: boolean}) => {
     }
   });
 
-  const query = useQuery<any>({
-    queryKey: ['aerodrome-search', debouncedValue],
-    queryFn: () => fetchAerodrome({ id: value }),
-    enabled,
-    cacheTime: 0,
-  });
+  const query = useAerodromeQuery(debouncedValue, enabled);
 
   const closeTooltip = useCallback(() => {
     if (document.activeElement !== searchInputRef.current) {

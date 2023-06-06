@@ -61,7 +61,7 @@ const AerodromeRunwaysTab = ({ info, metar }: {info: TAerodromeData, metar?: MET
         if (!rwy.rwy) return nodes;
         nodes.push(
           <>
-            <CardWithTitle key={rwy.rwy} title={rwy.rwy} Icon={<AirplaneArrival width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle key={rwy.rwy} title={rwy.rwy} Icon={<AirplaneArrival width="25"/>} styled>
               <div className={classes.RunwayInfoGridContainer}>
                 <div>
                   <div>Info</div>
@@ -188,7 +188,7 @@ const AerodromeRunwaysTab = ({ info, metar }: {info: TAerodromeData, metar?: MET
     {
       metar?.metar.wind.speed && metar?.metar.wind.direction && metar?.metar.wind.direction !== 'VRB'
         ? (
-          <CardWithTitle title={translator.capitalize().translate('wind')} Icon={<WindIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+          <CardWithTitle title={translator.capitalize().translate('wind')} Icon={<WindIcon width="25"/>} styled>
             <div className={classes.RunwayWindTableContainer}>
               <table className={classes.RunwayWindTable}>
                 <thead>

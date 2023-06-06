@@ -1,5 +1,5 @@
 import { TRequest } from '../../types/API';
-import { FlightPlan } from '../../types/app/fPlan';
+import type { FlightPlan } from '../../types/app/fPlan';
 import Api from '../HTTPRequest';
 import { API_ROUTES } from '../routes';
 

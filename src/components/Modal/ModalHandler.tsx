@@ -6,8 +6,6 @@ import modalStore from '../../store/modal/modalStore';
 import type { allModals, modalChildProps } from '../../store/modal/typings';
 import TransitionsModal from './Modal';
 import RotaerLoadingSpinner from '../Loading/RotaerLoadingSpinner';
-import DeleteAcftModal from './ModalContents/acft/DeleteAcftModal';
-import EditAcftModal from './ModalContents/acft/EditAcftModal';
 
 const ModalLoading = () => (
   <div>
@@ -16,6 +14,18 @@ const ModalLoading = () => (
 );
 
 const AuthModal = dynamic(() => import('./ModalContents/auth/LogInModal'), {
+  ssr: false,
+  loading: ModalLoading,
+});
+const DeleteAcftModal = dynamic(() => import('./ModalContents/acft/DeleteAcftModal'), {
+  ssr: false,
+  loading: ModalLoading,
+});
+const EditAcftModal = dynamic(() => import('./ModalContents/acft/EditAcftModal'), {
+  ssr: false,
+  loading: ModalLoading,
+});
+const AddWaypointModal = dynamic(() => import('./ModalContents/fplan/AddWaypointModal'), {
   ssr: false,
   loading: ModalLoading,
 });
@@ -33,6 +43,10 @@ const getModal = <T extends allModals>(name: T, propsToChildren: modalChildProps
     case 'editAcftModal': {
       const p = propsToChildren as modalChildProps<'editAcftModal'>;
       return <EditAcftModal { ...p ?? {} }/>;
+    }
+    case 'addWptModal': {
+      const p = propsToChildren as modalChildProps<'editAcftModal'>;
+      return <AddWaypointModal { ...p ?? {} }/>;
     }
     default:
       return null;

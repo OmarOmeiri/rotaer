@@ -11,6 +11,9 @@ import Config from '../../../../config';
 import { editUserAircraft } from '../../../../Http/requests/acft';
 import { useForms } from '../../../../hooks/Forms/useForm';
 import ModalEnterBtn from '../ModalEnterBtn';
+import {
+  acftClimbRateValidator, acftDescentRateValidator, acftFuelFlowValidator, acftIASValidator, acftUsableFuelValidator,
+} from '../../../../frameworks/zod/zodAcft';
 
 const styles = Config.get('styles');
 
@@ -30,60 +33,14 @@ const translator = new Translator({
   fuelInvalid: { 'en-US': 'Invalid usable fuel', 'pt-BR': 'Combustível utilizável inválido' },
 });
 
-const fuelFlowValidator = (value: string) => {
-  const num = Number(String(value).trim());
-  return z.number({
-    invalid_type_error: translator.translate('fuelFlowInvalid'),
-  })
-    .min(1, translator.translate('fuelFlowInvalid'))
-    .max(15000, translator.translate('fuelFlowInvalid'))
-    .optional()
-    .parse(num || undefined);
-};
-
 const validators = {
-  ias: (value: string) => {
-    const num = Number(String(value).trim());
-    return z.number({
-      invalid_type_error: translator.translate('iasInvalid'),
-    })
-      .min(30, translator.translate('iasInvalid'))
-      .max(1500, translator.translate('iasInvalid'))
-      .optional()
-      .parse(num || undefined);
-  },
-  climbRate: (value: string) => {
-    const num = Number(String(value).trim());
-    return z.number({
-      invalid_type_error: translator.translate('climbInvalid'),
-    })
-      .min(30, translator.translate('climbInvalid'))
-      .max(5000, translator.translate('climbInvalid'))
-      .optional()
-      .parse(num || undefined);
-  },
-  descentRate: (value: string) => {
-    const num = Number(String(value).trim());
-    return z.number({
-      invalid_type_error: translator.translate('climbInvalid'),
-    })
-      .min(30, translator.translate('climbInvalid'))
-      .max(5000, translator.translate('climbInvalid'))
-      .optional()
-      .parse(num || undefined);
-  },
-  usableFuel: (value: string) => {
-    const num = Number(String(value).trim());
-    return z.number({
-      invalid_type_error: translator.translate('fuelInvalid'),
-    })
-      .min(5, translator.translate('fuelInvalid'))
-      .optional()
-      .parse(num || undefined);
-  },
-  climbFuelFlow: fuelFlowValidator,
-  cruiseFuelFlow: fuelFlowValidator,
-  descentFuelFlow: fuelFlowValidator,
+  ias: acftIASValidator,
+  climbRate: acftClimbRateValidator,
+  descentRate: acftDescentRateValidator,
+  usableFuel: acftUsableFuelValidator,
+  climbFuelFlow: acftFuelFlowValidator,
+  cruiseFuelFlow: acftFuelFlowValidator,
+  descentFuelFlow: acftFuelFlowValidator,
 };
 
 const initFormData = (acft: WithStrId<IUserAcft>) => ({

@@ -15,11 +15,9 @@ export const API_ROUTES = {
     getUserFlightPlans: 'flight-plan/get-user-fplans',
   },
   auth: {
-    authenticate: 'auth/authenticate',
     gauth: 'auth/g-auth',
   },
   user: {
     create: 'user/create',
-    load: 'user/load',
   },
 };

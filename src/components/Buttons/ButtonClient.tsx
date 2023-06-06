@@ -44,8 +44,8 @@ ${(props: BtnStyleProps) => {
       default:
         return css`
           background: linear-gradient(#0000, rgb(0 0 0/25%)) top/100% 800%;
-          background-color: #1d7e1d;
-          color: #ffffff;
+          background-color: ${styles.colors.green};
+          color: ${styles.colors.black};;
           border-radius: 5px;
           padding: 8px 25px;
           line-height: 20px;

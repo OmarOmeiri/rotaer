@@ -4,7 +4,6 @@ import Config from '@config';
 import LogoSm from '@assets/icons/logo-sm.svg';
 import Input, { IInput, inputTypes } from '@components/Forms/Input';
 import { zodPasswordValidator } from '@frameworks/zod/zodValidators';
-import authStore from '@store/auth/authStore';
 import modalStore from '@store/modal/modalStore';
 import classes from './AuthModal.module.css';
 import { useForms } from '../../../../hooks/Forms/useForm';
@@ -86,8 +85,8 @@ const validators = {
 
 const ResetPasswordModal = ({ token }:{token: string}) => {
   const [loading, setLoading] = useState(false);
-  const reloadUser = authStore((state) => state.reloadUser);
-  const hasPassword = authStore((state) => false) || false;// state.user?.password
+  // const reloadUser = authStore((state) => state.reloadUser);
+  // const hasPassword = authStore((state) => false) || false;// state.user?.password
   const closeModal = modalStore((state) => (state.closeModal));
 
   const {
@@ -113,7 +112,7 @@ const ResetPasswordModal = ({ token }:{token: string}) => {
       // });
       setLoading(false);
       closeModal();
-      reloadUser();
+      // reloadUser();
     }
   };
 
@@ -127,7 +126,7 @@ const ResetPasswordModal = ({ token }:{token: string}) => {
       }}/>
       <div className={classes.Wrapper}>
         <StyledTitle className={classes.Title}>
-          {hasPassword ? 'Alterar Senha' : 'Criar Senha'}
+          {/* {hasPassword ? 'Alterar Senha' : 'Criar Senha'} */}
         </StyledTitle>
         <div className={classes.Contents}>
           <form className={classes.Form} onSubmit={onSubmit}>

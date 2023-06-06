@@ -1,12 +1,12 @@
 import withOriginMiddleware from './middlewares/withOrigin';
 import { stackMiddlewares } from './middlewares/stackMiddlewares';
 import withLocaleMiddleware from './middlewares/withLocale';
-import withTokenMiddleware from './middlewares/withToken';
+import withAuthMiddleware from './middlewares/withAuth';
 
 const middlewares = [
   withOriginMiddleware,
   withLocaleMiddleware,
-  withTokenMiddleware,
+  withAuthMiddleware,
 ];
 
 export default stackMiddlewares(middlewares);

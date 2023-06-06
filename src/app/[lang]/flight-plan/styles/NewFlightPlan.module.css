@@ -1,0 +1,12 @@
+.Wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.MapWrapper {
+  background-color: gray;
+  flex-grow: 1;
+  min-width: 600px;
+}
+

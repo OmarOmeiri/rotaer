@@ -49,17 +49,17 @@ const setLocale = (req: NextRequest) => {
   Translator.setLang(locale);
 };
 
-const setUserId = (req: NextRequest) => {
-  const token = getCookie(req, 'x-auth-token');
-  console.log('HEEELOOO', cookies().getAll());
-  if (!token) return;
-  try {
-    const { userId } = verifyJwt(token);
-    req.headers.set('user-id', userId);
-  } catch {
-    req.headers.delete('user-id');
-  }
-};
+// const setUserId = (req: NextRequest) => {
+//   const token = getCookie(req, 'x-auth-token');
+//   console.log('HEEELOOO', cookies().getAll());
+//   if (!token) return;
+//   try {
+//     const { userId } = verifyJwt(token);
+//     req.headers.set('user-id', userId);
+//   } catch {
+//     req.headers.delete('user-id');
+//   }
+// };
 
 /** */
 export function controller() {
@@ -71,11 +71,10 @@ export function controller() {
       const originalMethod = descriptor?.value;
       if (descriptor?.value instanceof Function) {
         target.prototype[propertyName] = async function (req: NextRequest) {
-          console.log('Controller', req.url);
           const response = new NextResponse();
           try {
             setLocale(req);
-            setUserId(req);
+            // setUserId(req);
             const params = await paramMap[req.method as keyof typeof paramMap](req);
             if (!params) {
               throw new ServerError('Invalid HTTP verb', {
@@ -92,7 +91,6 @@ export function controller() {
 
             return NextResponse.json(result, response);
           } catch (error) {
-            console.info('error: ', error);
             return new NextResponse(
               JSON.stringify({
                 message: error.message || 'An unknown error has occurred',

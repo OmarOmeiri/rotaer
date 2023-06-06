@@ -31,6 +31,10 @@ a {
   margin: auto;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
 ::-moz-selection {
   color: #000;
   background: var(--app-green);

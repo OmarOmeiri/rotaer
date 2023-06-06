@@ -7,7 +7,7 @@ type FindRoutes = TRequest<'aerodrome', 'find'>
 type CoordRoutes = TRequest<'aerodrome', 'coordinates'>
 type InfoRoutes = TRequest<'aerodrome', 'info'>
 
-export const fetchAerodrome: FindRoutes['GET'] = async (args) => {
+export const fetchAerodromes: FindRoutes['GET'] = async (args) => {
   const { data } = await new Api(API_ROUTES.aerodrome.find)
     .params({ id: args.id })
     .get<TAerodrome[]>();

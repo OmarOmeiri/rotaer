@@ -3,7 +3,6 @@
 import type { ColumnDefCustom } from '@tanstack/react-table';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import TrashIcon from '@icons/trash.svg';
 import EditIcon from '@icons/edit.svg';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -11,11 +10,10 @@ import classes from './MyAcftTable.module.css';
 import Translator from '../../../utils/Translate/Translator';
 import { ACFT_IMG_URL } from '../../../consts/urls';
 import { formatAcftRegistration } from '../../../utils/Acft/acft';
-import { findUserAircraft } from '../../../Http/requests/acft';
-import authStore from '../../../store/auth/authStore';
-import { API_ROUTES } from '../../../Http/routes';
 import modalStore from '../../../store/modal/modalStore';
 import { WithStrId } from '../../../types/app/mongo';
+import { useNextAuth } from '../../../hooks/Auth/useAuth';
+import { useAcftQuery } from '../../../frameworks/react-query/queries/acft';
 
 const Table = dynamic(() => import('../../../components/Table/Table'));
 
@@ -117,27 +115,18 @@ const myAcftCols = (onEdit: () => void): ColumnDefCustom<WithStrId<IUserAcft>>[]
 ];
 
 const MyAcftTable = () => {
-  const isAuthenticated = authStore((state) => state.isAuthenticated);
-  const userId = authStore((state) => state.user?._id);
-  const queryClient = useQueryClient();
-
-  const userAcftQuery = useQuery({
-    queryKey: [API_ROUTES.aircraft.findUserAcft, userId],
-    queryFn: () => (userId ? findUserAircraft({ userId }) : []),
-    enabled: !!(isAuthenticated && userId),
-    cacheTime: Infinity,
-    staleTime: Infinity,
-  });
+  const session = useNextAuth();
+  const userAcftQuery = useAcftQuery(session);
 
   const invalidateAcfts = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: [API_ROUTES.aircraft.findUserAcft] });
-  }, [queryClient]);
+    userAcftQuery.invalidate();
+  }, [userAcftQuery]);
 
   useEffect(() => {
     invalidateAcfts();
-  }, [userId, invalidateAcfts]);
+  }, [session.user?._id, invalidateAcfts]);
 
-  const data = isAuthenticated ? (userAcftQuery.data || []) : [];
+  const data = session.isAuthenticated ? (userAcftQuery.data || []) : [];
   const cols = useMemo(() => myAcftCols(invalidateAcfts) as ColumnDefCustom<Record<string, unknown>>[], [invalidateAcfts]);
 
   return (

@@ -5,6 +5,7 @@ import MinusCircle from '@assets/icons/minus-circle.svg';
 import { useCallback, useState } from 'react';
 import AnimateHeight from 'react-animate-height';
 import classes from './Card.module.css';
+import styledClasses from './CardStyled.module.css';
 
 const Content = ({
   height,
@@ -38,6 +39,7 @@ const CardWithTitle = ({
   titleClassName,
   TitleComponent,
   collapsible,
+  styled,
 }: {
   title: string
   Icon?: JSX.Element
@@ -48,7 +50,8 @@ const CardWithTitle = ({
   TitleComponent?: React.ElementType
   collapsible?: {
     height: number
-  }
+  },
+  styled?: boolean
 }) => {
   const [collapsed, setCollapsed] = useState(!!collapsible?.height);
   const isCollapsible = !!collapsible?.height;
@@ -58,8 +61,8 @@ const CardWithTitle = ({
   }, []);
 
   return (
-    <div className={`${classes.CardWithTitle} ${className || ''}`}>
-      <div className={`${classes.CardTitle} ${titleClassName || ''}`}>
+    <div className={`${classes.CardWithTitle} ${styled ? styledClasses.Card : ''} ${className || ''}`}>
+      <div className={`${classes.CardTitle} ${styled ? styledClasses.CardTitle : ''} ${titleClassName || ''}`}>
         {
           Icon
             ? (

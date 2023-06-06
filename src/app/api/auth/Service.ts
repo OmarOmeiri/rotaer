@@ -1,9 +1,8 @@
 import { omit } from 'lullo-utils/Objects';
-import { zodPasswordValidator, zodUserNameValidator } from '../../../frameworks/zod/zodValidators';
+import { zodEmailValidator, zodPasswordValidator, zodUserNameValidator } from '../../../frameworks/zod/zodValidators';
 import { MongoCollections } from '../../../types/app/mongo';
 import BaseService from '../utils/BaseService';
 import { comparePassword } from '../../../utils/password/password';
-import { getJWT } from '../../../utils/jwt/jwt';
 import { COMMON_API_ERRORS } from '../utils/Errors';
 
 class AuthService extends BaseService {
@@ -28,38 +27,35 @@ class AuthService extends BaseService {
     }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (await (comparePassword(password!, user.password))) {
-      return omit(user, 'password');
+      return user;
     }
 
     throw COMMON_API_ERRORS.invalidCredentials();
   }
 
-  async gAuth(username: string) {
+  async gAuth(username?: string) {
+    try {
+      zodEmailValidator(username);
+    } catch (error) {
+      throw COMMON_API_ERRORS.invalidCredentials();
+    }
+
     const db = this.getDb([
       MongoCollections.user,
     ]);
 
     const user = await db.userDb.findOne({ username });
     if (!user) {
-      const newUser = await db.userDb.insertOne({ username });
-      const userId = newUser.insertedId.toString();
-      const { token, expiresAt } = getJWT(userId);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const newUser = await db.userDb.insertOne({ username: username! });
+      const _id = newUser.insertedId.toString();
       return {
-        token,
-        msg: `Bem vindo, ${username.split('@')[0]}`,
-        id: userId,
-        expiresAt,
+        _id,
+        username,
       };
     }
 
-    const userId = user._id.toString();
-    const { token, expiresAt } = getJWT(userId);
-    return {
-      token,
-      msg: `Bem vindo, ${user.username.split('@')[0]}`,
-      id: userId,
-      expiresAt,
-    };
+    return omit(user, 'password', 'acfts');
   }
 }
 export default AuthService;

@@ -17,7 +17,7 @@ const QuestionIcon = dynamic(() => import('@icons/question-outline.svg')) as SVG
 const CardWithTitle = dynamic(() => import('../../../../components/Card/CardWithTitle'));
 const Link = dynamic(() => import('../../../../components/Navigation/Link/Link'));
 const StyledTooltip = dynamic(() => import('../../../../components/Tooltips/StyledTooltip'));
-const GMap = dynamic(() => import('../../../../components/Map/GMap'));
+const GMap = dynamic(() => import('../../../../components/Map/GoogleMap/GMap'));
 const TooltipHover = dynamic(() => import('../../../../components/Tooltips/TooltipHover'));
 
 const translator = new Translator({
@@ -84,7 +84,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
   ), [info]);
   return (
     <>
-      <CardWithTitle title={translator.translate('mainInfo')} Icon={<AirportIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+      <CardWithTitle title={translator.translate('mainInfo')} Icon={<AirportIcon width="20"/>} styled>
         <div className={classes.MainInfoCardContainer}>
           <table className={classes.MainInfoTable}>
             <tbody>
@@ -255,7 +255,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
       {
         info.charts && Object.keys(info.charts).length
           ? (
-            <CardWithTitle title={translator.translate('charts')} Icon={<MapIcon width="25"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle title={translator.translate('charts')} Icon={<MapIcon width="25"/>} styled>
               <div className={classes.ChartsContainer}>
                 {
                   Object.entries(info.charts)

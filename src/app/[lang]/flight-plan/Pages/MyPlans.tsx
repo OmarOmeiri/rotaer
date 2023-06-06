@@ -1,11 +1,18 @@
-import { FlightPlan } from '../../../../types/app/fPlan';
+import CardWithTitle from '../../../../components/Card/CardWithTitle';
+import Translator from '../../../../utils/Translate/Translator';
+import FlightPlanTable from '../components/FlightPlanTable';
+import classes from '../styles/FlightPlan.module.css';
 
-type Props = {
-  plans: FlightPlan[]
-}
+const translator = new Translator({
+  myPlans: { 'en-US': 'My plans', 'pt-BR': 'My plannings' },
+});
 
-const MyPlans = ({ plans }: Props) => (
-  <div>MyPlans</div>
+const MyPlans = () => (
+  <div>
+    <CardWithTitle title={translator.translate('myPlans')} styled>
+      <FlightPlanTable/>
+    </CardWithTitle>
+  </div>
 );
 
 export default MyPlans;

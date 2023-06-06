@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import type { TAerodromeData } from '../../../../types/app/aerodrome';
-import classes from '../AerodromeInfo.module.css';
 import { MetarTable } from '../../../../components/Metar/MetarTable';
 import METARParser from '../../../../utils/METAR/METAR';
 import langStore from '../../../../store/lang/langStore';
@@ -22,7 +21,7 @@ const AerodromeMetTab = ({ info, metar }: {info: TAerodromeData, metar: ReturnTy
       {
         metar
           ? (
-            <CardWithTitle title='METAR' Icon={<WindIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle title='METAR' Icon={<WindIcon width="20"/>} styled>
               <div>
                 <MetarTable parsedMetar={metar} lang={lang}/>
               </div>
@@ -33,7 +32,7 @@ const AerodromeMetTab = ({ info, metar }: {info: TAerodromeData, metar: ReturnTy
       {
         info.coords
           ? (
-            <CardWithTitle title={translator.translate('forecast')} Icon={<WindSockIcon width="20"/>} className={classes.Card} titleClassName={classes.CardTitle}>
+            <CardWithTitle title={translator.translate('forecast')} Icon={<WindSockIcon width="20"/>} styled>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Windy
                   lat={info.coords.decimal.lat}

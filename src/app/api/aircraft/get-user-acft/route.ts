@@ -12,6 +12,7 @@ class FindAircraft implements API {
   @protectedRoute()
   async GET({ reqData: { userId } }: MyRequest<{userId: string}>) {
     const service = new AcftService();
+
     const acfts = await (await service.withDb([
       MongoCollections.user,
       MongoCollections.userAcft,

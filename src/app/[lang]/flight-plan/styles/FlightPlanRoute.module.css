@@ -1,0 +1,130 @@
+
+.RouteHeader {
+  background-color: var(--app-green);
+  color: var(--app-black);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #46464624;
+}
+
+.RouteHeader:first-of-type {
+  grid-row: 1 / 2;
+}
+
+.RouteHeader:not(:first-of-type) {
+  grid-row: 1 / 3;
+}
+
+.RouteItem {
+  background-color: #131313;
+  color: var(--app-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #a9a7a7;
+  border-right: 1px solid rgb(73 73 73 / 18%);
+}
+
+.RouteItem[data-canclick='true'] {
+  cursor: pointer;
+}
+
+.RouteWaypoint {
+  background-color: #292929;
+  color: var(--app-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  border: 1px solid #767373;
+  padding: 0.7em 0;
+}
+
+.WptNameWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.WptName {
+  width: 70%;
+}
+
+.RouteWaypointBtnWrapper {
+  position: absolute;
+  bottom: -8px;
+  z-index: 10;
+  display: flex;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.RouteWaypointBtnWrapper button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: var(--app-dark);
+  color: var(--app-green);
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.RouteWaypointBtnAdd {
+  cursor: pointer;
+  border-right: 1px solid #ffffff33 !important;
+}
+
+.RouteWaypointBtnDrag {
+  cursor: grab;
+}
+
+.RouteWaypointBtnAdd *,
+.RouteWaypointBtnDrag * {
+  pointer-events: none;
+}
+
+.RouteWaypoint:not(:last-of-type)::after {
+  content: url('../../../../../public/assets/icons/route-arrow.svg?url');
+  width: 13px;
+  height: 100%;
+  position: absolute;
+  right: -13px;
+  top: 56%;
+  z-index: 100;
+}
+
+.RouteWaypoint[data-alternate="true"]:not(:last-of-type)::after {
+  content: url('../../../../../public/assets/icons/route-arrow-alternate.svg?url');
+  width: 13px;
+  height: 100%;
+  position: absolute;
+  right: -13px;
+  top: 56%;
+  z-index: 100;
+}
+
+.Coord {
+  font-size: 0.6rem;
+}
+
+.EditInput {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: #131313;
+  color: var(--app-white);
+}
+
+.EditInputHidden {
+  display: none;
+}

@@ -1,6 +1,6 @@
 export const SpeedConverter = (function _() {
   return {
-    mps(value: number) {
+    ms(value: number) {
       return {
         toKmh() {
           return value * 3.6;
@@ -15,7 +15,7 @@ export const SpeedConverter = (function _() {
     },
     kmh(value: number) {
       return {
-        toMps() {
+        toMs() {
           return value / 3.6;
         },
         toMph() {
@@ -28,7 +28,7 @@ export const SpeedConverter = (function _() {
     },
     mph(value: number) {
       return {
-        toMps() {
+        toMs() {
           return value / 2.237;
         },
         toKmh() {
@@ -41,7 +41,7 @@ export const SpeedConverter = (function _() {
     },
     kt(value: number) {
       return {
-        toMps() {
+        toMs() {
           return value / 1.944;
         },
         toKmh() {

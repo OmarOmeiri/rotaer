@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import Translator from '../../../utils/Translate/Translator';
-import classes from './MyAircraft.module.css';
 import AircraftSearch from './SearchAircraft';
 
 const PlaneSearchIcon = dynamic(() => import('@icons/plane-search.svg')) as SVGComponent;
@@ -29,8 +28,7 @@ const MyAircraft = async ({
       <CardWithTitle
           title={translator.capitalize().translate('searchAircraft')}
           Icon={<PlaneSearchIcon width="20"/>}
-          titleClassName={classes.CardTitle}
-          className={classes.Card}
+          styled
         >
         <div>
           <AircraftSearch/>
@@ -39,8 +37,7 @@ const MyAircraft = async ({
       <CardWithTitle
         title={translator.capitalize().translate('myAircraft')}
         Icon={<PlaneIcon width="20"/>}
-        titleClassName={classes.CardTitle}
-        className={classes.Card}
+        styled
       >
         <div>
           <MyAcftTable/>

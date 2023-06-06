@@ -133,6 +133,7 @@ export const Alert = () => {
           exitActive: classes.alertShow,
           exitDone: classes.alertShow,
         }}
+        nodeRef={alertRef}
       >
         <div
           ref={alertRef}

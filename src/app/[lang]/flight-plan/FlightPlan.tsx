@@ -3,15 +3,11 @@
 import ListIcon from '@icons/list.svg';
 import NewFileIcon from '@icons/file-circle-plus-solid.svg';
 import PlaneIcon from '@icons/plane-solid.svg';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Translator from '../../../utils/Translate/Translator';
 import FlightPlanDrawer from './FlightPlanDrawer';
 import FlightPlanPages from './FlightPlanPages';
-import { FlightPlan } from '../../../types/app/fPlan';
-
-type Props = {
-  userPlans: FlightPlan[]
-}
+import langStore from '../../../store/lang/langStore';
 
 const translator = new Translator({
   openDrawerBtn: { 'pt-BR': 'Abrir opções', 'en-US': 'Open flight plan options drawer' },
@@ -20,7 +16,7 @@ const translator = new Translator({
   myAcft: { 'en-US': 'My Aircraft', 'pt-BR': 'Minhas aeronaves' },
 });
 
-const drawerContents = [
+const getDrawerContents = () => ([
   {
     id: 'myPlans' as const,
     label: translator.translate('myPlans'),
@@ -36,21 +32,23 @@ const drawerContents = [
     label: translator.translate('myAcft'),
     icon: <PlaneIcon/>,
   },
-];
+]);
 
-const FlightPlan = ({
-  userPlans,
-}: Props) => {
+const FlightPlan = () => {
   const [page, setPage] = useState('myPlans');
+  const lang = langStore((state) => state.lang);
 
   const onPageChange = useCallback((page: string) => {
     setPage(page);
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const drawerContents = useMemo(() => getDrawerContents(), [lang]);
+
   return (
     <div>
       <FlightPlanDrawer contents={drawerContents} onPageChange={onPageChange} page={page}/>
-      <FlightPlanPages page={page} userPlans={userPlans}/>
+      <FlightPlanPages page={page} />
     </div>
   );
 };

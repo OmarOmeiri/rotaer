@@ -4,27 +4,15 @@ import { WithStrId } from "./app/mongo"
 import { FlightPlan } from "./app/fPlan"
 
 type UserRoutes = {
-  load: {
-    POST: {
-      req?: undefined,
-      res: UserOmitPassword | null
-    }
-  },
   create: {
     POST: {
       req: NativeAuthRequest,
-      res: IAuthResponse | null
+      res: UserOmitPassword | null
     }
   },
 }
 
 type AuthRoutes = {
-  authenticate: {
-    POST: {
-      req: NativeAuthRequest,
-      res: IAuthResponse | null
-    }
-  },
   gAuth: {
     POST: {
       req: GoogleAuthRequest,

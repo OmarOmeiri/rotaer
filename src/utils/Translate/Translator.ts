@@ -1,4 +1,10 @@
 import { locales } from '../Locale/locale';
+import { isClientSide } from '../Window/windowFuncs';
+
+const getCurrentURL = () => {
+  if (isClientSide()) return window.location.href;
+  return null;
+};
 
 class Translator <const T extends Record<string, Record<Langs, string>>, S extends boolean = true> {
   private translator: T;
@@ -14,6 +20,12 @@ class Translator <const T extends Record<string, Record<Langs, string>>, S exten
 
   static setLang(lang: Langs) {
     if (locales.includes(lang)) this.lang = lang;
+  }
+
+  private getLangFromUrl() {
+    const url = getCurrentURL();
+    if (!url) return Translator.lang;
+    return locales.find((l) => url?.includes(l)) || Translator.lang;
   }
 
   capitalize() {
@@ -33,7 +45,7 @@ class Translator <const T extends Record<string, Record<Langs, string>>, S exten
     lang?: Langs,
   ) {
     try {
-      const trl = this.translator?.[key]?.[lang || Translator.lang];
+      const trl = this.translator?.[key]?.[lang || this.getLangFromUrl()];
       if (!trl) return key;
       if (this.capt) return `${trl.charAt(0).toUpperCase()}${trl.slice(1, trl.length)}`;
       if (this.lower) return `${trl.charAt(0).toLowerCase()}${trl.slice(1, trl.length)}`;

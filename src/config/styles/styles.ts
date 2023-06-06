@@ -1,5 +1,5 @@
 import { colors } from './colors';
-import { modalStyles } from './modals';
+// import { modalStyles } from './modals';
 
 const main = {
   paddingY: '0rem',
@@ -96,7 +96,7 @@ export const stylesConfig = {
     container,
     navBar,
     mainMenu,
-    modal: modalStyles,
+    // modal: modalStyles,
     footer,
   },
 };

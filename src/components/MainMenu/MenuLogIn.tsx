@@ -2,13 +2,13 @@
 
 import LogInIcon from '@icons/log-in.svg';
 import { useCallback } from 'react';
-import authStore from '../../store/auth/authStore';
+import { signOut } from 'next-auth/react';
 import MainMenuBtn from './MenuBtn';
 import modalStore from '../../store/modal/modalStore';
+import { useNextAuth } from '../../hooks/Auth/useAuth';
 
 const MainMenuLogIn = () => {
-  const isAuthenticated = authStore((state) => state.isAuthenticated);
-  const logOut = authStore((state) => state.logOut);
+  const { isAuthenticated } = useNextAuth();
   const setModalContent = modalStore((state) => state.setModalContent);
   const showModal = modalStore((state) => state.setShowModal);
   const onLogInClick = useCallback(() => {
@@ -20,8 +20,8 @@ const MainMenuLogIn = () => {
   }, [setModalContent, showModal]);
 
   const onLogOutClick = useCallback(() => {
-    logOut();
-  }, [logOut]);
+    signOut();
+  }, []);
   return (
     isAuthenticated
       ? (

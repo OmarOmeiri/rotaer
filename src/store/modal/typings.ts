@@ -15,10 +15,15 @@ const acftModals = [
   'editAcftModal',
 ] as const;
 
+const routeModals = [
+  'addWptModal',
+] as const;
+
 export const allModals = [
   ...AuthModals,
   ...tableModals,
   ...acftModals,
+  ...routeModals,
 ] as const;
 
 export type allModals = ElementType<typeof allModals>

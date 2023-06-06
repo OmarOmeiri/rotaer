@@ -12,13 +12,13 @@ import Translator from '../../../utils/Translate/Translator';
 import { findAircraft, saveAircraft } from '../../../Http/requests/acft';
 import classes from './SearchAircraft.module.css';
 import alertStore from '../../../store/alert/alertStore';
-import authStore from '../../../store/auth/authStore';
 import { ACFT_IMG_URL } from '../../../consts/urls';
 import { formatAcftRegistration } from '../../../utils/Acft/acft';
 import Input from '../../../components/Forms/Input/Input';
 import RotaerLoadingSpinner from '../../../components/Loading/RotaerLoadingSpinner';
 import { WithStrId } from '../../../types/app/mongo';
 import { API_ROUTES } from '../../../Http/routes';
+import { useNextAuth } from '../../../hooks/Auth/useAuth';
 
 const MagnifierIcon = dynamic(() => import('@icons/search-magnifier.svg')) as SVGComponent;
 const ButtonClient = dynamic(() => import('../../../components/Buttons/ButtonClient'));
@@ -84,7 +84,7 @@ const validateInput = (value: string) => {
 
 const AircraftSearch = () => {
   const queryClient = useQueryClient();
-  const isAuth = authStore((state) => state.isAuthenticated);
+  const { isAuthenticated } = useNextAuth();
   const setAlert = alertStore((state) => state.setAlert);
   const [loading, setLoading] = useState(false);
   const [imgSuccess, setImgSuccess] = useState(true);
@@ -119,7 +119,7 @@ const AircraftSearch = () => {
   }, []);
 
   const onAcftSave = useCallback(async () => {
-    if (!isAuth) {
+    if (!isAuthenticated) {
       setAlert({ msg: alertsTranslator.translate('acftSaveMustBeLoggedIn'), type: 'error' });
       return;
     }
@@ -127,7 +127,7 @@ const AircraftSearch = () => {
       await saveAircraft({ id: acft._id });
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.aircraft.findUserAcft] });
     }
-  }, [isAuth, setAlert, acft, queryClient]);
+  }, [isAuthenticated, setAlert, acft, queryClient]);
 
   return (
     <div>

@@ -21,8 +21,8 @@ class GetUserFlightPlans implements API {
       MongoCollections.flightPlan,
       MongoCollections.aerodrome,
     ]);
-    const auth = await service.getUserFlightPlans(userId);
-    return auth;
+    const plans = await service.getUserFlightPlans(userId);
+    return plans;
   }
 }
 

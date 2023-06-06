@@ -8,4 +8,11 @@ declare module "next-auth" {
   interface Session {
     user: Expand<WithStrId<Omit<IUserSchema, 'password'>>> | null
   }
+
+  type MySession = {
+    isAuthenticated: boolean,
+    isLoading: boolean,
+    user: Session['user'],
+    expires: string | null,
+  };
 }
