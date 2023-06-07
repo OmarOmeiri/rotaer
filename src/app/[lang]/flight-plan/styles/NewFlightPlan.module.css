@@ -8,5 +8,6 @@
   background-color: gray;
   flex-grow: 1;
   min-width: 600px;
+  height: 500px;
 }
 

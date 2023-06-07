@@ -14,7 +14,7 @@ const MainMenuLogIn = () => {
   const onLogInClick = useCallback(() => {
     setModalContent({
       name: 'logIn',
-      propsToChildren: null,
+      propsToChildren: { isLogin: true },
     });
     showModal(true);
   }, [setModalContent, showModal]);

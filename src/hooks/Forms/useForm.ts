@@ -4,6 +4,7 @@ import React, {
 import { ErrorCodes } from 'lullo-common-types';
 import { cloneDeep } from 'lodash';
 import { objHasProp } from 'lullo-utils/Objects';
+import { omitFromObjArray } from 'lullo-utils/Arrays';
 import { ClientError } from '../../utils/Errors/ClientError';
 import { IInput } from '../../components/Forms/typings';
 import { useSyncStateRef } from '../React/useSyncStateRef';
@@ -92,7 +93,7 @@ export const useForms = <F extends IFormData<false>, V extends Validators<F>>({
       onBlur,
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  ), [_formData, JSON.stringify(_inputs.current)]);
+  ), [_formData, omitFromObjArray(_inputs.current, ['labelSideComponent'])]);
 
   useEffect(() => {
     if (formData) setFormData(formData);

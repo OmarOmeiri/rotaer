@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { cloneDeep } from 'lodash';
 import { objHasProp } from 'lullo-utils/Objects';
+import { insertAtIndex } from 'lullo-utils/Arrays';
 import OSMap from '../../../../components/Map/OpenStreetMap/OSMap';
 import NewFlightPlanAcft from '../components/newFlightPlan/NewFlightPlanAcft';
 import NewFlightPlanInfo from '../components/newFlightPlan/NewFlightPlanInfo';
@@ -24,15 +25,23 @@ import { Route, RouteWaypoint, TWaypoint } from '../../../../utils/Route/Route';
 import { useAcftQuery } from '../../../../frameworks/react-query/queries/acft';
 import { formatAcftRegistration } from '../../../../utils/Acft/acft';
 import {
-  acftClimbRateValidator, acftDescentRateValidator, acftFuelFlowValidator, acftIASValidator, acftUsableFuelValidator,
+  acftClimbRateValidator,
+  acftDescentRateValidator,
+  acftFuelFlowValidator,
+  acftIASValidator,
+  acftUsableFuelValidator,
 } from '../../../../frameworks/zod/zodAcft';
 import { WithStrId } from '../../../../types/app/mongo';
 import alertStore from '../../../../store/alert/alertStore';
 import { editUserAircraft } from '../../../../Http/requests/acft';
-import { FlightPlanEditableIds } from '../types';
+import { OnUserWaypointEdit, UserWaypointAdded } from '../types';
 import { LengthConverter } from '../../../../utils/converters/length';
 import { userWaypointInputValidators } from '../forms/userWaypointInputValidation';
 import { getZodErrorMessage } from '../../../../frameworks/zod/zodError';
+import AddToFlighPlanPopUp from '../components/AddToPlanMapPopUp';
+import OSPolyLine from '../../../../components/Map/OpenStreetMap/OSPolyLine';
+
+type TUserAddedWaypoint = TWaypoint & {addAfter: string}
 
 const translator = new Translator({
   adNotFound: { 'en-US': 'Aerodrome not found', 'pt-BR': 'Aeródromo não encontrado' },
@@ -101,14 +110,16 @@ const aerodromeToWaypoint = ({
   ad
     ? new RouteWaypoint({
       name: ad.icao,
+      type: 'ad',
       coord: ad.coords,
       windSpeed: 0,
       windDirection: 0,
-      speed: acftData?.ias || 0,
+      ias: acftData?.ias || 0,
       altitude: Math.round(LengthConverter.M(ad.elev).toFt() + 1000),
       fixed: fixed || false,
       alternate: alternate || false,
     })
+
     : null
 );
 
@@ -116,7 +127,7 @@ const NewPlan = () => {
   const session = useNextAuth();
   const setAlert = alertStore((state) => state.setAlert);
   const [selectedAcft, setSelectedAcft] = useState<WithStrId<IUserAcft> | null>(null);
-  const [userAddedWpts, setUserAddedWpts] = useState<TWaypoint[]>([]);
+  const [userAddedWpts, setUserAddedWpts] = useState<TUserAddedWaypoint[]>([]);
   const [departure, setDeparture] = useState<TAerodromeData | null>(null);
   const [arrival, setArrival] = useState<TAerodromeData | null>(null);
   const [alternate, setAlternate] = useState<TAerodromeData | null>(null);
@@ -191,9 +202,8 @@ const NewPlan = () => {
 
   const waypoints = useMemo(() => {
     if (!departure || !arrival) return null;
-    const wps = ([
+    let wps = ([
       aerodromeToWaypoint({ ad: departure, acftData: parsedAcftData, fixed: true }),
-      ...userAddedWpts,
       aerodromeToWaypoint({ ad: arrival, acftData: parsedAcftData, fixed: true }),
       aerodromeToWaypoint({
         ad: alternate, acftData: parsedAcftData, fixed: true, alternate: true,
@@ -201,8 +211,27 @@ const NewPlan = () => {
     ].filter((wp) => wp) as RouteWaypoint[]);
 
     wps.forEach((w, i) => {
-      if (userEditedWaypoints[i]) {
-        w.merge(userEditedWaypoints[i]);
+      const { name } = w;
+      const userAddedAfter = userAddedWpts.find((ua) => ua.addAfter === name);
+      if (userAddedAfter) {
+        wps = insertAtIndex(wps, i + 1, new RouteWaypoint({
+          name: userAddedAfter.name,
+          type: userAddedAfter.type,
+          coord: userAddedAfter.coord,
+          windSpeed: 0,
+          windDirection: 0,
+          ias: parsedAcftData?.ias || 0,
+          altitude: userAddedAfter.altitude,
+          fixed: userAddedAfter.fixed,
+          alternate: i > 1,
+        })).filter((w) => w) as RouteWaypoint[];
+      }
+    });
+
+    wps.forEach((w) => {
+      const userEdited = userEditedWaypoints.find((ue) => ue.name === w.name);
+      if (userEdited) {
+        w.merge(userEdited);
       }
     });
     return wps;
@@ -281,8 +310,8 @@ const NewPlan = () => {
     validateFlightInfo,
   ]);
 
-  const onEditableContentBlur = useCallback((index: number, id: FlightPlanEditableIds, value: string) => {
-    if (!route) return;
+  const onEditableContentBlur = useCallback<OnUserWaypointEdit>((index, id, value) => {
+    if (!route || !waypoints) return;
     if (!objHasProp(userWaypointInputValidators, [id])) return;
 
     let validatedValue: Partial<TWaypoint> | undefined;
@@ -300,27 +329,47 @@ const NewPlan = () => {
       return;
     }
 
+    const wpt = waypoints[index];
+
     setUserEditedWaypoints((state) => {
       const clone = cloneDeep(state);
-      clone[index] = { ...(clone[index] || {}), ...validatedValue };
+      const alreadyEditedIx = clone.findIndex((c) => c.name === wpt.name);
+      if (alreadyEditedIx > -1) {
+        clone[alreadyEditedIx] = {
+          ...clone[alreadyEditedIx],
+          ...validatedValue,
+        };
+      } else {
+        clone.push({
+          ...waypoints[index],
+          ...validatedValue,
+        });
+      }
       return clone;
     });
-  }, [route, setAlert]);
+  }, [route, waypoints, setAlert]);
 
-  const onWaypointAdd = useCallback((wpt: {altitude: number, coords: {lat: number, lon: number}, name: string}) => {
-    setUserAddedWpts([
-      new RouteWaypoint({
-        name: wpt.name,
-        coord: { decimal: wpt.coords } as any,
-        windSpeed: 0,
-        windDirection: 0,
-        speed: parsedAcftData?.ias || 0,
-        altitude: wpt.altitude,
-        fixed: false,
-        alternate: false,
-      }),
-    ]);
+  const onWaypointAdd = useCallback((wpt: UserWaypointAdded) => {
+    const routeWpt: TUserAddedWaypoint = {
+      name: wpt.name,
+      type: 'coord',
+      coord: wpt.coords,
+      windSpeed: 0,
+      windDirection: 0,
+      ias: parsedAcftData?.ias || 0,
+      altitude: wpt.altitude,
+      fixed: false,
+      alternate: false,
+      addAfter: wpt.addAfter,
+    };
+    setUserAddedWpts((wpts) => [...wpts, routeWpt]);
   }, [parsedAcftData]);
+
+  const onWaypointDelete = useCallback((name: string) => {
+    setUserAddedWpts((wpts) => (
+      wpts.filter((w) => w.name !== name)
+    ));
+  }, []);
 
   return (
     <div className={classes.Wrapper}>
@@ -342,10 +391,22 @@ const NewPlan = () => {
           legs={legs}
           onEditableContent={onEditableContentBlur}
           onWaypointAdd={onWaypointAdd}
+          onWaypointDelete={onWaypointDelete}
         />
       </div>
       <div className={classes.MapWrapper}>
-        <OSMap className={classes.Map}/>
+        <OSMap>
+          {
+          route
+            ? <AddToFlighPlanPopUp/>
+            : null
+          }
+          {
+            waypoints
+              ? <OSPolyLine waypoints={waypoints}/>
+              : null
+          }
+        </OSMap>
       </div>
     </div>
   );

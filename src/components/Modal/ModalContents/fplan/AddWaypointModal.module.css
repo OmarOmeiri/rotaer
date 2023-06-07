@@ -12,3 +12,25 @@
   display: flex;
   justify-content: center;
 }
+
+.ViewMapIcon {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.5em;
+  cursor: pointer;
+  color: var(--app-lightGrey);
+}
+
+.MapWrapper {
+  height: 70vh;
+  width: 100vh;
+}
+
+.MapWrapper :global(.leaflet-marker-icon) {
+  pointer-events: none;
+}

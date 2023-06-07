@@ -1,3 +1,5 @@
+import { round } from 'lullo-utils/Math';
+
 const LATLON_RE = {
   fullWithHemisphere: /^(?<deg>\d{1,3})°\s*(?<min>\d{1,2})'\s*(?<sec>\d{1,2}\.?\d*\s?)(''|")(?<hemisphere>[S|N|W|E]+)$/i,
   fullWithoutHemisphere: /^(?<deg>-?\d{1,3})°\s*(?<min>\d{1,2})'\s*(?<sec>\d{1,2}\.?\d*\s?)(''|")$/i,
@@ -80,3 +82,28 @@ export const convertUnknownCoordinatesToDecimal = (value: string) => {
   return degreeMinSecCoordsToDecimal(value);
 };
 
+const _decimalCoordinatesToDegMinSec = (coord: number) => {
+  const deg = Math.trunc(coord);
+  const _min = (Math.abs(coord) - Math.abs(deg)) * 60;
+  const min = Math.trunc(_min);
+  const sec = round((_min - min) * 60, 2);
+
+  return `${deg}°${min}'${sec}''`;
+};
+
+export const decimalCoordinatesToDegMinSec = (coord: {lat: number, lon: number}) => {
+  let latDeg = _decimalCoordinatesToDegMinSec(coord.lat);
+  let lonDeg = _decimalCoordinatesToDegMinSec(coord.lon);
+  if (/^-/.test(latDeg)) {
+    latDeg = `${latDeg.replace(/^-/, '')}S`;
+  } else {
+    latDeg = `${latDeg}N`;
+  }
+
+  if (/^-/.test(lonDeg)) {
+    lonDeg = `${lonDeg.replace(/^-/, '')}W`;
+  } else {
+    lonDeg = `${lonDeg}E`;
+  }
+  return `${latDeg} ${lonDeg}`;
+};

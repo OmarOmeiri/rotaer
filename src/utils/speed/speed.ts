@@ -14,7 +14,7 @@ const getMachNumber = (speed: number, temp: number) => {
   return speedMs / C;
 };
 
-const getWindCorrectionAngle = ({
+export const getDriftCorrectionAngle = ({
   heading,
   windDirection,
   windSpeed,
@@ -52,7 +52,7 @@ export const calcGS = ({
   windDirection: number,
   tas: number,
 }) => {
-  const corrAngle = getWindCorrectionAngle({
+  const corrAngle = getDriftCorrectionAngle({
     heading,
     windDirection,
     windSpeed,

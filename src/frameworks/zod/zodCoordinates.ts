@@ -1,6 +1,6 @@
 import z from 'zod';
 import Translator from '../../utils/Translate/Translator';
-import { convertUnknownCoordinatesToDecimal } from '../../utils/converters/coordinates';
+import { convertUnknownCoordinatesToDecimal, decimalCoordinatesToDegMinSec } from '../../utils/converters/coordinates';
 
 const translator = new Translator({
   invalidCoord: { 'en-US': 'Invalid coordinates', 'pt-BR': 'Coordenadas inválidas' },
@@ -18,6 +18,10 @@ export const zodCoordinateValidator = (value: unknown) => z.string({
       return false;
     }
   }, { message: translator.translate('invalidCoord') })
-  .transform((value) => convertUnknownCoordinatesToDecimal(value))
+  .transform((value) => {
+    const decimal = convertUnknownCoordinatesToDecimal(value);
+    const degMinSec = decimalCoordinatesToDegMinSec(decimal);
+    return { decimal, degMinSec };
+  })
   .parse(value);
 

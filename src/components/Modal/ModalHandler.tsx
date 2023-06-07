@@ -45,7 +45,7 @@ const getModal = <T extends allModals>(name: T, propsToChildren: modalChildProps
       return <EditAcftModal { ...p ?? {} }/>;
     }
     case 'addWptModal': {
-      const p = propsToChildren as modalChildProps<'editAcftModal'>;
+      const p = propsToChildren as modalChildProps<'addWptModal'>;
       return <AddWaypointModal { ...p ?? {} }/>;
     }
     default:

@@ -4,10 +4,13 @@ import geomag, { type MagneticModel } from 'geomagnetism';
 import { round } from 'lullo-utils/Math';
 import { loxodromicBearing, loxodromicDistance, loxodromicMidPoint } from './routeUtils';
 import { getNearestAllowedAltitude } from '../altitude/altitude';
-import { calcGS, calcTAS } from '../speed/speed';
+import { calcGS, calcTAS, getDriftCorrectionAngle } from '../speed/speed';
+
+type TWaypointType = 'ad' | 'coord'
 
 export type TWaypoint = {
   name: string;
+  type: TWaypointType
   coord: {
     degMinSec: string;
     decimal: {
@@ -15,10 +18,10 @@ export type TWaypoint = {
         lon: number;
     };
   } | null;
-  speed: number,
+  ias: number,
   windSpeed: number;
   windDirection: number;
-  altitude: number;
+  altitude: number | null;
   fixed: boolean;
   alternate: boolean;
 }
@@ -27,7 +30,8 @@ type _TLeg = {
   type: 'leg',
   mh: number,
   altitude: number,
-  speed: number,
+  ias: number,
+  tas: number,
   distance: number,
   windSpeed: number,
   windDirection: number,
@@ -40,6 +44,7 @@ type _TLeg = {
 
 type _TWpt = {
   type: 'wpt',
+  wptType: TWaypointType,
   name: string,
   coord: string | null,
   index: number,
@@ -57,6 +62,7 @@ const readableHoursDecimal = (hours: number) => {
 
 export class RouteWaypoint {
   name: string;
+  type: TWaypointType;
   coord: {
     degMinSec: string;
     decimal: {
@@ -66,15 +72,16 @@ export class RouteWaypoint {
   } | null;
   windSpeed: number;
   windDirection: number;
-  speed: number;
-  altitude: number;
+  ias: number;
+  altitude: number | null;
   fixed: boolean;
   alternate: boolean;
 
   constructor(wpt: TWaypoint) {
     this.name = wpt.name;
+    this.type = wpt.type;
     this.coord = wpt.coord;
-    this.speed = wpt.speed;
+    this.ias = wpt.ias;
     this.windSpeed = wpt.windSpeed;
     this.windDirection = wpt.windDirection;
     this.altitude = wpt.altitude;
@@ -84,8 +91,9 @@ export class RouteWaypoint {
 
   merge(wpt: Partial<TWaypoint>) {
     if (wpt.name) this.name = wpt.name;
+    if (wpt.type) this.type = wpt.type;
     if (wpt.coord) this.coord = wpt.coord;
-    if (wpt.speed) this.speed = wpt.speed;
+    if (wpt.ias) this.ias = wpt.ias;
     if (wpt.windSpeed) this.windSpeed = wpt.windSpeed;
     if (wpt.windDirection) this.windDirection = wpt.windDirection;
     if (wpt.altitude) this.altitude = wpt.altitude;
@@ -186,13 +194,11 @@ export class Route {
   }
 
   private getGS(
-    ias: number,
-    altitude: number,
+    tas: number,
     heading: number,
     windDirection: number,
     windSpeed: number,
   ) {
-    const tas = calcTAS(altitude, ias);
     return Math.round(calcGS({
       heading,
       windDirection,
@@ -202,9 +208,8 @@ export class Route {
   }
 
   private getAltitude(pts: TWaypoint[], mh: number) {
-    console.log('pts: ', pts);
-    // const maxAlt = Math.max(...pts.map((p) => p.altitude));
-    return getNearestAllowedAltitude(mh, pts[0].altitude);
+    const alt = pts[0].altitude || pts[1].altitude || 0;
+    return getNearestAllowedAltitude(mh, alt);
   }
 
   getLegs() {
@@ -214,16 +219,18 @@ export class Route {
     for (const leg of windowArray(this.route, 2)) {
       const {
         name,
+        type,
         coord,
         windSpeed,
         windDirection,
-        speed,
+        ias,
         fixed,
         alternate,
       } = leg[0];
 
       legs.push({
         type: 'wpt',
+        wptType: type,
         name,
         coord: coord?.degMinSec || null,
         fixed,
@@ -233,9 +240,19 @@ export class Route {
       const midPoint = this.getMidPoint(leg);
       const distance = this.getDistance(leg);
       const heading = this.getHeading(leg);
-      const MH = this.getMagHeading(midPoint, heading);
+      const MHNoWind = this.getMagHeading(midPoint, heading);
+      const altitudeNoWind = this.getAltitude(leg, MHNoWind);
+      const TASNoWind = calcTAS(altitudeNoWind, ias);
+      const driftCorrectionAngle = getDriftCorrectionAngle({
+        heading,
+        windDirection,
+        windSpeed,
+        tas: TASNoWind,
+      }) || 0;
+      const MH = MHNoWind + driftCorrectionAngle;
       const altitude = this.getAltitude(leg, MH);
-      const GS = this.getGS(speed, altitude, MH, windDirection, windSpeed);
+      const TAS = calcTAS(altitude, ias);
+      const GS = this.getGS(TAS, MH, windDirection, windSpeed);
       const ETE = this.getETE(distance, GS);
       ETO += ETE;
       ix += 1;
@@ -244,7 +261,8 @@ export class Route {
         mh: Math.round(MH),
         altitude,
         distance: round(distance, 2),
-        speed,
+        ias,
+        tas: Math.round(TAS),
         windSpeed,
         windDirection,
         gs: GS,
@@ -257,6 +275,7 @@ export class Route {
     const lastWpt = this.route[this.route.length - 1];
     legs.push({
       type: 'wpt',
+      wptType: lastWpt.type,
       name: lastWpt.name,
       coord: lastWpt.coord?.degMinSec || null,
       fixed: lastWpt.fixed,

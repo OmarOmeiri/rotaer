@@ -4,6 +4,7 @@ import RotaerIcon from '@icons/rotaer_icon.svg';
 import Link from 'next/link';
 import { NextWebVitalsMetric } from 'next/app';
 import type { Session } from 'next-auth';
+import { Metadata } from 'next';
 import ClientLayout from '../../utils/ClientLayout/ClientLayout';
 import Providers from '../Providers';
 import AssetSearch from '../../components/AssetSearch/AssetSearch';
@@ -28,6 +29,11 @@ type Props = {
   }
 };
 
+export const metadata: Metadata = {
+  title: 'ROTAER',
+  description: 'A tool for planning and viewing brazilian aviation data',
+};
+
 /** */
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === 'custom' && process.env.NODE_ENV === 'development') {
@@ -44,7 +50,6 @@ export default function RootLayout({
 
   return (
     <html lang={lang}>
-      <title>ROTAER</title>
       <script src="https://accounts.google.com/gsi/client" async defer></script>
       <body>
         <div id="overlay-alert" className='alert-overlay'/>
