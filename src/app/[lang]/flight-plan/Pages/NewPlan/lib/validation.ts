@@ -1,6 +1,10 @@
 import z from 'zod';
-import Translator from '../../../../utils/Translate/Translator';
-import { FlightPlanEditableIds } from '../types';
+import Translator from '../../../../../../utils/Translate/Translator';
+import { FlightPlanEditableIds } from '../../../types';
+import {
+  acftClimbRateValidator, acftDescentRateValidator, acftFuelFlowValidator, acftIASValidator, acftUsableFuelValidator,
+} from '../../../../../../frameworks/zod/zodAcft';
+import { zodAdIcaoValidator } from '../../../../../../frameworks/zod/zodAerodrome';
 
 const translator = new Translator({
   invalidAltitude: { 'en-US': 'Invalid altitude', 'pt-BR': 'Altitude inválida' },
@@ -69,4 +73,27 @@ export const userWaypointInputValidators = {
         .map((s) => Number(s.replace(/(°|kt)$/i, '').trim()));
       return { windSpeed, windDirection };
     }).parse(input),
+};
+
+export const newFlightPlanAcftValidator = {
+  ias: acftIASValidator,
+  climbFuelFlow: acftFuelFlowValidator,
+  descentFuelFlow: acftFuelFlowValidator,
+  cruiseFuelFlow: acftFuelFlowValidator,
+  climbRate: acftClimbRateValidator,
+  descentRate: acftDescentRateValidator,
+  usableFuel: acftUsableFuelValidator,
+};
+
+export const flightPlanInfoValidators = {
+  name: () => true,
+  dep: (value: string) => (value ? (
+    zodAdIcaoValidator(value)
+  ) : value),
+  arr: (value: string) => (value ? (
+    zodAdIcaoValidator(value)
+  ) : value),
+  altrn: (value: string) => (value ? (
+    zodAdIcaoValidator(value)
+  ) : value),
 };

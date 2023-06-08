@@ -61,7 +61,7 @@ a {
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--app-green);
+  background: var(--app-grey);
 }
 
 *::-webkit-scrollbar-thumb {

@@ -1,7 +1,6 @@
-import CardWithTitle from '../../../../components/Card/CardWithTitle';
-import Translator from '../../../../utils/Translate/Translator';
-import FlightPlanTable from '../components/FlightPlanTable';
-import classes from '../styles/FlightPlan.module.css';
+import CardWithTitle from '../../../../../components/Card/CardWithTitle';
+import Translator from '../../../../../utils/Translate/Translator';
+import FlightPlanTable from './lib/FlightPlanTable';
 
 const translator = new Translator({
   myPlans: { 'en-US': 'My plans', 'pt-BR': 'My plannings' },

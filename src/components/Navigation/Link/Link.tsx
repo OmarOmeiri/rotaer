@@ -112,6 +112,7 @@ const Link = ({
 }: LinkProps) => {
   const pathname = usePathname() || '';
   const route = to || pathname;
+  console.log('route: ', formatURL(route, queryParams, id));
   return (
     <StyledLink
       href={formatURL(route, queryParams, id)}

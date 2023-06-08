@@ -28,7 +28,7 @@
 
 .MapWrapper {
   height: 70vh;
-  width: 100vh;
+  width:calc(100vw - 70px);
 }
 
 .MapWrapper :global(.leaflet-marker-icon) {

@@ -21,7 +21,7 @@ type useFormProps<F extends IFormData<false>, V extends Validators<F>> = {
   validateOnBlur?: boolean,
 }
 
-type ParsedForms<F extends IFormData<false>, V extends Validators<F>> = {
+export type ParsedForms<F extends IFormData<false>, V extends Validators<F>> = {
   [K in keyof V]: ReturnType<V[K]>
 }
 

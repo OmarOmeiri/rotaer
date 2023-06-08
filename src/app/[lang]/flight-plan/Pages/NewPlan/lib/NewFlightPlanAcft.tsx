@@ -1,12 +1,12 @@
 import type { SxProps } from '@mui/material';
 import { CSSTransition } from 'react-transition-group';
 import { useCallback, useRef } from 'react';
-import CardWithTitle from '../../../../../components/Card/CardWithTitle';
-import DropDown, { DropDownItem } from '../../../../../components/Dropdown/DropDown';
-import Input, { IInput } from '../../../../../components/Forms/Input';
-import Translator from '../../../../../utils/Translate/Translator';
-import classes from '../../styles/NewFlightPlanInfo.module.css';
-import ButtonClient from '../../../../../components/Buttons/ButtonClient';
+import CardWithTitle from '../../../../../../components/Card/CardWithTitle';
+import DropDown, { DropDownItem } from '../../../../../../components/Dropdown/DropDown';
+import Input, { IInput } from '../../../../../../components/Forms/Input';
+import Translator from '../../../../../../utils/Translate/Translator';
+import classes from './NewFlightPlanInfo.module.css';
+import ButtonClient from '../../../../../../components/Buttons/ButtonClient';
 
 const translator = new Translator({
   acft: { 'pt-BR': 'Aeronave', 'en-US': 'Aircraft' },

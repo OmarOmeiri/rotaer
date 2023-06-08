@@ -5,7 +5,10 @@ import {
   NextResponse,
 } from 'next/server';
 import { MiddlewareFactory } from './types';
-import { getLocale, isMissingLocale } from '../utils/Locale/locale';
+import {
+  getLocale,
+  isMissingLocale,
+} from '../utils/Locale/locale';
 
 const pathMatch = (req: NextRequest) => {
   const path = req.nextUrl.pathname;
@@ -24,6 +27,11 @@ const withLocaleMiddleware: MiddlewareFactory = (next: NextMiddleware) => (
     const res = await next(req, _next) as NextResponse;
     if (pathMatch(req)) {
       const pathWithSearchParams = `${path}${req.nextUrl.search}`;
+
+      // if (hasDoubleLocale(path)) {
+
+      // }
+
       const pathnameIsMissingLocale = isMissingLocale(path);
 
       if (pathnameIsMissingLocale) {

@@ -42,16 +42,37 @@
   position: relative;
   border: 1px solid #767373;
   padding: 0.7em 0;
+  height: 85px;
+}
+
+.RouteWaypoint * {
+  pointer-events: none;
+}
+
+.RouteWaypointDrop::before {
+  content: '';
+  width: 100%;
+  height: 3px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  background-color:var(--app-green);
 }
 
 .WptNameWrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.WptNameWrapper > * {
+  padding: 0 0.4em;
 }
 
 .WptName {
-  width: 70%;
+  flex-grow: 1;
 }
 
 .RouteWaypointBtnWrapper {
@@ -77,6 +98,10 @@
   justify-content: center;
 }
 
+.RouteWaypointBtnWrapper * {
+  pointer-events: all;
+}
+
 .RouteWaypointBtnAdd,
 .RouteWaypointBtnDelete {
   cursor: pointer;
@@ -94,22 +119,22 @@
 }
 
 .RouteWaypoint:not(:last-of-type)::after {
-  content: url('../../../../../public/assets/icons/route-arrow.svg?url');
+  content: url('../../../../../../../public/assets//icons/route-arrow.svg?url');
   width: 13px;
   height: 100%;
   position: absolute;
   right: -13px;
-  top: 56%;
+  top: 68%;
   z-index: 100;
 }
 
 .RouteWaypoint[data-alternate="true"]:not(:last-of-type)::after {
-  content: url('../../../../../public/assets/icons/route-arrow-alternate.svg?url');
+  content: url('../../../../../../../public/assets//icons/route-arrow-alternate.svg?url');
   width: 13px;
   height: 100%;
   position: absolute;
   right: -13px;
-  top: 56%;
+  top: 68%;
   z-index: 100;
 }
 

@@ -6,8 +6,27 @@ import PlaneIcon from '@icons/plane-solid.svg';
 import { useCallback, useMemo, useState } from 'react';
 import Translator from '../../../utils/Translate/Translator';
 import FlightPlanDrawer from './FlightPlanDrawer';
-import FlightPlanPages from './FlightPlanPages';
 import langStore from '../../../store/lang/langStore';
+import MyAcft from './Pages/MyAcft/MyAcft';
+import MyPlans from './Pages/MyPlans/MyPlans';
+import NewPlan from './Pages/NewPlan/NewPlan';
+
+const FlightPlanPages = ({
+  page,
+}: {
+  page: string
+}) => {
+  switch (page) {
+    case 'myPlans':
+      return <MyPlans/>;
+    case 'newPlan':
+      return <NewPlan/>;
+    case 'myAcft':
+      return <MyAcft/>;
+    default:
+      return null;
+  }
+};
 
 const translator = new Translator({
   openDrawerBtn: { 'pt-BR': 'Abrir opções', 'en-US': 'Open flight plan options drawer' },

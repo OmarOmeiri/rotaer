@@ -1,5 +1,5 @@
-import { inputTypes, type IInput } from '../../../../components/Forms/typings';
-import Translator from '../../../../utils/Translate/Translator';
+import { inputTypes, type IInput } from '../../../../../../components/Forms/typings';
+import Translator from '../../../../../../utils/Translate/Translator';
 
 const translator = new Translator({
   name: { 'pt-BR': 'Nome', 'en-US': 'Name' },

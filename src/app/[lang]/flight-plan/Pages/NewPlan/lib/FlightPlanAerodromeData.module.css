@@ -1,0 +1,16 @@
+.Wrapper {
+  width: 100%;
+}
+
+.AerodromesWrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1em;
+}
+
+.AerodromeIcao {
+  background-color: var(--app-green);
+  color: var(--app-black);
+  font-weight: bold;
+  text-align: center;
+}

@@ -5,9 +5,9 @@ import {
 } from 'react-leaflet';
 import LatLonIcon from '@icons/lat-lon.svg';
 import styled from 'styled-components';
-import Translator from '../../../../utils/Translate/Translator';
-import { decimalCoordinatesToDegMinSec } from '../../../../utils/converters/coordinates';
-import ButtonClient from '../../../../components/Buttons/ButtonClient';
+import Translator from '../../../../../../utils/Translate/Translator';
+import { decimalCoordinatesToDegMinSec } from '../../../../../../utils/converters/coordinates';
+import ButtonClient from '../../../../../../components/Buttons/ButtonClient';
 
 const translator = new Translator({
   'getCoords': { 'en-US': 'Copy coordinates', 'pt-BR': 'Copiar coordenadas' },

@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import CardWithTitle from '../../../../../components/Card/CardWithTitle';
-import Input, { IInput } from '../../../../../components/Forms/Input';
-import Translator from '../../../../../utils/Translate/Translator';
-import classes from '../../styles/NewFlightPlanInfo.module.css';
+import CardWithTitle from '../../../../../../components/Card/CardWithTitle';
+import Input, { IInput } from '../../../../../../components/Forms/Input';
+import Translator from '../../../../../../utils/Translate/Translator';
+import classes from './NewFlightPlanInfo.module.css';
 
 const translator = new Translator({
   info: { 'pt-BR': 'Informação de voo', 'en-US': 'Flight Info' },

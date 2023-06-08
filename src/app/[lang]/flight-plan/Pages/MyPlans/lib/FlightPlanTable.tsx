@@ -3,13 +3,13 @@
 import type { ColumnDefCustom } from '@tanstack/react-table';
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
-import Translator from '../../../../utils/Translate/Translator';
-import { WithStrId } from '../../../../types/app/mongo';
-import type { FlightPlan } from '../../../../types/app/fPlan';
-import { useNextAuth } from '../../../../hooks/Auth/useAuth';
-import { useFlightPlansQuery } from '../../../../frameworks/react-query/queries/flightPlan';
+import Translator from '../../../../../../utils/Translate/Translator';
+import { WithStrId } from '../../../../../../types/app/mongo';
+import type { FlightPlan } from '../../../../../../types/app/fPlan';
+import { useNextAuth } from '../../../../../../hooks/Auth/useAuth';
+import { useFlightPlansQuery } from '../../../../../../frameworks/react-query/queries/flightPlan';
 
-const Table = dynamic(() => import('../../../../components/Table/Table'));
+const Table = dynamic(() => import('../../../../../../components/Table/Table'));
 
 const translator = new Translator({
   name: { 'pt-BR': 'Nome', 'en-US': 'Name' },

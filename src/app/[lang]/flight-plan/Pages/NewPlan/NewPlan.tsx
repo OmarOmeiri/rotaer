@@ -1,77 +1,49 @@
 import React, {
-  useCallback, useEffect, useMemo, useState,
+  useCallback,
+  useMemo,
+  useState,
 } from 'react';
 import { cloneDeep } from 'lodash';
 import { objHasProp } from 'lullo-utils/Objects';
-import { insertAtIndex } from 'lullo-utils/Arrays';
-import OSMap from '../../../../components/Map/OpenStreetMap/OSMap';
-import NewFlightPlanAcft from '../components/newFlightPlan/NewFlightPlanAcft';
-import NewFlightPlanInfo from '../components/newFlightPlan/NewFlightPlanInfo';
-import classes from '../styles/NewFlightPlan.module.css';
-import { useForms } from '../../../../hooks/Forms/useForm';
+import OSMap from '../../../../../components/Map/OpenStreetMap/OSMap';
+import NewFlightPlanAcft from './lib/NewFlightPlanAcft';
+import NewFlightPlanInfo from './lib/NewFlightPlanInfo';
+import classes from './NewFlightPlan.module.css';
+import { useForms } from '../../../../../hooks/Forms/useForm';
 import {
   newFlightPlanAcftFormData,
   newFlightPlanAcftForms,
   newFlightPlanInfoFormData,
   newFlightPlanInfoForms,
-} from '../forms/newFlightPlan';
-import NewFlightPlanRoute from '../components/newFlightPlan/NewFlightPlanRoute';
-import { fetchAerodromeInfo } from '../../../../Http/requests/aerodrome';
-import { zodAdIcaoValidator } from '../../../../frameworks/zod/zodAerodrome';
-import { TAerodromeData } from '../../../../types/app/aerodrome';
-import Translator from '../../../../utils/Translate/Translator';
-import { useNextAuth } from '../../../../hooks/Auth/useAuth';
-import { Route, RouteWaypoint, TWaypoint } from '../../../../utils/Route/Route';
-import { useAcftQuery } from '../../../../frameworks/react-query/queries/acft';
-import { formatAcftRegistration } from '../../../../utils/Acft/acft';
-import {
-  acftClimbRateValidator,
-  acftDescentRateValidator,
-  acftFuelFlowValidator,
-  acftIASValidator,
-  acftUsableFuelValidator,
-} from '../../../../frameworks/zod/zodAcft';
-import { WithStrId } from '../../../../types/app/mongo';
-import alertStore from '../../../../store/alert/alertStore';
-import { editUserAircraft } from '../../../../Http/requests/acft';
-import { OnUserWaypointEdit, UserWaypointAdded } from '../types';
-import { LengthConverter } from '../../../../utils/converters/length';
-import { userWaypointInputValidators } from '../forms/userWaypointInputValidation';
-import { getZodErrorMessage } from '../../../../frameworks/zod/zodError';
-import AddToFlighPlanPopUp from '../components/AddToPlanMapPopUp';
-import OSPolyLine from '../../../../components/Map/OpenStreetMap/OSPolyLine';
-
-type TUserAddedWaypoint = TWaypoint & {addAfter: string}
+} from './lib/forms';
+import NewFlightPlanRoute from './lib/NewFlightPlanRoute';
+import { fetchAerodromeInfo } from '../../../../../Http/requests/aerodrome';
+import { TAerodromeData } from '../../../../../types/app/aerodrome';
+import Translator from '../../../../../utils/Translate/Translator';
+import { useNextAuth } from '../../../../../hooks/Auth/useAuth';
+import { Route, TWaypoint } from '../../../../../utils/Route/Route';
+import { useAcftQuery } from '../../../../../frameworks/react-query/queries/acft';
+import { formatAcftRegistration } from '../../../../../utils/Acft/acft';
+import { WithStrId } from '../../../../../types/app/mongo';
+import alertStore from '../../../../../store/alert/alertStore';
+import { editUserAircraft } from '../../../../../Http/requests/acft';
+import { OnUserWaypointEdit, UserWaypointAdded } from '../../types';
+import { flightPlanInfoValidators, newFlightPlanAcftValidator, userWaypointInputValidators } from './lib/validation';
+import { getZodErrorMessage } from '../../../../../frameworks/zod/zodError';
+import AddToFlighPlanPopUp from './lib/AddToPlanMapPopUp';
+import OSPolyLine from '../../../../../components/Map/OpenStreetMap/OSPolyLine';
+import { TUserAddedWaypoint } from './lib/types';
+import { getRouteWaypoints } from './lib/utils/getWaypoints';
+import CardWithTitle from '../../../../../components/Card/CardWithTitle';
+import FlightPlanAerodromeData from './lib/FlightPlanAerodromeData';
 
 const translator = new Translator({
   adNotFound: { 'en-US': 'Aerodrome not found', 'pt-BR': 'Aeródromo não encontrado' },
   invalidAcft: { 'en-US': 'Aircraft data is not valid.', 'pt-BR': 'Aeronave inválida.' },
   acftSave: { 'en-US': 'Aircraft saved successfully.', 'pt-BR': 'Aeronave salva com sucesso.' },
   acftSaveFail: { 'en-US': 'Could not save aircraft data.', 'pt-BR': 'Houve um erro ao salvar a aeronave.' },
+  map: { 'en-US': 'Map', 'pt-BR': 'Mapa' },
 });
-
-const flightInfoValidators = {
-  name: () => true,
-  dep: (value: string) => (value ? (
-    zodAdIcaoValidator(value)
-  ) : value),
-  arr: (value: string) => (value ? (
-    zodAdIcaoValidator(value)
-  ) : value),
-  altrn: (value: string) => (value ? (
-    zodAdIcaoValidator(value)
-  ) : value),
-};
-
-const acftValidator = {
-  ias: acftIASValidator,
-  climbFuelFlow: acftFuelFlowValidator,
-  descentFuelFlow: acftFuelFlowValidator,
-  cruiseFuelFlow: acftFuelFlowValidator,
-  climbRate: acftClimbRateValidator,
-  descentRate: acftDescentRateValidator,
-  usableFuel: acftUsableFuelValidator,
-};
 
 const hasUserChangedAcftData = (
   originalAcft: WithStrId<IUserAcft>,
@@ -86,41 +58,6 @@ const hasUserChangedAcftData = (
 },
 ) => (
   Object.entries(formData).some(([k, v]) => v !== originalAcft[k as keyof typeof originalAcft])
-);
-
-const aerodromeToWaypoint = ({
-  ad,
-  acftData,
-  fixed,
-  alternate,
-}: {
-  ad: TAerodromeData | null,
-  acftData: {
-    ias: number | undefined
-    climbRate: number | undefined
-    descentRate: number | undefined
-    usableFuel: number | undefined
-    climbFuelFlow: number | undefined
-    cruiseFuelFlow: number | undefined
-    descentFuelFlow: number | undefined
-  },
-  fixed?: boolean,
-  alternate?: boolean,
-}): RouteWaypoint | null => (
-  ad
-    ? new RouteWaypoint({
-      name: ad.icao,
-      type: 'ad',
-      coord: ad.coords,
-      windSpeed: 0,
-      windDirection: 0,
-      ias: acftData?.ias || 0,
-      altitude: Math.round(LengthConverter.M(ad.elev).toFt() + 1000),
-      fixed: fixed || false,
-      alternate: alternate || false,
-    })
-
-    : null
 );
 
 const NewPlan = () => {
@@ -144,12 +81,11 @@ const NewPlan = () => {
   } = useForms({
     formData: newFlightPlanInfoFormData,
     inputs: newFlightPlanInfoForms,
-    validation: flightInfoValidators,
+    validation: flightPlanInfoValidators,
   });
 
   const {
     inputs: flightPlanAcftInputs,
-    formData: acftFormData,
     manualFormDataChange: setAcftFormData,
     onChange: onFlightPlanAcftChange,
     parse: parseAcftData,
@@ -158,7 +94,7 @@ const NewPlan = () => {
   } = useForms({
     formData: newFlightPlanAcftFormData,
     inputs: newFlightPlanAcftForms,
-    validation: acftValidator,
+    validation: newFlightPlanAcftValidator,
     validateOnBlur: true,
   });
 
@@ -200,42 +136,14 @@ const NewPlan = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   ), [selectedAcft, parseAcftData]);
 
-  const waypoints = useMemo(() => {
-    if (!departure || !arrival) return null;
-    let wps = ([
-      aerodromeToWaypoint({ ad: departure, acftData: parsedAcftData, fixed: true }),
-      aerodromeToWaypoint({ ad: arrival, acftData: parsedAcftData, fixed: true }),
-      aerodromeToWaypoint({
-        ad: alternate, acftData: parsedAcftData, fixed: true, alternate: true,
-      }),
-    ].filter((wp) => wp) as RouteWaypoint[]);
-
-    wps.forEach((w, i) => {
-      const { name } = w;
-      const userAddedAfter = userAddedWpts.find((ua) => ua.addAfter === name);
-      if (userAddedAfter) {
-        wps = insertAtIndex(wps, i + 1, new RouteWaypoint({
-          name: userAddedAfter.name,
-          type: userAddedAfter.type,
-          coord: userAddedAfter.coord,
-          windSpeed: 0,
-          windDirection: 0,
-          ias: parsedAcftData?.ias || 0,
-          altitude: userAddedAfter.altitude,
-          fixed: userAddedAfter.fixed,
-          alternate: i > 1,
-        })).filter((w) => w) as RouteWaypoint[];
-      }
-    });
-
-    wps.forEach((w) => {
-      const userEdited = userEditedWaypoints.find((ue) => ue.name === w.name);
-      if (userEdited) {
-        w.merge(userEdited);
-      }
-    });
-    return wps;
-  }, [
+  const waypoints = useMemo(() => getRouteWaypoints({
+    departure,
+    arrival,
+    alternate,
+    acftData: parsedAcftData,
+    userEditedWaypoints,
+    userAddedWpts,
+  }), [
     departure,
     arrival,
     alternate,
@@ -371,9 +279,29 @@ const NewPlan = () => {
     ));
   }, []);
 
+  const onWaypointOrderChange = (target: string, addAfter: string) => {
+    if (!waypoints) return;
+    const wNames = waypoints.map((w) => w.name);
+    const indexOfTarget = wNames.indexOf(target);
+    if (indexOfTarget < 0) return;
+    wNames.splice(indexOfTarget, 1);
+    const indexOfAfter = wNames.indexOf(addAfter);
+    if (indexOfAfter < 0) return;
+    wNames.splice(indexOfAfter + 1, 0, target);
+
+    setUserAddedWpts((ua) => (
+      ua.map((w) => {
+        const beforeIndex = wNames.findIndex((name) => name === w.name) - 1;
+        if (beforeIndex < 0) return w;
+        w.addAfter = wNames[beforeIndex];
+        return w;
+      })
+    ));
+  };
+
   return (
     <div className={classes.Wrapper}>
-      <div>
+      <div className={classes.PlanWrapper}>
         <NewFlightPlanInfo
           forms={flightInfoInputs}
           onFormChange={onNewFlightInfoChange}
@@ -392,22 +320,35 @@ const NewPlan = () => {
           onEditableContent={onEditableContentBlur}
           onWaypointAdd={onWaypointAdd}
           onWaypointDelete={onWaypointDelete}
+          onWaypointOrderChange={onWaypointOrderChange}
         />
       </div>
       <div className={classes.MapWrapper}>
-        <OSMap>
-          {
-          route
-            ? <AddToFlighPlanPopUp/>
-            : null
-          }
-          {
-            waypoints
-              ? <OSPolyLine waypoints={waypoints}/>
+        <CardWithTitle
+          title={translator.translate('map')}
+          className={classes.MapCard}
+          contentClassName={classes.MapInnerWrapper}
+          styled
+        >
+          <OSMap>
+            {
+            route
+              ? <AddToFlighPlanPopUp/>
               : null
-          }
-        </OSMap>
+            }
+            {
+              waypoints
+                ? <OSPolyLine waypoints={waypoints}/>
+                : null
+            }
+          </OSMap>
+        </CardWithTitle>
       </div>
+      <FlightPlanAerodromeData
+        arrival={arrival}
+        departure={departure}
+        alternate={alternate}
+      />
     </div>
   );
 };

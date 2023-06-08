@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import ClickHandle from '../../../components/Handle/ClickHandle';
 import FullDrawer from '../../../components/Drawer/FullDrawer';
-import classes from './styles/FlightPlanDrawer.module.css';
+import classes from './FlightPlanDrawer.module.css';
 import Translator from '../../../utils/Translate/Translator';
 import Config from '../../../config';
 

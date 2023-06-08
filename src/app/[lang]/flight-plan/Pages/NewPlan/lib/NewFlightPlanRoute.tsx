@@ -6,23 +6,33 @@ import { mapChunk } from 'lullo-utils/Arrays';
 import GripLinesIcon from '@icons/grip-lines-solid.svg';
 import AerodromePin from '@icons/aerodrome-pin.svg';
 import LatLonIcon from '@icons/lat-lon.svg';
+
+import TestIcon from '@icons/lat-lon.svg?url';
 import TrashIcon from '@icons/X.svg';
-import CardWithTitle from '../../../../../components/Card/CardWithTitle';
-import Translator from '../../../../../utils/Translate/Translator';
-import classes from '../../styles/FlightPlanRoute.module.css';
+import CardWithTitle from '../../../../../../components/Card/CardWithTitle';
+import Translator from '../../../../../../utils/Translate/Translator';
+import classes from './FlightPlanRoute.module.css';
 import {
   TLeg,
-} from '../../../../../utils/Route/Route';
-import Sequence from '../../../../../utils/Sequence/Sequence';
-import modalStore from '../../../../../store/modal/modalStore';
-import { FlightPlanEditableIds, OnUserWaypointEdit, UserWaypointAdded } from '../../types';
+} from '../../../../../../utils/Route/Route';
+import Sequence from '../../../../../../utils/Sequence/Sequence';
+import modalStore from '../../../../../../store/modal/modalStore';
+import { FlightPlanEditableIds, OnUserWaypointEdit, UserWaypointAdded } from '../../../types';
+import { getElmComputedDimension } from '../../../../../../utils/HTML/htmlPosition';
+import Link from '../../../../../../components/Navigation/Link/Link';
+import { APP_ROUTES } from '../../../../../../consts/routes';
+import langStore from '../../../../../../store/lang/langStore';
 
 type FlightPlanRoutesProps = {
   legs: TLeg[],
+  onWaypointOrderChange: (target: string, setAfter: string) => void,
   onWaypointAdd: (wpt: UserWaypointAdded) => void
   onEditableContent: OnUserWaypointEdit,
   onWaypointDelete: (name: string) => void
 }
+
+const DragIcon = new Image();
+DragIcon.src = TestIcon;
 
 const translator = new Translator({
   route: { 'pt-BR': 'Rota', 'en-US': 'Route' },
@@ -35,6 +45,7 @@ const seqStep2 = new Sequence(2, 2);
 const LegsWrapper = styled.div.attrs(({ count }: {count: number}) => ({
   style: { gridTemplateRows: `repeat(${count + 2}, 1fr)` },
 }))`
+min-width: 790px;
 display: grid;
 grid-template-columns: repeat(10, 1fr);` as StyledComponent<'div', any, {
   style: {
@@ -77,6 +88,12 @@ const RouteItem = ({
     if (onEditableContent) setShowInput(true);
   }, [onEditableContent, children]);
 
+  const onInputEnterPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && inputRef.current) {
+      inputRef.current.blur();
+    }
+  };
+
   const onInputBlur = useCallback((e: React.FocusEvent) => {
     setShowInput(false);
     const target = e.currentTarget as HTMLInputElement;
@@ -109,7 +126,7 @@ const RouteItem = ({
     onClick={onClick}
     data-canclick={onEditableContent ? 'true' : 'false'}
     tabIndex={-1}
-    onKeyDown={onClick}
+    onKeyUp={onClick}
   >
       {
         onEditableContent
@@ -122,6 +139,7 @@ const RouteItem = ({
               value={inputValue}
               onChange={onChange}
               onBlur={onInputBlur}
+              onKeyDown={onInputEnterPress}
             />
           )
           : null
@@ -144,6 +162,12 @@ const RouteWpt = ({
   alternate,
   onWaypointAdd,
   onWaypointDelete,
+  dragstartHandler,
+  dragendHandler,
+  dragenterHandler,
+  dropHandler,
+  dragoverHandler,
+  dragleaveHandler,
 }: {
   children?: React.ReactNode,
   name: string,
@@ -153,6 +177,12 @@ const RouteWpt = ({
   alternate?: boolean,
   onWaypointAdd: FlightPlanRoutesProps['onWaypointAdd'],
   onWaypointDelete: FlightPlanRoutesProps['onWaypointDelete']
+  dragstartHandler: React.DragEventHandler,
+  dragendHandler: React.DragEventHandler,
+  dragenterHandler: React.DragEventHandler,
+  dropHandler: React.DragEventHandler,
+  dragoverHandler: React.DragEventHandler,
+  dragleaveHandler: React.DragEventHandler,
 }) => {
   const setModal = modalStore((state) => state.setModalContent);
   const showModal = modalStore((state) => state.setShowModal);
@@ -181,22 +211,31 @@ const RouteWpt = ({
     onWaypointDelete(name);
   }, [onWaypointDelete]);
 
+  const isLast = !(count <= index);
   return (
     <div
       className={classes.RouteWaypoint}
       style={{ gridRow: `${seqStep2.get(index)}/ span 2` } as React.CSSProperties}
+      draggable={!!canDrag}
+      onDragStart={dragstartHandler}
+      onDragEnd={dragendHandler}
+      onDragEnter={dragenterHandler}
+      onDrop={isLast ? dropHandler : undefined}
+      onDragOver={isLast ? dragoverHandler : undefined}
+      onDragLeave={dragleaveHandler}
+      data-name={name}
       {...(alternate ? { 'data-alternate': 'true' } : null)}
     >
       {children || null}
       {
-      count <= index
-        ? null
-        : (
-          <div className={classes.RouteWaypointBtnWrapper}>
-            <button className={classes.RouteWaypointBtnAdd} data-name={name} onClick={onAddClick}>
-              +
-            </button>
-            {
+        !isLast
+          ? null
+          : (
+            <div className={classes.RouteWaypointBtnWrapper}>
+              <button className={classes.RouteWaypointBtnAdd} data-name={name} onClick={onAddClick}>
+                +
+              </button>
+              {
               canDrag === false
                 ? null
                 : (
@@ -210,24 +249,80 @@ const RouteWpt = ({
                   </>
                 )
             }
-          </div>
-        )
-    }
+            </div>
+          )
+      }
     </div>
   );
 };
 
 const Legs = ({
   legs,
+  lang,
   onEditableContent,
   onWaypointAdd,
   onWaypointDelete,
+  onWaypointOrderChange,
 }: {
   legs: TLeg[],
+  lang: Langs
   onWaypointAdd: FlightPlanRoutesProps['onWaypointAdd'],
   onWaypointDelete: FlightPlanRoutesProps['onWaypointDelete']
   onEditableContent: FlightPlanRoutesProps['onEditableContent'],
+  onWaypointOrderChange: (target: string, setAfter: string) => void
 }) => {
+  console.log('lang: ', lang);
+  const [dragTargetName, setDragTargetName] = useState<string | null>(null);
+
+  const dragstartHandler = useCallback((e: React.DragEvent) => {
+    const target = e.target as HTMLDivElement;
+    const name = target.getAttribute('data-name');
+    const dims = getElmComputedDimension(target);
+    const clone = target.cloneNode(true) as HTMLDivElement;
+    clone.id = 'route-waypoint-drag-image';
+    clone.style.height = dims.height;
+    clone.style.width = dims.width;
+    clone.style.position = 'absolute';
+    clone.style.top = `calc(-50px - ${dims.height})`;
+    document.body.appendChild(clone);
+    e.dataTransfer.setDragImage(clone, 0, 0);
+    setDragTargetName(name);
+  }, []);
+
+  const dragendHandler = useCallback(() => {
+    const dragImage = document.getElementById('route-waypoint-drag-image');
+    if (dragImage) dragImage.remove();
+  }, []);
+
+  const dropHandler = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'DIV') return;
+    const name = target.getAttribute('data-name');
+    target.classList.remove(classes.RouteWaypointDrop);
+    if (
+      dragTargetName
+      && name
+      && name !== dragTargetName
+    ) onWaypointOrderChange(dragTargetName, name);
+  }, [dragTargetName, onWaypointOrderChange]);
+
+  const dragoverHandler = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+  }, []);
+
+  const dragenterHandler = useCallback((e: React.DragEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'DIV') return;
+    target.classList.add(classes.RouteWaypointDrop);
+  }, []);
+
+  const dragleaveHandler = useCallback((e: React.DragEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'DIV') return;
+    target.classList.remove(classes.RouteWaypointDrop);
+  }, []);
+
   if (legs.length < 2) {
     return (
       <div style={{ textAlign: 'center' }}>
@@ -262,6 +357,12 @@ const Legs = ({
                   alternate={isAlternate}
                   onWaypointAdd={onWaypointAdd}
                   onWaypointDelete={onWaypointDelete}
+                  dragstartHandler={dragstartHandler}
+                  dragendHandler={dragendHandler}
+                  dragenterHandler={dragenterHandler}
+                  dropHandler={dropHandler}
+                  dragoverHandler={dragoverHandler}
+                  dragleaveHandler={dragleaveHandler}
                 >
                   <div className={classes.WptNameWrapper}>
                     <div>
@@ -272,7 +373,21 @@ const Legs = ({
                       }
                     </div>
                     <div className={classes.WptName}>
-                      <div>{_l.name}</div>
+                      {
+                        _l.wptType === 'ad'
+                          ? (
+                            <Link
+                              to={APP_ROUTES.aerodromeInfo(_l.name, lang)}
+                              locale={lang}
+                              openInNewTab
+                            >
+                              {_l.name}
+                            </Link>
+                          )
+                          : (
+                            <div>{_l.name}</div>
+                          )
+                      }
                       <div className={classes.Coord}>{_l.coord}</div>
                     </div>
                   </div>
@@ -300,18 +415,26 @@ const Legs = ({
 
 const NewFlightPlanRoute = ({
   legs,
+  onWaypointOrderChange,
   onEditableContent,
   onWaypointAdd,
   onWaypointDelete,
-}: FlightPlanRoutesProps) => (
-  <CardWithTitle title={translator.translate('route')} styled>
-    <Legs
-      legs={legs}
-      onEditableContent={onEditableContent}
-      onWaypointAdd={onWaypointAdd}
-      onWaypointDelete={onWaypointDelete}
-    />
-  </CardWithTitle>
-);
+}: FlightPlanRoutesProps) => {
+  const lang = langStore((state) => state.lang);
+  return (
+    <CardWithTitle title={translator.translate('route')} styled>
+      <div>
+        <Legs
+        legs={legs}
+        lang={lang}
+        onEditableContent={onEditableContent}
+        onWaypointAdd={onWaypointAdd}
+        onWaypointDelete={onWaypointDelete}
+        onWaypointOrderChange={onWaypointOrderChange}
+      />
+      </div>
+    </CardWithTitle>
+  );
+};
 
 export default NewFlightPlanRoute;

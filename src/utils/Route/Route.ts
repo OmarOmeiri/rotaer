@@ -19,8 +19,8 @@ export type TWaypoint = {
     };
   } | null;
   ias: number,
-  windSpeed: number;
-  windDirection: number;
+  windSpeed: number | null;
+  windDirection: number | null;
   altitude: number | null;
   fixed: boolean;
   alternate: boolean;
@@ -33,8 +33,8 @@ type _TLeg = {
   ias: number,
   tas: number,
   distance: number,
-  windSpeed: number,
-  windDirection: number,
+  windSpeed: number | null,
+  windDirection: number | null,
   gs: number,
   ete: string,
   eto: string,
@@ -70,8 +70,8 @@ export class RouteWaypoint {
         lon: number;
     };
   } | null;
-  windSpeed: number;
-  windDirection: number;
+  windSpeed: number | null;
+  windDirection: number | null;
   ias: number;
   altitude: number | null;
   fixed: boolean;
@@ -245,14 +245,14 @@ export class Route {
       const TASNoWind = calcTAS(altitudeNoWind, ias);
       const driftCorrectionAngle = getDriftCorrectionAngle({
         heading,
-        windDirection,
-        windSpeed,
+        windDirection: windDirection || 0,
+        windSpeed: windSpeed || 0,
         tas: TASNoWind,
       }) || 0;
       const MH = MHNoWind + driftCorrectionAngle;
       const altitude = this.getAltitude(leg, MH);
       const TAS = calcTAS(altitude, ias);
-      const GS = this.getGS(TAS, MH, windDirection, windSpeed);
+      const GS = this.getGS(TAS, MH, windDirection || 0, windSpeed || 0);
       const ETE = this.getETE(distance, GS);
       ETO += ETE;
       ix += 1;
@@ -263,8 +263,8 @@ export class Route {
         distance: round(distance, 2),
         ias,
         tas: Math.round(TAS),
-        windSpeed,
-        windDirection,
+        windSpeed: windSpeed || 0,
+        windDirection: windDirection || 0,
         gs: GS,
         ete: readableHoursDecimal(ETE),
         eto: `T+${readableHoursDecimal(ETO)}`,
