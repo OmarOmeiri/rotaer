@@ -14,11 +14,12 @@ const translator = new Translator({
 });
 
 export const userWaypointInputValidators = {
-  altitude: (input: string, key: FlightPlanEditableIds) => z.string({
+  userEditedAltitude: (input: string, key: FlightPlanEditableIds) => z.string({
     required_error: translator.translate('invalidAltitude'),
     invalid_type_error: translator.translate('invalidAltitude'),
   })
     .refine((value) => {
+      if (value === '') return true;
       const valTr = value
         .trim()
         .replace(/ft$/i, '');
@@ -29,6 +30,7 @@ export const userWaypointInputValidators = {
       return true;
     }, { message: translator.translate('invalidAltitude') })
     .transform((val) => {
+      if (val === '') return { [key]: undefined };
       const valTr = val
         .trim()
         .replace(/ft$/i, '');

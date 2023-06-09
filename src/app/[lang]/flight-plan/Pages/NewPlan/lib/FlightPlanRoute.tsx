@@ -1,5 +1,5 @@
 import React, {
-  Fragment, useCallback, useEffect, useRef, useState,
+  Fragment, useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import styled, { type StyledComponent } from 'styled-components';
 import { mapChunk } from 'lullo-utils/Arrays';
@@ -22,6 +22,8 @@ import { getElmComputedDimension } from '../../../../../../utils/HTML/htmlPositi
 import Link from '../../../../../../components/Navigation/Link/Link';
 import { APP_ROUTES } from '../../../../../../consts/routes';
 import langStore from '../../../../../../store/lang/langStore';
+import { RouteErrorBanner } from './ErrorBanner';
+import RouteWarningPopUp from './RouteWarningPopUp';
 
 type FlightPlanRoutesProps = {
   legs: TLeg[],
@@ -69,11 +71,15 @@ const RouteItem = ({
   children,
   index,
   id,
+  error,
+  warning,
   onEditableContent,
 }: {
   children?: string,
   index: number,
   id?: FlightPlanEditableIds,
+  error?: string,
+  warning?: string,
   onEditableContent?: OnUserWaypointEdit,
 }) => {
   const [showInput, setShowInput] = useState(false);
@@ -116,18 +122,22 @@ const RouteItem = ({
     }, 50);
   }, [showInput]);
 
+  const itemClasses = [classes.RouteItem];
+  if (error) itemClasses.push(classes.RouteItemError);
+  else if (warning) itemClasses.push(classes.RouteItemWarning);
+
   return (
     <div
-    className={classes.RouteItem}
-    role="button"
-    style={{ gridRow: `${seqStep3.get(index)}/ span 2` } as React.CSSProperties}
-    data-index={index}
-    data-id={id}
-    onClick={onClick}
-    data-canclick={onEditableContent ? 'true' : 'false'}
-    tabIndex={-1}
-    onKeyUp={onClick}
-  >
+      className={itemClasses.join(' ')}
+      role="button"
+      style={{ gridRow: `${seqStep3.get(index)}/ span 2` } as React.CSSProperties}
+      data-index={index}
+      data-id={id}
+      onClick={onClick}
+      data-canclick={onEditableContent ? 'true' : 'false'}
+      tabIndex={-1}
+      onKeyUp={onClick}
+    >
       {
         onEditableContent
           ? (
@@ -146,7 +156,20 @@ const RouteItem = ({
       }
       {
         !showInput
-          ? children || null
+          ? (
+            <>
+              {children || null}
+              {
+                warning
+                  ? (
+                    <RouteWarningPopUp>
+                      {warning}
+                    </RouteWarningPopUp>
+                  )
+                  : null
+              }
+            </>
+          )
           : null
       }
     </div>
@@ -271,7 +294,6 @@ const Legs = ({
   onEditableContent: FlightPlanRoutesProps['onEditableContent'],
   onWaypointOrderChange: (target: string, setAfter: string) => void
 }) => {
-  console.log('lang: ', lang);
   const [dragTargetName, setDragTargetName] = useState<string | null>(null);
 
   const dragstartHandler = useCallback((e: React.DragEvent) => {
@@ -396,15 +418,75 @@ const Legs = ({
             }
             return (
               <Fragment key={_l.index}>
-                <RouteItem index={i}>{`${_l.mh}°`}</RouteItem>
-                <RouteItem id="altitude" index={i} onEditableContent={onEditableContent}>{`${_l.altitude}ft`}</RouteItem>
-                <RouteItem index={i}>{`${_l.distance}nm`}</RouteItem>
-                <RouteItem id="ias" index={i} onEditableContent={onEditableContent}>{`${_l.ias}kt`}</RouteItem>
-                <RouteItem index={i}>{`${_l.tas}kt`}</RouteItem>
-                <RouteItem id="wind" index={i} onEditableContent={onEditableContent}>{`${_l.windDirection}°/${_l.windSpeed}kt`}</RouteItem>
-                <RouteItem index={i}>{`${_l.gs}kt`}</RouteItem>
-                <RouteItem index={i}>{`${_l.ete}`}</RouteItem>
-                <RouteItem index={i}>{`${_l.eto}`}</RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.mh}
+                  warning={_l.warnings?.mh}
+                >
+                  {`${_l.mh}°`}
+                </RouteItem>
+                <RouteItem
+                  id="userEditedAltitude"
+                  index={i}
+                  onEditableContent={onEditableContent}
+                  error={_l.errors?.altitude}
+                  warning={_l.warnings?.altitude}
+                >
+                  {`${_l.altitude}ft`}
+                </RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.distance}
+                  warning={_l.warnings?.distance}
+                >
+                  {`${_l.distance}nm`}
+                </RouteItem>
+                <RouteItem
+                  id="ias"
+                  index={i}
+                  onEditableContent={onEditableContent}
+                  error={_l.errors?.ias}
+                  warning={_l.warnings?.ias}
+                >
+                  {`${_l.ias}kt`}
+                </RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.tas}
+                  warning={_l.warnings?.tas}
+                >
+                  {`${_l.tas}kt`}
+                </RouteItem>
+                <RouteItem
+                  id="wind"
+                  index={i}
+                  onEditableContent={onEditableContent}
+                  error={_l.errors?.windSpeed || _l.errors?.windDirection}
+                  warning={_l.errors?.windSpeed || _l.errors?.windDirection}
+                >
+                  {`${_l.windDirection}°/${_l.windSpeed}kt`}
+                </RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.gs}
+                  warning={_l.warnings?.gs}
+                >
+                  {`${_l.gs}kt`}
+                </RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.ete}
+                  warning={_l.warnings?.ete}
+                >
+                  {`${_l.ete}`}
+                </RouteItem>
+                <RouteItem
+                  index={i}
+                  error={_l.errors?.eto}
+                  warning={_l.warnings?.eto}
+                  >
+                  {`${_l.eto}`}
+                </RouteItem>
               </Fragment>
             );
           })), 2)
@@ -421,17 +503,33 @@ const NewFlightPlanRoute = ({
   onWaypointDelete,
 }: FlightPlanRoutesProps) => {
   const lang = langStore((state) => state.lang);
+  const errors = useMemo(() => (
+    legs.flatMap((l) => {
+      if (l.type === 'wpt') return;
+      return Object.values(l.errors || {});
+    }).filter((e) => e) as string[]
+  ), [legs]);
+
   return (
     <CardWithTitle title={translator.translate('route')} styled>
+      {
+        errors.length
+          ? (
+            <RouteErrorBanner>
+              {errors}
+            </RouteErrorBanner>
+          )
+          : null
+      }
       <div>
         <Legs
-        legs={legs}
-        lang={lang}
-        onEditableContent={onEditableContent}
-        onWaypointAdd={onWaypointAdd}
-        onWaypointDelete={onWaypointDelete}
-        onWaypointOrderChange={onWaypointOrderChange}
-      />
+          legs={legs}
+          lang={lang}
+          onEditableContent={onEditableContent}
+          onWaypointAdd={onWaypointAdd}
+          onWaypointDelete={onWaypointDelete}
+          onWaypointOrderChange={onWaypointOrderChange}
+        />
       </div>
     </CardWithTitle>
   );

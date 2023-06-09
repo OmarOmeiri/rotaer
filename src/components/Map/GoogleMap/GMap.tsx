@@ -11,6 +11,8 @@ import Config from '@config';
 import BoundingSuperClusterAlgorithm from '@utils/Map/SuperClusterAlgorithm';
 import { smoothlyAnimatePanTo } from '@utils/Map/smoothPan';
 import langStore from '@store/lang/langStore';
+import AerodromeIcon from '@icons/aerodrome-pin.svg';
+import HelipadIcon from '@icons/helipad-pin.svg';
 import { MapMarker } from '../../Icons/Map/MapMarker';
 import classes from './GMap.module.css';
 import AerodromeInfoWindow from './AerodromeInfoWindow';
@@ -18,9 +20,9 @@ import { TAerodromPrelimInfo } from '../../../types/app/aerodrome';
 
 const aerodromeColors = Config.get('styles').colors.aerodromes;
 const mapMarkers = {
-  AD: svgToDataURI(<MapMarker color={aerodromeColors.AD.color}/>),
-  HP: svgToDataURI(<MapMarker color={aerodromeColors.HP.color}/>),
-  HD: svgToDataURI(<MapMarker color={aerodromeColors.HD.color}/>),
+  AD: svgToDataURI(<AerodromeIcon width='18'/>),
+  HP: svgToDataURI(<HelipadIcon width="18"/>),
+  HD: svgToDataURI(<HelipadIcon width="18"/>),
   other: svgToDataURI(<MapMarker color={aerodromeColors.other.color}/>),
 };
 
@@ -76,7 +78,7 @@ const createMarkers = (
   return new MarkerClusterer({
     markers,
     map,
-    algorithm: new BoundingSuperClusterAlgorithm({ radius: 160, minPoints: 4 }),
+    algorithm: new BoundingSuperClusterAlgorithm({ radius: 150, minPoints: 10 }),
   });
 };
 

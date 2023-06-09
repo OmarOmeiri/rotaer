@@ -1,4 +1,7 @@
-const isRight = (magHeading: number) => magHeading >= 0 && magHeading <= 179;
+const isRight = (magHeading: number) => {
+  if (magHeading === 360) return true;
+  return magHeading >= 0 && magHeading < 179;
+};
 
 const vfr = {
   right: [
@@ -90,3 +93,13 @@ export const getNearestAllowedAltitude = (
   return getNearestGt(isVfr ? vfr.left : ifr.left, alt);
 };
 
+export const isValidAltitude = (
+  magHeading: number,
+  alt: number,
+  isVfr = true,
+) => {
+  if (isRight(magHeading)) {
+    return (isVfr ? vfr.right : ifr.right).includes(alt);
+  }
+  return (isVfr ? vfr.left : ifr.left).includes(alt);
+};

@@ -9,6 +9,7 @@ import langStore from '../../../../store/lang/langStore';
 import rotaerLightsTranslator from '../../../../utils/Translate/RotaerLightsTranslator';
 import rotaerFuelAndServicesTranslator from '../../../../utils/Translate/RotaerFuelAnsServicesTranslator';
 import coordinatesTranslator from '../../../../utils/Translate/CoordinatesTranslator';
+import { LengthConverter } from '../../../../utils/converters/length';
 
 const AirportIcon = dynamic(() => import('@icons/airport-pin.svg')) as SVGComponent;
 const MapIcon = dynamic(() => import('@icons/map-solid.svg')) as SVGComponent;
@@ -140,7 +141,7 @@ const AerodromeMainInfoTab = ({ info }: {info: TAerodromeData}) => {
               </tr>
               <tr>
                 <td>{translator.translate('altitude')}</td>
-                <td>{info.elev}m</td>
+                <td>{Math.round(info.elev)}m / {Math.round(LengthConverter.M(info.elev).toFt())}ft</td>
               </tr>
               <tr>
                 <td>VFR</td>

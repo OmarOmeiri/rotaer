@@ -2,6 +2,7 @@ import CardWithTitle from '../../../../../../components/Card/CardWithTitle';
 import { TAerodromeData } from '../../../../../../types/app/aerodrome';
 import rotaerFuelAndServicesTranslator from '../../../../../../utils/Translate/RotaerFuelAnsServicesTranslator';
 import Translator from '../../../../../../utils/Translate/Translator';
+import { LengthConverter } from '../../../../../../utils/converters/length';
 import classes from './FlightPlanAerodromeData.module.css';
 
 const translator = new Translator({
@@ -9,6 +10,7 @@ const translator = new Translator({
   rwy: { 'en-US': 'Runways', 'pt-BR': 'Pistas' },
   freq: { 'en-US': 'Frequencies', 'pt-BR': 'Frequências' },
   fuel: { 'en-US': 'Fuel', 'pt-BR': 'Combustível' },
+  elev: { 'pt-BR': 'Elevação', 'en-US': 'Elevation' },
 });
 
 const AerodromeData = ({
@@ -18,7 +20,10 @@ const AerodromeData = ({
     <div className={classes.AerodromeIcao}>{aerodrome.icao}</div>
     <div>
       Info
-      {/* {aerodrome.} */}
+      <ul>
+        <li style={{ listStyle: 'none' }}>{`${translator.translate('elev')}: ${Math.round(LengthConverter.M(aerodrome.elev).toFt())}`}ft</li>
+        <li style={{ listStyle: 'none' }}>{`FIR: ${aerodrome.fir}`}</li>
+      </ul>
     </div>
     <div>
       {translator.translate('rwy')}

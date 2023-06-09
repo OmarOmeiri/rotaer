@@ -16,7 +16,7 @@ import {
   newFlightPlanInfoFormData,
   newFlightPlanInfoForms,
 } from './lib/forms';
-import NewFlightPlanRoute from './lib/NewFlightPlanRoute';
+import NewFlightPlanRoute from './lib/FlightPlanRoute';
 import { fetchAerodromeInfo } from '../../../../../Http/requests/aerodrome';
 import { TAerodromeData } from '../../../../../types/app/aerodrome';
 import Translator from '../../../../../utils/Translate/Translator';
@@ -36,6 +36,7 @@ import { TUserAddedWaypoint } from './lib/types';
 import { getRouteWaypoints } from './lib/utils/getWaypoints';
 import CardWithTitle from '../../../../../components/Card/CardWithTitle';
 import FlightPlanAerodromeData from './lib/FlightPlanAerodromeData';
+import FlightPlanFuel from './lib/FlightPlanFuel';
 
 const translator = new Translator({
   adNotFound: { 'en-US': 'Aerodrome not found', 'pt-BR': 'Aeródromo não encontrado' },
@@ -154,8 +155,8 @@ const NewPlan = () => {
 
   const route = useMemo(() => {
     if (!waypoints) return null;
-    return new Route(waypoints);
-  }, [waypoints]);
+    return new Route(waypoints, parsedAcftData);
+  }, [waypoints, parsedAcftData]);
 
   const legs = useMemo(() => (
     route
@@ -349,6 +350,7 @@ const NewPlan = () => {
         departure={departure}
         alternate={alternate}
       />
+      <FlightPlanFuel legs={legs}/>
     </div>
   );
 };

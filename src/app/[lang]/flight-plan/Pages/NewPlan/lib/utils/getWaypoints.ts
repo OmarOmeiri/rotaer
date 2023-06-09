@@ -13,10 +13,24 @@ const makeInitialWaypoints = (
   alternate: TAerodromeData | null,
   acftData: ParsedForms<typeof newFlightPlanAcftFormData, typeof newFlightPlanAcftValidator>,
 ) => ([
-  aerodromeToRouteWaypoint({ ad: departure, acftData, fixed: true }),
-  aerodromeToRouteWaypoint({ ad: arrival, acftData, fixed: true }),
   aerodromeToRouteWaypoint({
-    ad: alternate, acftData, fixed: true, alternate: true,
+    ad: departure,
+    acftData,
+    fixed: true,
+    adType: 'dep',
+  }),
+  aerodromeToRouteWaypoint({
+    ad: arrival,
+    acftData,
+    fixed: true,
+    adType: 'arr',
+  }),
+  aerodromeToRouteWaypoint({
+    ad: alternate,
+    acftData,
+    fixed: true,
+    alternate: true,
+    adType: 'alt',
   }),
 ].filter((wp) => wp) as RouteWaypoint[]);
 

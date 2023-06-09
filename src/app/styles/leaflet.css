@@ -4,3 +4,14 @@
   width: 100%;
   height: 100%;
 }
+
+.leaflet-tooltip-right:before {
+  left: 1px !important;
+  border-right-color: var(--app-darklight) !important;
+}
+
+.leaflet-tooltip {
+  background-color: var(--app-darklight) !important;
+  border: none !important;
+  color: var(--app-green) !important;
+}

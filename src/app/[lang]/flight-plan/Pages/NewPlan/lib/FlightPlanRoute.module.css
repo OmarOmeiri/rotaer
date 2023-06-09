@@ -25,6 +25,15 @@
   justify-content: center;
   border-top: 1px solid #a9a7a7;
   border-right: 1px solid rgb(73 73 73 / 18%);
+  position: relative;
+}
+
+.RouteItemError {
+  color: rgb(247, 55, 55)
+}
+
+.RouteItemWarning {
+  color: rgb(240, 167, 40)
 }
 
 .RouteItem[data-canclick='true'] {

@@ -1,5 +1,5 @@
 export type FlightPlanEditableIds =
-| 'altitude'
+| 'userEditedAltitude'
 | 'ias'
 | 'wind';
 
