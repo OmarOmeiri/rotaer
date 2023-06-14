@@ -51,3 +51,10 @@
   transform: scale(0.9);
   transition: opacity 300ms, transform 300ms;
 }
+
+.SaveBtnWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}

@@ -2,10 +2,15 @@
 import { windowArray } from 'lullo-utils/Arrays';
 import geomag, { type MagneticModel } from 'geomagnetism';
 import { round } from 'lullo-utils/Math';
-import { loxodromicBearing, loxodromicDistance, loxodromicMidPoint } from './routeUtils';
+import { cloneDeep } from 'lodash';
+import {
+  getRouteAltitudeChangeTime, loxodromicBearing, loxodromicDistance, loxodromicMidPoint,
+} from './routeUtils';
 import { getNearestAllowedAltitude, isValidAltitude } from '../altitude/altitude';
 import { calcGS, calcTAS, getDriftCorrectionAngle } from '../speed/speed';
 import Translator from '../Translate/Translator';
+import RouteVerticalProfile from './VerticalProfile';
+import { TimeConverter } from '../converters/time';
 
 type TWaypointType = 'ad' | 'coord'
 export type TRouteAdType = 'dep' | 'arr' | 'alt';
@@ -65,7 +70,7 @@ type _TWpt = {
   adType?: TRouteAdType
 }
 
-type RouteAcftData = {
+export type RouteAcftData = {
   ias: number | undefined;
   climbFuelFlow: number | undefined;
   descentFuelFlow: number | undefined;
@@ -82,19 +87,17 @@ export type LegWaypointTuple = [_TWpt, _TLeg, _TWpt];
 const errorTranslator = new Translator({
   planeCannotReachAltitude: {
     'en-US': 'The aircraft cannot reach the desired altitude in the given distance',
-    'pt-BR': 'A aeronave não conseguirá atingir a altitude desejada na distância disponível',
+    'pt-BR': 'A aeronave não conseguirá atingir a altitude desejada na distância disponível.',
+  },
+  planeCannotDescendInTime: {
+    'en-US': 'The aircraft cannot descent to the desired altitude in the given distance.',
+    'pt-BR': 'A aeronave não conseguirá descer até a altitude desejada na distância disponível.',
   },
   invalidVFRAltitude: {
-    'en-US': 'The altitude is invalid for this magnetic heading under VFR',
-    'pt-BR': 'A altitude é inválida para esta proa magnética voando VFR',
+    'en-US': 'The altitude is invalid for this magnetic heading under VFR.',
+    'pt-BR': 'A altitude é inválida para esta proa magnética voando VFR.',
   },
 });
-
-const readableHoursDecimal = (hours: number) => {
-  const n = new Date(0, 0);
-  n.setSeconds(hours * 60 * 60);
-  return n.toTimeString().slice(0, 8);
-};
 
 export class RouteWaypoint {
   name: string;
@@ -124,6 +127,7 @@ export class RouteWaypoint {
     this.windSpeed = wpt.windSpeed;
     this.windDirection = wpt.windDirection;
     this.altitude = wpt.altitude;
+    this.userEditedAltitude = wpt.userEditedAltitude;
     this.fixed = wpt.fixed;
     this.alternate = wpt.alternate;
   }
@@ -140,6 +144,22 @@ export class RouteWaypoint {
     if (wpt.userEditedAltitude) this.userEditedAltitude = wpt.userEditedAltitude;
     if (wpt.fixed) this.fixed = wpt.fixed;
     if (wpt.alternate) this.alternate = wpt.alternate;
+  }
+
+  toObject(): TWaypoint {
+    return {
+      name: this.name,
+      type: this.type,
+      adType: this.adType,
+      coord: this.coord,
+      windSpeed: this.windSpeed,
+      windDirection: this.windDirection,
+      ias: this.ias,
+      altitude: this.altitude,
+      userEditedAltitude: this.userEditedAltitude,
+      fixed: this.fixed,
+      alternate: this.alternate,
+    };
   }
 }
 
@@ -193,12 +213,12 @@ class Legs {
 }
 
 export class Route {
-  private route: TWaypoint[];
+  private route: RouteWaypoint[];
   private magModel: MagneticModel;
   private legs?: Legs;
   private acftData: RouteAcftData;
 
-  constructor(route: TWaypoint[], acftData: RouteAcftData) {
+  constructor(route: RouteWaypoint[], acftData: RouteAcftData) {
     this.route = route;
     this.acftData = acftData;
     this.magModel = geomag.model();
@@ -274,25 +294,6 @@ export class Route {
     }) || 0);
   }
 
-  private getAltitudeChangeTime(altitude1: number, altitude2: number) {
-    if (
-      !this.legs
-      || !this.acftData.climbRate
-      || !this.acftData.descentRate
-    ) return NaN;
-    let isClimb = true;
-
-    const altitudeChange = altitude2 - altitude1;
-    if (altitudeChange === 0) return 0;
-    if (altitudeChange < 0) isClimb = false;
-    const altitudeChangeTime = (
-      isClimb
-        ? Math.abs(altitudeChange) / Math.abs(this.acftData.climbRate)
-        : Math.abs(altitudeChange) / Math.abs(this.acftData.descentRate)
-    ) / 60;
-    return altitudeChangeTime;
-  }
-
   private getAerodromeIndex(type: TRouteAdType) {
     if (!this.legs) return -1;
     return this.legs.toArray().findIndex((l) => {
@@ -324,7 +325,7 @@ export class Route {
     };
   }
 
-  private _checkErrors(legs: _TLeg[], startAltitude:number) {
+  private _checkErrors(legs: _TLeg[], startAltitude:number, endAltitude:number) {
     if (!this.legs) return;
 
     legs
@@ -332,17 +333,26 @@ export class Route {
         const _startAltitude = i === 0
           ? startAltitude
           : legs[i - 1].altitude;
-        const altitudeChangeTime = this.getAltitudeChangeTime(_startAltitude, l.altitude);
+        const altitudeChangeTime = getRouteAltitudeChangeTime(_startAltitude, l.altitude, this.acftData);
         const totalTime = l.distance / l.gs;
         const cruiseTime = totalTime - altitudeChangeTime;
         if (cruiseTime < 0) {
           this.legs?.addError(l.index, { altitude: errorTranslator.translate('planeCannotReachAltitude') });
         }
       });
+
+    const lastLeg = legs[legs.length - 1];
+    const altitudeChangeTime = getRouteAltitudeChangeTime(lastLeg.altitude, endAltitude, this.acftData);
+    const totalTime = lastLeg.distance / lastLeg.gs;
+    const cruiseTime = totalTime - altitudeChangeTime;
+    if (cruiseTime < 0) {
+      this.legs?.addError(lastLeg.index, { altitude: errorTranslator.translate('planeCannotDescendInTime') });
+    }
   }
 
   private setWarnings() {
     if (!this.legs) return;
+
     this.legs.toArray()
       .forEach((l) => {
         if (l.type === 'wpt') return;
@@ -364,11 +374,13 @@ export class Route {
     } = legSections;
     const legs = this.legs.toArray();
     const initialAltitude = legs[depIx].altitude;
+    const endAltitude = legs[arrIx].altitude;
 
-    this._checkErrors(mainLegs, initialAltitude);
+    this._checkErrors(mainLegs, initialAltitude, endAltitude);
     if (altIx < 0) return;
     const alternateInitialAltitude = legs[arrIx].altitude;
-    this._checkErrors(alternateLegs, alternateInitialAltitude);
+    const alternateEndAltitude = legs[altIx].altitude;
+    this._checkErrors(alternateLegs, alternateInitialAltitude, alternateEndAltitude);
   }
 
   private getFuelConsumption(leg: _TLeg, startAltitude:number) {
@@ -381,7 +393,7 @@ export class Route {
       || !this.acftData.descentRate
     ) return NaN;
 
-    const altitudeChangeTime = this.getAltitudeChangeTime(startAltitude, leg.altitude);
+    const altitudeChangeTime = getRouteAltitudeChangeTime(startAltitude, leg.altitude, this.acftData);
     const totalTime = leg.distance / leg.gs;
     const cruiseTime = totalTime - altitudeChangeTime;
     if (cruiseTime < 0) {
@@ -461,7 +473,6 @@ export class Route {
   getLegs() {
     const legs = new Legs([]);
     let ETO = 0;
-    let ix = 0;
     for (const leg of windowArray(this.route, 2)) {
       const {
         name,
@@ -487,7 +498,6 @@ export class Route {
         alternate,
         adType,
       });
-      if (!ix) ix += 1;
       const midPoint = this.getMidPoint(leg);
       const distance = this.getDistance(leg);
       const heading = this.getHeading(leg);
@@ -506,7 +516,6 @@ export class Route {
       const GS = this.getGS(TAS, MH, windDirection || 0, windSpeed || 0);
       const ETE = this.getETE(distance, GS);
       ETO += ETE;
-      ix += 1;
       legs.push({
         type: 'leg',
         mh: Math.round(MH),
@@ -518,12 +527,11 @@ export class Route {
         windDirection: windDirection || 0,
         gs: GS,
         fuelConsumption: NaN,
-        ete: readableHoursDecimal(ETE),
-        eto: `T+${readableHoursDecimal(ETO)}`,
+        ete: TimeConverter.H(ETE).tohhmmss(),
+        eto: `T+${TimeConverter.H(ETO).tohhmmss()}`,
         alternate: leg[1].alternate,
       });
     }
-    ix += 1;
     const lastWpt = this.route[this.route.length - 1];
     legs.push({
       type: 'wpt',
@@ -540,17 +548,22 @@ export class Route {
     this.calculateFuelConsumption();
     this.setErrors();
     this.setWarnings();
-    console.log('this.legs: ', this.legs);
     return this.legs.toArray();
   }
 
-  private getLegByIndex(index: string | number) {
-    if (!this.legs) return;
-    const ix = Number(index);
-    if (Number.isNaN(ix)) throw new Error(`Invalid leg index: ${index}`);
-    const l = this.legs.toArray().filter((l) => l.type === 'leg')[ix];
-    if (!l) throw new Error(`Invalid leg index: ${index}`);
-    return l;
+  getVerticalProfile() {
+    if (
+      !this.legs
+        || !this.acftData.climbRate
+        || !this.acftData.descentRate
+    ) return null;
+    return new RouteVerticalProfile(
+      this.legs.toArray(),
+      this.acftData,
+    );
+  }
+
+  toObject() {
+    return this.route.map((r) => r.toObject());
   }
 }
-

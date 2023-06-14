@@ -45,6 +45,6 @@
 }
 
 .DrawerBtn {
-  position: absolute;
+  position: fixed;
   top: 10%;
 }

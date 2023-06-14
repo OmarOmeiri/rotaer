@@ -3,9 +3,10 @@
 }
 
 .AerodromesWrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  justify-content: space-evenly;
 }
 
 .AerodromeIcao {
@@ -13,4 +14,20 @@
   color: var(--app-black);
   font-weight: bold;
   text-align: center;
+}
+
+.TablesWrapper div{
+  width: 100%;
+  text-align: center;
+}
+
+.TablesWrapper div table{
+  width: 100%;
+}
+
+.TablesWrapper div > span{
+  width: 100%;
+  display: block;
+  font-weight: bold;
+  background-color: #585858;
 }

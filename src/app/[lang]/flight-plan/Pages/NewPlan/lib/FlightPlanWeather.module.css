@@ -1,0 +1,33 @@
+.MetarWrapper {
+  font-family: monospace, monospace;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1em 0;
+}
+
+.SelectionWrapper {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.SelectionWrapper > * {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.SelectionWrapper > button {
+  all: unset;
+  cursor: pointer;
+  padding: 0 1em;
+}
+
+.Windy {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

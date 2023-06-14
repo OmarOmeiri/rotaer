@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { fetchAerodromeInfo } from '../../../Http/requests/aerodrome';
 import classes from './AerodromeInfo.module.css';
-import { fetchAerodromeMETAR } from '../../../Http/requests/metar';
+import { fetchParsedAerodromeMETAR } from '../../../Http/requests/metar';
 import type METARParser from '../../../utils/METAR/METAR';
 
 const StyledTooltip = dynamic(() => import('../../../components/Tooltips/StyledTooltip'));
@@ -62,7 +62,7 @@ const AerodromeInfo = async ({
   if (!id || info === null) {
     return notFound();
   }
-  const metar = await fetchAerodromeMETAR({ icao: info.icao });
+  const metar = await fetchParsedAerodromeMETAR({ icao: info.icao });
 
   return (
     <div>

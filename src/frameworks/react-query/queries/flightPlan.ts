@@ -1,7 +1,7 @@
 import type { Session } from 'next-auth';
 import { API_ROUTES } from '../../../Http/routes';
 import { getUserFlightPlans } from '../../../Http/requests/flightPlan';
-import { useMyQuery } from './query';
+import { useMyQuery } from './myQuery';
 
 export const useFlightPlansQuery = (user: Session['user']) => (
   useMyQuery({

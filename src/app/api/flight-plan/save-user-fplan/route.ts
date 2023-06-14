@@ -5,14 +5,14 @@ import FlightPlanService from '../Service';
 import { protectedRoute } from '../../utils/protectedRoute';
 import { COMMON_API_ERRORS } from '../../utils/Errors';
 import type { MyRequest } from '../../../../types/request';
-import type { FlightPlan } from '../../../../types/app/fPlan';
+import type { FlightPlan, SaveFlightPlan } from '../../../../types/app/fPlan';
 
 type API = TAPI<'flightPlan', 'saveUserFlightPlans'>;
 
 @controller()
 class SaveUserFlightPlans implements API {
   @protectedRoute()
-  async POST({ req, reqData }: MyRequest<FlightPlan>) {
+  async POST({ req, reqData }: MyRequest<SaveFlightPlan>) {
     const userId = req.headers.get('user-id');
     if (!userId) {
       throw COMMON_API_ERRORS.unauthorized();

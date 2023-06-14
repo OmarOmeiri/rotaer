@@ -1,5 +1,5 @@
 import { API_ROUTES } from '../../../Http/routes';
-import { useMyQuery } from './query';
+import { useMyQuery } from './myQuery';
 import { fetchAerodromes } from '../../../Http/requests/aerodrome';
 
 export const useAerodromeQuery = (key: string, enabled: boolean) => (

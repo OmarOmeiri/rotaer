@@ -37,6 +37,9 @@ import { getRouteWaypoints } from './lib/utils/getWaypoints';
 import CardWithTitle from '../../../../../components/Card/CardWithTitle';
 import FlightPlanAerodromeData from './lib/FlightPlanAerodromeData';
 import FlightPlanFuel from './lib/FlightPlanFuel';
+import { FlightPlanWeather } from './lib/FlightPlanWeather';
+import FlightPlanVerticalProfile from './lib/FlightPlanVerticalProfile';
+import { saveUserFlightPlan } from '../../../../../Http/requests/flightPlan';
 
 const translator = new Translator({
   adNotFound: { 'en-US': 'Aerodrome not found', 'pt-BR': 'Aeródromo não encontrado' },
@@ -44,6 +47,8 @@ const translator = new Translator({
   acftSave: { 'en-US': 'Aircraft saved successfully.', 'pt-BR': 'Aeronave salva com sucesso.' },
   acftSaveFail: { 'en-US': 'Could not save aircraft data.', 'pt-BR': 'Houve um erro ao salvar a aeronave.' },
   map: { 'en-US': 'Map', 'pt-BR': 'Mapa' },
+  noRouteToSave: { 'en-US': 'You must fill the route to save.', 'pt-BR': 'Preencha os dados para salvar.' },
+  couldNotSave: { 'en-US': 'There was an error while saving your flight plan.', 'pt-BR': 'Houve um erro ao salvar o plano.' },
 });
 
 const hasUserChangedAcftData = (
@@ -275,10 +280,26 @@ const NewPlan = () => {
   }, [parsedAcftData]);
 
   const onWaypointDelete = useCallback((name: string) => {
-    setUserAddedWpts((wpts) => (
-      wpts.filter((w) => w.name !== name)
-    ));
-  }, []);
+    if (!route || !waypoints) return;
+
+    const wptNames = waypoints
+      .map((w) => w.name)
+      .filter((wn) => wn !== name);
+
+    setUserAddedWpts((wpts) => {
+      const clone = cloneDeep(wpts)
+        .filter((w) => w.name !== name);
+      return clone.reduce((wpts, w) => {
+        const beforeIndex = wptNames.findIndex((wn) => wn === w.name) - 1;
+        if (beforeIndex < 0) return wpts;
+        wpts.push({
+          ...w,
+          addAfter: wptNames[beforeIndex],
+        });
+        return wpts;
+      }, [] as TUserAddedWaypoint[]);
+    });
+  }, [waypoints, route]);
 
   const onWaypointOrderChange = (target: string, addAfter: string) => {
     if (!waypoints) return;
@@ -300,13 +321,42 @@ const NewPlan = () => {
     ));
   };
 
+  const onSave = useCallback(async () => {
+    if (!route || !departure || !arrival) {
+      setAlert({ msg: translator.translate('noRouteToSave'), type: 'error' });
+      return;
+    }
+
+    const routeObj = route.toObject();
+    try {
+      await saveUserFlightPlan({
+        name: flightInfoFData.name || `${departure?.icao} -> ${arrival?.icao}`,
+        dep: departure.icao,
+        arr: arrival.icao,
+        alt: alternate?.icao,
+        route: routeObj,
+      });
+    } catch (error) {
+      setAlert({ msg: translator.translate('couldNotSave'), type: 'error' });
+    }
+  }, [
+    route,
+    flightInfoFData,
+    departure,
+    arrival,
+    alternate,
+    setAlert,
+  ]);
+
   return (
     <div className={classes.Wrapper}>
       <div className={classes.PlanWrapper}>
         <NewFlightPlanInfo
           forms={flightInfoInputs}
+          onSaveClick={onSave}
           onFormChange={onNewFlightInfoChange}
           onAerodromeBlur={onDepArrInputBlur}
+          canSave={!!(route)}
         />
         <NewFlightPlanAcft
           forms={flightPlanAcftInputs}
@@ -350,7 +400,11 @@ const NewPlan = () => {
         departure={departure}
         alternate={alternate}
       />
-      <FlightPlanFuel legs={legs}/>
+      <div className={classes.FuelAndWeather}>
+        <FlightPlanFuel legs={legs} acftData={parsedAcftData}/>
+        <FlightPlanWeather waypoints={waypoints}/>
+      </div>
+      <FlightPlanVerticalProfile route={route}/>
     </div>
   );
 };

@@ -10,7 +10,7 @@
 }
 
 .MapWrapper {
-  width: 30%;
+  width: 40%;
 }
 
 .MapCard {
@@ -21,6 +21,21 @@
   height: calc(100% - 5em);
   min-height: 700px;
 }
+
+.FuelAndWeather {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.FuelAndWeather > :nth-child(1){
+  width: calc(30% - 2em);
+}
+
+.FuelAndWeather > :nth-child(2) {
+  width: calc(70% - 2em);
+}
+
 
 @media (width < 1500px) {
   .PlanWrapper {

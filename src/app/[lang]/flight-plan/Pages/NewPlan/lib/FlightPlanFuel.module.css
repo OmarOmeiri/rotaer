@@ -1,0 +1,24 @@
+.TableWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.Table {
+  border-collapse: collapse;
+  font-family: monospace, monospace;
+}
+
+.Table tr td:first-child {
+  border-right: 1px solid #858484;
+}
+
+.Table tr td:first-child,
+.Table tr td:last-child {
+  padding: 0.1em 0.5em;
+}
+
+.TotalRow {
+  border-top: 1px solid #858484;
+  font-weight: bold;
+}

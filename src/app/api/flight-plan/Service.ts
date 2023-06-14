@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { ErrorCodes } from 'lullo-common-types';
 import { MongoCollections } from '../../../types/app/mongo';
 import BaseService from '../utils/BaseService';
-import type { FlightPlan } from '../../../types/app/fPlan';
+import type { FlightPlan, SaveFlightPlan } from '../../../types/app/fPlan';
 import ServerError from '../../../utils/Errors/ServerError';
 import Translator from '../../../utils/Translate/Translator';
 import { COMMON_API_ERRORS } from '../utils/Errors';
@@ -10,6 +10,7 @@ import { COMMON_API_ERRORS } from '../utils/Errors';
 const translator = new Translator({
   adArrNotFound: { 'pt-BR': 'Aeródromo de chegada não encontrado.', 'en-US': 'Arrival aerodrome not found' },
   adDepNotFound: { 'pt-BR': 'Aeródromo de partida não encontrado.', 'en-US': 'Departure aerodrome not found' },
+  adAltNotFound: { 'pt-BR': 'Aeródromo de alternativa não encontrado.', 'en-US': 'Alternate aerodrome not found' },
 });
 
 const NotFoundError = (msg: string) => (
@@ -28,47 +29,64 @@ class FlightPlanService extends BaseService {
 
     const userPlans = await db.flightPlansDb.find({ userId: new ObjectId(userId) }).toArray();
     const arrivals = await Promise.all(userPlans.map((p) => (
-      db.aerodromeDb.findOne({ _id: new ObjectId(p.arr) })
+      db.aerodromeDb.findOne({ icao: p.arr })
     )));
 
     const departures = await Promise.all(userPlans.map((p) => (
-      db.aerodromeDb.findOne({ _id: new ObjectId(p.dep) })
+      db.aerodromeDb.findOne({ icao: p.dep })
     )));
 
-    const acfts = await Promise.all(userPlans.map((p) => (
-      db.userAcftsDb.findOne({ _id: new ObjectId(p.acft) })
-    )));
+    const alternates = await Promise.all(userPlans.map((p) => {
+      if (!p.alt) return undefined;
+      return db.aerodromeDb.findOne({ icao: p.alt });
+    }));
 
-    return userPlans.map((p, i) => ({
-      ...p,
-      acft: acfts[i],
-      dep: departures[i],
-      arr: arrivals[i],
-    })) as unknown as FlightPlan[];
+    return userPlans.reduce((plans, p, i) => {
+      const dep = departures[i];
+      const arr = arrivals[i];
+      const alt = alternates[i];
+      if (dep && arr) {
+        plans.push({
+          ...p,
+          dep: {
+            ...dep,
+            _id: dep._id.toString(),
+          },
+          arr: {
+            ...arr,
+            _id: arr._id.toString(),
+          },
+          alt: alt
+            ? {
+              ...alt,
+              _id: alt._id.toString(),
+            } : undefined,
+        });
+      }
+      return plans;
+    }, [] as FlightPlan[]);
   }
 
-  async saveUserFlightPlan(plan: FlightPlan, userId: string) {
+  async saveUserFlightPlan(plan: SaveFlightPlan, userId: string) {
     const db = this.getDb([
       MongoCollections.aerodrome,
-      MongoCollections.acft,
       MongoCollections.flightPlan,
     ]);
 
-    const acftId = new ObjectId(plan.acft._id);
-    const adDepId = new ObjectId(plan.dep._id);
-    const adArrId = new ObjectId(plan.arr._id);
-
-    const checkDepAerodrome = await db.aerodromeDb.findOne({ _id: adDepId });
+    const checkDepAerodrome = await db.aerodromeDb.findOne({ icao: plan.dep });
     if (!checkDepAerodrome) throw NotFoundError(translator.translate('adDepNotFound'));
-    const checkArrAerodrome = await db.aerodromeDb.findOne({ _id: adArrId });
+    const checkArrAerodrome = await db.aerodromeDb.findOne({ icao: plan.arr });
     if (!checkArrAerodrome) throw NotFoundError(translator.translate('adArrNotFound'));
-    const checkAcft = await db.userAcftsDb.findOne({ _id: acftId });
-    if (!checkAcft) throw COMMON_API_ERRORS.acftNotFound();
+    if (plan.alt) {
+      const checkAltAerodrome = await db.aerodromeDb.findOne({ icao: plan.alt });
+      if (!checkAltAerodrome) throw NotFoundError(translator.translate('adAltNotFound'));
+    }
     await db.flightPlansDb.insertOne({
       name: plan.name,
-      acft: acftId,
-      arr: adArrId,
-      dep: adDepId,
+      arr: plan.arr,
+      dep: plan.dep,
+      alt: plan.alt,
+      route: plan.route,
       userId: new ObjectId(userId),
       createdAt: new Date(),
     });

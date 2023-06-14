@@ -2,15 +2,21 @@ import classes from './ErrorBanner.module.css';
 
 export const RouteErrorBanner = ({
   children,
-}: {children: string | string[]}) => {
+  type = 'error',
+}: {
+  children: string | string[]
+  type?: 'error' | 'warning'
+}) => {
   if (Array.isArray(children)) {
     return (
       <>
         {
           children
             .map((c) => (
-              <div key={c} className={classes.Wrapper}>
-                Error: {c}
+              <div key={c} className={`${classes.Wrapper} ${type === 'warning' ? classes.Warning : classes.Error}`}>
+                <div>
+                  Error: {c}
+                </div>
               </div>
             ))
         }
@@ -18,8 +24,10 @@ export const RouteErrorBanner = ({
     );
   }
   return (
-    <div className={classes.Wrapper}>
-      Error: {children}
+    <div className={`${classes.Wrapper} ${type === 'warning' ? classes.Warning : classes.Error}`}>
+      <div>
+        Error: {children}
+      </div>
     </div>
   );
 };

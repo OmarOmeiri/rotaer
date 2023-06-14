@@ -1,0 +1,26 @@
+.VProfileWrapper {
+  width: 100%;
+}
+
+.VProfileChartWrapper {
+  height: 40vh;
+  overflow: hidden;
+}
+
+.Tooltip{
+  padding: 0.5em 1em;
+}
+
+.TooltipName {
+  text-align: center;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid white;
+}
+
+.ProfilePointLabel {
+  font-size: 0.7em;
+  font-weight: bold;
+  display: block;
+  rotate: -15deg;
+  transform-origin: bottom left;
+}

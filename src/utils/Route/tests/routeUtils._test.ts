@@ -1,5 +1,5 @@
-import { degreeMinSecCoordsToDecimal } from '../converters/coordinates';
-import { loxodromicBearing, loxodromicDistance, loxodromicMidPoint } from './routeUtils';
+import { degreeMinSecCoordsToDecimal } from '../../converters/coordinates';
+import { loxodromicBearing, loxodromicDistance, loxodromicMidPoint } from '../routeUtils';
 
 const DIST_UNIT = 'km' as const;
 const MAX_DEV = {

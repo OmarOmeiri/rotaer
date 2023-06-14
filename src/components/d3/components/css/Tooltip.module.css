@@ -1,0 +1,77 @@
+@value bg-color: rgba(7, 7, 7, 0.7);
+
+.TooltipWrapper {
+  border-radius: 2px;
+  background-color: bg-color
+}
+
+.TooltipWrapper * {
+  padding: 0 0.6em;
+}
+
+.TooltipLabel {
+  font-weight: bold;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.39);
+  text-shadow: 0px 0px 1px white
+}
+
+.TooltipContent {
+  padding: 0.3em 0.3em 0.6em;
+  text-align: center;
+}
+
+.TooltipArrowUnder::after {
+  content: "";
+  position: absolute;
+  top: 99%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: bg-color transparent transparent transparent;
+}
+
+.TooltipArrowLeft::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 6px);
+  left: -6px;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent bg-color transparent transparent ;
+}
+
+.TooltipArrowTop::after {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent bg-color transparent;
+}
+
+.TooltipArrowRight::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 6px);
+  left: calc(99% + 6px);
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent bg-color;
+}
+
+.TooltipName {
+  font-weight: bold;
+}
+
+@supports (-webkit-text-stroke: 0.02em white) {
+  .TooltipName {
+    -webkit-text-stroke: 0.02em white;
+  }
+}
+

@@ -4,6 +4,7 @@
  */
 import { toDegrees, toRadians } from '../angle/angles';
 import { LengthConverter } from '../converters/length';
+import type { RouteAcftData } from './Route';
 
 const EARTH_RADIUS = 6371;
 
@@ -84,3 +85,29 @@ export const loxodromicMidPoint = ({
   return { lat: toDegrees(φ3), lon: toDegrees(λ3) };
 };
 
+export const getRouteAltitudeChangeTime = (
+  altitude1: number,
+  altitude2: number,
+  acft: RouteAcftData,
+) => {
+  if (
+    !acft.climbRate
+    || !acft.descentRate
+  ) return NaN;
+  let isClimb = true;
+
+  const altitudeChange = altitude2 - altitude1;
+  if (altitudeChange === 0) return 0;
+  if (altitudeChange < 0) isClimb = false;
+  const altitudeChangeTime = (
+    isClimb
+      ? Math.abs(altitudeChange) / Math.abs(acft.climbRate)
+      : Math.abs(altitudeChange) / Math.abs(acft.descentRate)
+  ) / 60;
+  return altitudeChangeTime;
+};
+
+export const getRouteAltitudeChangeDistance = (
+  time: number,
+  gs: number,
+) => time * gs;

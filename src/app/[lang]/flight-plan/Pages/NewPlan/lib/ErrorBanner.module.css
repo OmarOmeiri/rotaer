@@ -1,8 +1,19 @@
 .Wrapper {
-  background-color: #D32F2F;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 0.5em;
+}
+
+.Wrapper > div {
+  padding: 0 0.5em;
+}
+
+.Error {
+  background-color: #D32F2F;
+}
+
+.Warning {
+  background-color: rgb(240, 167, 40);
+  color: #252525;
 }

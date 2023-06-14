@@ -8,6 +8,7 @@ import { WithStrId } from '../../../../../../types/app/mongo';
 import type { FlightPlan } from '../../../../../../types/app/fPlan';
 import { useNextAuth } from '../../../../../../hooks/Auth/useAuth';
 import { useFlightPlansQuery } from '../../../../../../frameworks/react-query/queries/flightPlan';
+import { formatDate } from '../../../../../../utils/format/date';
 
 const Table = dynamic(() => import('../../../../../../components/Table/Table'));
 
@@ -31,31 +32,24 @@ const flightPlanCols = (): ColumnDefCustom<WithStrId<FlightPlan>>[] => [
 
   },
   {
-    header: translator.translate('acft'),
-    id: 'acft',
-    accessorKey: 'acft',
-    accessorFn: (data) => data.acft,
-    draggable: false,
-  },
-  {
     header: translator.translate('dep'),
     id: 'dep',
     accessorKey: 'dep',
-    accessorFn: (data) => data.dep,
+    accessorFn: (data) => data.dep.icao,
     draggable: false,
   },
   {
     header: translator.translate('arr'),
     id: 'arr',
     accessorKey: 'arr',
-    accessorFn: (data) => data.arr,
+    accessorFn: (data) => data.arr.icao,
     draggable: false,
   },
   {
     header: translator.translate('date'),
     id: 'createdAt',
     accessorKey: 'createdAt',
-    accessorFn: (data) => data.createdAt,
+    accessorFn: (data) => (data.createdAt ? formatDate(new Date(data.createdAt)) : ''),
     draggable: false,
   },
 ];
@@ -63,6 +57,7 @@ const flightPlanCols = (): ColumnDefCustom<WithStrId<FlightPlan>>[] => [
 const FlightPlanTable = () => {
   const { user } = useNextAuth();
   const userPlansQuery = useFlightPlansQuery(user);
+  console.log('userPlansQuery: ', userPlansQuery.data);
   const cols = useMemo(() => flightPlanCols() as ColumnDefCustom<Record<string, unknown>>[], []);
   return (
     <Table

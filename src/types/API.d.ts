@@ -85,7 +85,7 @@ type FlightPlanRoutes = {
   },
   saveUserFlightPlans: {
     POST: {
-      req: FlightPlan,
+      req: SaveFlightPlan,
       res: null,
     }
   },

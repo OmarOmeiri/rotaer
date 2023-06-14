@@ -18,51 +18,77 @@ const AerodromeData = ({
 }:{aerodrome: TAerodromeData}) => (
   <div>
     <div className={classes.AerodromeIcao}>{aerodrome.icao}</div>
-    <div>
-      Info
-      <ul>
-        <li style={{ listStyle: 'none' }}>{`${translator.translate('elev')}: ${Math.round(LengthConverter.M(aerodrome.elev).toFt())}`}ft</li>
-        <li style={{ listStyle: 'none' }}>{`FIR: ${aerodrome.fir}`}</li>
-      </ul>
+    <div className={classes.TablesWrapper}>
+      <div>
+        <span>Info</span>
+        <table>
+          <tbody>
+            <tr>
+              <td align='left'>{translator.translate('elev')}</td>
+              <td>{Math.round(LengthConverter.M(aerodrome.elev).toFt())}</td>
+            </tr>
+            <tr>
+              <td align='left'>FIR</td>
+              <td>{aerodrome.fir}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <span>{translator.translate('rwy')}</span>
+        <table>
+          <tbody>
+            {aerodrome.rwys.map((rwy) => (
+              <tr key={rwy.rwy}>
+                <td align='left'>{rwy.rwy}</td>
+                <td>{rwy.length}m</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {
+        aerodrome.com?.length
+          ? (
+            <div>
+              <span>{translator.translate('freq')}</span>
+              <table>
+                <tbody>
+                  {aerodrome.com.map((com) => (
+                    com.freq
+                      ? (
+                        <tr key={com.name}>
+                          <td align='left'>{com.name}</td>
+                          <td>{com.freq.join(', ')}</td>
+                        </tr>
+                      )
+                      : null
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+          : null
+      }
+      {
+        aerodrome.CMB?.length
+          ? (
+            <div>
+              <span>{translator.translate('fuel')}</span>
+              <table>
+                <tbody>
+                  {aerodrome.CMB.map((c) => (
+                    <tr key={c}>
+                      <td>{rotaerFuelAndServicesTranslator.fuel.translate(c)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+          : null
+      }
     </div>
-    <div>
-      {translator.translate('rwy')}
-      <ul>
-        {aerodrome.rwys.map((rwy) => (
-          <li key={rwy.rwy}>{rwy.rwy} - {rwy.length}m</li>
-        ))}
-      </ul>
-    </div>
-    {
-      aerodrome.com?.length
-        ? (
-          <div>
-            {translator.translate('freq')}
-            <ul>
-              {aerodrome.com.map((com) => (
-                com.freq
-                  ? <li key={com.name}>{com.name}: {com.freq.join(', ')}</li>
-                  : null
-              ))}
-            </ul>
-          </div>
-        )
-        : null
-    }
-    {
-      aerodrome.CMB?.length
-        ? (
-          <div>
-            {translator.translate('fuel')}
-            <ul>
-              {aerodrome.CMB.map((c) => (
-                <li key={c}>{rotaerFuelAndServicesTranslator.fuel.translate(c)}</li>
-              ))}
-            </ul>
-          </div>
-        )
-        : null
-    }
   </div>
 );
 

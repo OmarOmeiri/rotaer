@@ -504,10 +504,12 @@ const NewFlightPlanRoute = ({
 }: FlightPlanRoutesProps) => {
   const lang = langStore((state) => state.lang);
   const errors = useMemo(() => (
+    Array.from(new Set(
     legs.flatMap((l) => {
       if (l.type === 'wpt') return;
       return Object.values(l.errors || {});
-    }).filter((e) => e) as string[]
+    }).filter((e) => e) as string[],
+    ))
   ), [legs]);
 
   return (

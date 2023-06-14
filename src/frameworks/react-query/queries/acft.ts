@@ -1,7 +1,7 @@
 import type { MySession } from 'next-auth';
 import { API_ROUTES } from '../../../Http/routes';
 import { findUserAircraft } from '../../../Http/requests/acft';
-import { useMyQuery } from './query';
+import { useMyQuery } from './myQuery';
 
 export const useAcftQuery = (session: MySession) => (
   useMyQuery({

@@ -113,6 +113,7 @@ const Search = ({ onSearch }: {onSearch: (search: string) => void}) => {
       showPopup: false,
       popupFormat: ({ query }: any) => {
         onSearch(String(query.query));
+        map.closePopup();
         return '';
       },
       marker: {

@@ -13,6 +13,7 @@ export const API_ROUTES = {
   },
   flightPlan: {
     getUserFlightPlans: 'flight-plan/get-user-fplans',
+    saveUserFlightPlans: 'flight-plan/save-user-fplan',
   },
   auth: {
     gauth: 'auth/g-auth',
