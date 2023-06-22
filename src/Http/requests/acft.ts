@@ -1,9 +1,8 @@
-import alertStore from '../../store/alert/alertStore';
 import { TRequest } from '../../types/API';
 import { WithStrId } from '../../types/app/mongo';
-import Translator from '../../utils/Translate/Translator';
 import Api from '../HTTPRequest';
 import { API_ROUTES } from '../routes';
+import { WithErrorSuccessFetch } from '../types';
 
 type AcftRoutes ={
   find: TRequest<'acft', 'find'>,
@@ -13,44 +12,57 @@ type AcftRoutes ={
   editUserAcft: TRequest<'acft', 'editUserAcft'>,
 }
 
-const translator = new Translator({
-  savedSuccess: { 'en-US': 'Aircraft saved successfully.', 'pt-BR': 'Aeronave salva com sucesso.' },
-});
-
-export const findAircraft: AcftRoutes['find']['GET'] = async (args) => {
+export const findAircraft: WithErrorSuccessFetch<
+AcftRoutes['find']['GET']
+> = async (args, options) => {
   const { data } = await new Api(API_ROUTES.aircraft.find)
+    .onError(options?.onError)
+    .onSuccess(options?.onSuccess)
     .params(args)
     .get<WithStrId<IAcft>>();
   return data;
 };
 
-export const findUserAircraft: AcftRoutes['findUserAcft']['GET'] = async (args) => {
+export const findUserAircraft: WithErrorSuccessFetch<
+AcftRoutes['findUserAcft']['GET']
+> = async (args, options) => {
   const { data } = await new Api(API_ROUTES.aircraft.findUserAcft)
+    .onError(options?.onError)
+    .onSuccess(options?.onSuccess)
     .params(args)
     .get<WithStrId<IUserAcft>[]>();
   return data || [];
 };
 
-export const deleteUserAircraft: AcftRoutes['deleteUserAcft']['DELETE'] = async (args) => {
+export const deleteUserAircraft: WithErrorSuccessFetch<
+AcftRoutes['deleteUserAcft']['DELETE']
+> = async (args, options) => {
   await new Api(API_ROUTES.aircraft.deleteUserAcft)
+    .onError(options?.onError)
+    .onSuccess(options?.onSuccess)
     .params(args)
     .delete<null>();
   return null;
 };
 
-export const editUserAircraft: AcftRoutes['editUserAcft']['PATCH'] = async (args) => {
+export const editUserAircraft: WithErrorSuccessFetch<
+AcftRoutes['editUserAcft']['PATCH']
+> = async (args, options) => {
   await new Api(API_ROUTES.aircraft.editUserAcft)
+    .onError(options?.onError)
+    .onSuccess(options?.onSuccess)
     .body(args)
     .patch<null>();
   return null;
 };
 
-export const saveAircraft: AcftRoutes['save']['POST'] = async (args) => {
+export const saveAircraft: WithErrorSuccessFetch<
+AcftRoutes['save']['POST']
+> = async (args, options) => {
   const { data } = await new Api(API_ROUTES.aircraft.save)
+    .onError(options?.onError)
+    .onSuccess(options?.onSuccess)
     .params(args)
-    .onSuccess(() => alertStore
-      .getState()
-      .setAlert({ msg: translator.translate('savedSuccess'), type: 'success' }))
     .get<WithStrId<IAcft>>();
 
   return data;

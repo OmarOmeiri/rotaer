@@ -64,6 +64,15 @@ const GoogleAuth = () => {
     }
   }, [isAuthenticated], 3000);
 
+  useEffect(() => {
+    const googleLogInPrompt = document.getElementById('credential_picker_container');
+    if (isAuthenticated && googleLogInPrompt) {
+      googleLogInPrompt.style.display = 'none';
+    } else if (googleLogInPrompt) {
+      googleLogInPrompt.style.removeProperty('display');
+    }
+  }, [isAuthenticated]);
+
   return null;
 };
 

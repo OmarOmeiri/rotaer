@@ -1,7 +1,9 @@
-<svg version="1.1" viewBox="0 0 21.96 22.754" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor">
-  <g transform="translate(-116.02 -117.89)">
-    <path d="m119.36 125.29s0.81851 12.311 0.88533 13.029c0.0668 0.71829 0.75169 1.3865 1.4867 1.3865 0.73499 0 8.9201 0.0501 9.5549 0.0167 0.63477-0.0334 1.9711-0.66818 2.0045-1.5034 0.0334-0.83522 0.85192-12.896 0.85192-12.896z" strokeOpacity="0" />
-    <path d="m119.54 122.92h14.316" fill="none" strokeLinecap="round" strokeWidth="2.465" />
-    <path d="m123.44 121.65h6.331" fill="none" strokeLinecap="round" strokeWidth="2.265" />
-  </g>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 15.9 19.1" style="enable-background:new 0 0 15.9 19.1;" xml:space="preserve" stroke="currentColor" fill="currentColor">
+<g transform="translate(-116.02 -117.89)">
+	<path class="st0" d="M116.6,122.1c0,0,0.8,12.3,0.9,13c0.1,0.7,0.8,1.4,1.5,1.4c0.7,0,8.9,0.1,9.6,0c0.6,0,2-0.7,2-1.5
+		s0.9-12.9,0.9-12.9L116.6,122.1z"/>
+	<path class="st1" d="M116.8,119.7h14.3"/>
+	<path class="st1" d="M120.7,118.4h6.3"/>
+</g>
 </svg>

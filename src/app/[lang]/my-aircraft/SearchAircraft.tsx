@@ -42,6 +42,8 @@ const translator = new Translator({
   gravame: { 'pt-BR': 'Operador', 'en-US': 'Operator' },
   cancelDate: { 'pt-BR': 'Operador', 'en-US': 'Operator' },
   invalidRegNo: { 'pt-BR': 'Matrícula inválida', 'en-US': 'Invalid registration' },
+  acftSave: { 'en-US': 'Aircraft saved successfully.', 'pt-BR': 'Aeronave salva com sucesso.' },
+  acftSaveFail: { 'en-US': 'Could not save aircraft data.', 'pt-BR': 'Houve um erro ao salvar a aeronave.' },
 });
 
 const aircraftTableTranslator = new Translator({
@@ -124,7 +126,10 @@ const AircraftSearch = () => {
       return;
     }
     if (acft) {
-      await saveAircraft({ id: acft._id });
+      await saveAircraft({ id: acft._id }, {
+        onError: () => translator.translate('acftSaveFail'),
+        onSuccess: () => setAlert({ msg: translator.translate('acftSave'), type: 'success' }),
+      });
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.aircraft.findUserAcft] });
     }
   }, [isAuthenticated, setAlert, acft, queryClient]);

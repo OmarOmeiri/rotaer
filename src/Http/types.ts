@@ -29,3 +29,14 @@ export type APIError = {
   data: unknown,
   isError: true,
 }
+
+export type HTTPOnError = () => string
+export type HTTPOnSuccess = () => void
+
+export type WithErrorSuccessFetch<T extends (...args: any) => any> = (
+  args: Parameters<T>[number],
+  options?: {
+    onError?: HTTPOnError,
+    onSuccess?: HTTPOnSuccess
+  }
+  ) => ReturnType<T>

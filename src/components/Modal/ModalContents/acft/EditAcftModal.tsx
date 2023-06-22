@@ -14,6 +14,7 @@ import ModalEnterBtn from '../ModalEnterBtn';
 import {
   acftClimbRateValidator, acftDescentRateValidator, acftFuelFlowValidator, acftIASValidator, acftUsableFuelValidator,
 } from '../../../../frameworks/zod/zodAcft';
+import alertStore from '../../../../store/alert/alertStore';
 
 const styles = Config.get('styles');
 
@@ -31,6 +32,8 @@ const translator = new Translator({
   iasInvalid: { 'en-US': 'Invalid IAS', 'pt-BR': 'VI inválida' },
   climbInvalid: { 'en-US': 'Invalid climb rate', 'pt-BR': 'Razão de subida inválida' },
   fuelInvalid: { 'en-US': 'Invalid usable fuel', 'pt-BR': 'Combustível utilizável inválido' },
+  acftSave: { 'en-US': 'Aircraft saved successfully.', 'pt-BR': 'Aeronave salva com sucesso.' },
+  acftSaveFail: { 'en-US': 'Could not save aircraft data.', 'pt-BR': 'Houve um erro ao salvar a aeronave.' },
 });
 
 const validators = {
@@ -107,6 +110,7 @@ const labelStyle = {
 const EditAcftModal = ({ acft, onEdit }: {acft: WithStrId<IUserAcft>, onEdit: () => void}) => {
   const [loading, setLoading] = useState(false);
   const closeModal = modalStore((state) => state.closeModal);
+  const setAlert = alertStore((s) => s.setAlert);
 
   const initializedForm = useMemo(() => initFormData(acft), [acft]);
   const {
@@ -130,6 +134,9 @@ const EditAcftModal = ({ acft, onEdit }: {acft: WithStrId<IUserAcft>, onEdit: ()
         await editUserAircraft({
           ...acft,
           ...parsed,
+        }, {
+          onError: () => translator.translate('acftSaveFail'),
+          onSuccess: () => setAlert({ msg: translator.translate('acftSave'), type: 'success' }),
         });
       } finally {
         onEdit();
@@ -137,7 +144,7 @@ const EditAcftModal = ({ acft, onEdit }: {acft: WithStrId<IUserAcft>, onEdit: ()
         closeModal();
       }
     }
-  }, [acft, closeModal, isFormsValid, loading, validate, onEdit]);
+  }, [acft, closeModal, isFormsValid, loading, validate, onEdit, setAlert]);
 
   return (
     <GenericModal title={translator.translate('title')}>

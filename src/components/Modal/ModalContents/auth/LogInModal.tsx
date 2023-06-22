@@ -34,6 +34,7 @@ const translator = new Translator({
   nonMatchingPassword: { 'en-US': 'The passwords do not match', 'pt-BR': 'As senhas não são iguais' },
   loginSuccess: { 'en-US': 'Welcome', 'pt-BR': 'Bem vindo' },
   loginFail: { 'en-US': 'There was an error logging you in.', 'pt-BR': 'Houve um erro ao logar' },
+  userCreateFail: { 'en-US': 'There was an error while creating the user', 'pt-BR': 'Houve um erro ao criar o usuário.' },
 });
 
 const initFormData = {
@@ -210,6 +211,8 @@ const LogInModal = ({ isLogin }: Props) => {
     const res = await createUser({
       password,
       username,
+    }, {
+      onError: () => translator.translate('userCreateFail'),
     });
     if (res) logIn({ username, password });
     else setLoading(false);

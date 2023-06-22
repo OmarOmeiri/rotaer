@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import errorHelper from '@/utils/Errors/errorHelper';
-import { ContentTypes } from './types';
+import { ContentTypes, HTTPOnError, HTTPOnSuccess } from './types';
 import langStore from '../store/lang/langStore';
 
 type url = string;
@@ -54,8 +54,11 @@ const responseHandler = () => (
           };
         }
 
+        // eslint-disable-next-line dot-notation
+        const onErrorMsg = self['onErrorFn']?.();
+
         errorHelper({
-          message: resJson.message || 'An unknown error has occured',
+          message: onErrorMsg || resJson.message || 'An unknown error has occured',
           code: resJson.code,
           stack: new Error().stack,
         });
@@ -81,7 +84,8 @@ class Api<CT extends keyof typeof ContentTypes> {
       'lang': langStore.getState().lang,
     },
   };
-  private onSuccessFn?: () => void;
+  private onSuccessFn?: HTTPOnSuccess;
+  private onErrorFn?: HTTPOnError;
 
   constructor(
     private url: url,
@@ -121,8 +125,13 @@ class Api<CT extends keyof typeof ContentTypes> {
     return this;
   }
 
-  public onSuccess(fn: () => void) {
+  public onSuccess(fn?: HTTPOnSuccess) {
     this.onSuccessFn = fn;
+    return this;
+  }
+
+  public onError(fn?: HTTPOnError) {
+    this.onErrorFn = fn;
     return this;
   }
 
@@ -169,28 +178,15 @@ class Api<CT extends keyof typeof ContentTypes> {
       },
     ) as unknown as Promise<ApiExternalResponse<T>>;
   }
-
+  @responseHandler()
   async patch<T>(): Promise<ApiExternalResponse<T>> {
-    try {
-      const res = await fetch(
-        this.url,
-        {
-          method: 'PATCH',
-          ...this.request,
-        },
-      );
-
-      return {
-        data: await res.json(),
-        status: res.status,
-      };
-    } catch (err) {
-      errorHelper(err);
-      return {
-        data: null,
-        status: err?.response?.data ?? 500,
-      };
-    }
+    return fetch(
+      this.url,
+      {
+        method: 'PATCH',
+        ...this.request,
+      },
+    ) as unknown as Promise<ApiExternalResponse<T>>;
   }
 
   async put<T>(): Promise<ApiExternalResponse<T>> {

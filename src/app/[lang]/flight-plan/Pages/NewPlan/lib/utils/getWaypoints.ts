@@ -91,7 +91,7 @@ const setUserEditedDataToWaypoints = (
   });
 };
 
-export const getRouteWaypoints = ({
+export const makeRouteWaypoints = ({
   arrival,
   departure,
   alternate,
@@ -116,6 +116,41 @@ export const getRouteWaypoints = ({
 
   const waypoints = mergeWithUserAddedWaypoints(
     aerodromeWaypoints,
+    userAddedWpts,
+    acftData,
+  );
+
+  setUserEditedDataToWaypoints(
+    waypoints,
+    userEditedWaypoints,
+  );
+
+  return waypoints;
+};
+
+export const makeUserRouteWaypoints = ({
+  route,
+  acftData,
+  userAddedWpts,
+  userEditedWaypoints,
+}: {
+  route: TWaypoint[],
+  acftData: ParsedForms<typeof newFlightPlanAcftFormData, typeof newFlightPlanAcftValidator>,
+  userAddedWpts: TUserAddedWaypoint[],
+  userEditedWaypoints: TWaypoint[]
+}) => {
+  const waypoints = mergeWithUserAddedWaypoints(
+    route.map((r) => new RouteWaypoint({
+      name: r.name,
+      type: r.type,
+      coord: r.coord,
+      windSpeed: null,
+      windDirection: null,
+      ias: acftData?.ias || 0,
+      altitude: r.altitude,
+      fixed: r.fixed,
+      alternate: false,
+    })),
     userAddedWpts,
     acftData,
   );

@@ -25,7 +25,7 @@ const AerodromeData = ({
           <tbody>
             <tr>
               <td align='left'>{translator.translate('elev')}</td>
-              <td>{Math.round(LengthConverter.M(aerodrome.elev).toFt())}</td>
+              <td>{Math.round(LengthConverter.M(aerodrome.elev).toFt())}ft</td>
             </tr>
             <tr>
               <td align='left'>FIR</td>
@@ -39,7 +39,7 @@ const AerodromeData = ({
         <table>
           <tbody>
             {aerodrome.rwys.map((rwy) => (
-              <tr key={rwy.rwy}>
+              <tr key={`${aerodrome.icao}-${rwy.rwy}`}>
                 <td align='left'>{rwy.rwy}</td>
                 <td>{rwy.length}m</td>
               </tr>
@@ -78,7 +78,7 @@ const AerodromeData = ({
               <table>
                 <tbody>
                   {aerodrome.CMB.map((c) => (
-                    <tr key={c}>
+                    <tr key={`${aerodrome.icao}-${c}`}>
                       <td>{rotaerFuelAndServicesTranslator.fuel.translate(c)}</td>
                     </tr>
                   ))}

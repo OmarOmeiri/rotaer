@@ -228,6 +228,17 @@ export class Route {
     return this.legs?.length || 0;
   }
 
+  get distance() {
+    if (!this.legs) return 0;
+    return this.legs.toArray().reduce((d, l) => d + (l.type === 'wpt' ? 0 : l.distance), 0);
+  }
+
+  get time() {
+    if (!this.legs) return 0;
+    const timeMinutes = this.legs.toArray().reduce((t, l) => t + (l.type === 'wpt' ? 0 : TimeConverter.hhmmss(l.ete).toMin()), 0);
+    return TimeConverter.MIN(timeMinutes).tohhmmss();
+  }
+
   hasLegs() {
     return (this.legs?.length || 0) > 0;
   }

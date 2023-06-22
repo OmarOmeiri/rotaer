@@ -1,7 +1,18 @@
 import { useSession } from 'next-auth/react';
 import { useMemo } from 'react';
 
-export const useNextAuth = () => {
+export interface NextAuthSession {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: {
+      username: string;
+      acfts?: string[] | undefined;
+      _id: string;
+  } | null;
+  expires: string | null;
+}
+
+export const useNextAuth = (): NextAuthSession => {
   const session = useSession();
 
   const isAuthenticated = session.status === 'authenticated';

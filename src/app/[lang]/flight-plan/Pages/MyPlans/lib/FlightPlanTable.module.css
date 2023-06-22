@@ -1,0 +1,33 @@
+.TableWrapper {
+  display: flex;
+  justify-content: center;
+  max-width: 750px;
+}
+
+.TableBtnsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+}
+
+.TableBtnsWrapper > button {
+  all: unset;
+  display: flex;;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.TableBtnsWrapper > button * {
+  pointer-events: none;
+}
+
+.ViewBtn:hover {
+  color: var(--app-green);
+}
+
+.DeleteBtn:hover {
+  color: #e35353;
+}

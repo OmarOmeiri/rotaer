@@ -4,12 +4,12 @@ import { fetchAerodromeInfo } from '../../../Http/requests/aerodrome';
 import classes from './AerodromeInfo.module.css';
 import { fetchParsedAerodromeMETAR } from '../../../Http/requests/metar';
 import type METARParser from '../../../utils/METAR/METAR';
+import Tab from '../../../components/Tabs/Tab';
 
 const StyledTooltip = dynamic(() => import('../../../components/Tooltips/StyledTooltip'));
 const MetarStatusBadge = dynamic(() => import('../../../components/Badges/MetarStatusBadge'));
 const Tabs = dynamic(() => import('../../../components/Tabs/Tabs'));
 const AssetTypeBadge = dynamic(() => import('../../../components/Badges/AssetTypeBadge'));
-const Tab = dynamic(() => import('../../../components/Tabs/Tab'));
 const TooltipHover = dynamic(() => import('../../../components/Tooltips/TooltipHover'));
 const AerodromeMainInfoTab = dynamic(() => import('./Tabs/MainInfo'));
 const AerodromeRunwaysTab = dynamic(() => import('./Tabs/AerodromeRunwaysTab'));

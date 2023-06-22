@@ -1,10 +1,11 @@
 import { controller } from '../../utils/controller';
 import { TAPI } from '../../../../types/API';
-import { MongoCollections } from '../../../../types/app/mongo';
+import { MongoCollections, WithStrId } from '../../../../types/app/mongo';
 import FlightPlanService from '../Service';
 import { protectedRoute } from '../../utils/protectedRoute';
 import { COMMON_API_ERRORS } from '../../utils/Errors';
 import type { MyRequest } from '../../../../types/request';
+import type { FlightPlan } from '../../../../types/app/fPlan';
 
 type API = TAPI<'flightPlan', 'getUserFlightPlans'>;
 
@@ -20,8 +21,10 @@ class GetUserFlightPlans implements API {
     await service.withDb([
       MongoCollections.flightPlan,
       MongoCollections.aerodrome,
+      MongoCollections.coord,
+      MongoCollections.rwy,
     ]);
-    const plans = await service.getUserFlightPlans(userId);
+    const plans = await service.getUserFlightPlans(userId) as WithStrId<FlightPlan>[];
     return plans;
   }
 }

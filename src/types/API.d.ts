@@ -1,7 +1,7 @@
 import { TAerodromeData, TAerodromPrelimInfo } from "./app/aerodrome"
 import { NextRequest } from "next/server"
 import { WithStrId } from "./app/mongo"
-import { FlightPlan } from "./app/fPlan"
+import { FlightPlan, SaveFlightPlan } from "./app/fPlan"
 
 type UserRoutes = {
   create: {
@@ -80,12 +80,16 @@ type FlightPlanRoutes = {
   getUserFlightPlans: {
     GET: {
       req: undefined,
-      res: FlightPlan[],
+      res: WithStrId<FlightPlan>[],
     }
   },
   saveUserFlightPlans: {
     POST: {
       req: SaveFlightPlan,
+      res: null,
+    }
+    PATCH: {
+      req: SaveFlightPlan & {id: string},
       res: null,
     }
   },

@@ -1,14 +1,10 @@
 /* eslint-disable new-cap */
 /* eslint-disable func-names */
-
 import { ErrorCodes } from 'lullo-common-types';
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import ServerError from '@/utils/Errors/ServerError';
 import { checkLocale } from '../../../utils/Locale/locale';
 import Translator from '../../../utils/Translate/Translator';
-import { verifyJwt } from '../../../utils/jwt/jwt';
-import { getCookie } from './cookies';
 
 const paramMap = new Proxy({
   GET: (req: NextRequest) => {
@@ -91,6 +87,7 @@ export function controller() {
 
             return NextResponse.json(result, response);
           } catch (error) {
+            console.error(error);
             return new NextResponse(
               JSON.stringify({
                 message: error.message || 'An unknown error has occurred',
