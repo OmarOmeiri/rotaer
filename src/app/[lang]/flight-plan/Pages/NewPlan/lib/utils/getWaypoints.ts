@@ -1,11 +1,20 @@
 import { ParsedForms } from '../../../../../../../hooks/Forms/useForm';
 import { TAerodromeData } from '../../../../../../../types/app/aerodrome';
 import ConditionalMerger from '../../../../../../../utils/Array/ConditionalMerger';
-import { RouteWaypoint, TWaypoint } from '../../../../../../../utils/Route/Route';
+import { RouteWaypoint, TRouteAdType, TWaypoint } from '../../../../../../../utils/Route/Route';
 import { newFlightPlanAcftFormData } from '../forms';
 import { TUserAddedWaypoint } from '../types';
 import { newFlightPlanAcftValidator } from '../validation';
 import { aerodromeToRouteWaypoint } from './aerodromeToWaypoint';
+
+const getAdType = (
+  w: TWaypoint,
+  ads: {dep: TAerodromeData, arr: TAerodromeData, alt: TAerodromeData | null},
+): TRouteAdType | undefined => {
+  if (w.name === ads.dep.icao) return 'dep';
+  if (w.name === ads.arr.icao) return 'arr';
+  if (w.name === ads.alt?.icao) return 'alt';
+};
 
 const makeInitialWaypoints = (
   departure: TAerodromeData | null,
@@ -129,16 +138,23 @@ export const makeRouteWaypoints = ({
 };
 
 export const makeUserRouteWaypoints = ({
+  arrival,
+  departure,
+  alternate,
   route,
   acftData,
   userAddedWpts,
   userEditedWaypoints,
 }: {
+  arrival: TAerodromeData | null
+  departure: TAerodromeData | null
+  alternate: TAerodromeData | null
   route: TWaypoint[],
   acftData: ParsedForms<typeof newFlightPlanAcftFormData, typeof newFlightPlanAcftValidator>,
   userAddedWpts: TUserAddedWaypoint[],
   userEditedWaypoints: TWaypoint[]
 }) => {
+  if (!departure || !arrival) return null;
   const waypoints = mergeWithUserAddedWaypoints(
     route.map((r) => new RouteWaypoint({
       name: r.name,
@@ -150,6 +166,7 @@ export const makeUserRouteWaypoints = ({
       altitude: r.altitude,
       fixed: r.fixed,
       alternate: false,
+      adType: getAdType(r, { dep: departure, arr: arrival, alt: alternate }),
     })),
     userAddedWpts,
     acftData,

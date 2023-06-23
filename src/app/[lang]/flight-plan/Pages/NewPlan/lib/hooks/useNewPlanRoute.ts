@@ -1,4 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { objHasProp } from 'lullo-utils/Objects';
 import { cloneDeep } from 'lodash';
 import type { ParsedForms } from '../../../../../../../hooks/Forms/useForm';
@@ -13,6 +15,40 @@ import { makeRouteWaypoints, makeUserRouteWaypoints } from '../utils/getWaypoint
 import { getZodErrorMessage } from '../../../../../../../frameworks/zod/zodError';
 import type alertStore from '../../../../../../../store/alert/alertStore';
 import type { OnUserWaypointEdit, UserWaypointAdded } from '../../../../types';
+
+const makeUserRoute = ({
+  userLoadedPlan,
+  departure,
+  arrival,
+  alternate,
+}:{
+  userLoadedPlan: WithStrId<FlightPlan>,
+  departure: TAerodromeData | null,
+  arrival: TAerodromeData | null,
+  alternate: TAerodromeData | null,
+}) => {
+  const aerodromeNames = [departure, arrival, alternate]
+    .map((a) => a?.icao)
+    .filter((a) => a);
+  return userLoadedPlan.route.reduce((r, w, i) => {
+    if (aerodromeNames.includes(w.name)) {
+      r.route.push(w);
+    } else {
+      const last = userLoadedPlan.route[i - 1];
+      r.userAdded.push({
+        ...w,
+        addAfter: last.name,
+      });
+    }
+    return r;
+  }, {
+    route: [],
+    userAdded: [],
+  } as {
+    route: TWaypoint[],
+    userAdded: TUserAddedWaypoint[]
+  });
+};
 
 const useNewPlanRoute = ({
   userLoadedPlan,
@@ -31,13 +67,39 @@ const useNewPlanRoute = ({
 }) => {
   const [userEditedWaypoints, setUserEditedWaypoints] = useState<TWaypoint[]>([]);
   const [userAddedWpts, setUserAddedWpts] = useState<TUserAddedWaypoint[]>([]);
+  console.log('userAddedWpts: ', userAddedWpts);
+  const [userRoute, setUserRoute] = useState<TWaypoint[]>([]);
+  console.log('userRoute: ', userRoute);
+
+  useEffect(() => {
+    if (userLoadedPlan && departure && arrival) {
+      const { route, userAdded } = makeUserRoute({
+        userLoadedPlan,
+        departure,
+        arrival,
+        alternate,
+      });
+      setUserAddedWpts(userAdded);
+      setUserRoute(route);
+    }
+  }, [
+    userLoadedPlan,
+    departure,
+    arrival,
+    alternate,
+  ]);
+
   const waypoints = useMemo(() => {
     if (userLoadedPlan) {
+      if (!userRoute.length) return null;
       return makeUserRouteWaypoints({
-        route: userLoadedPlan.route,
+        route: userRoute,
         acftData: parsedAcftData,
         userAddedWpts,
         userEditedWaypoints,
+        departure,
+        arrival,
+        alternate,
       });
     }
     return makeRouteWaypoints({
@@ -50,6 +112,7 @@ const useNewPlanRoute = ({
     });
   }, [
     userLoadedPlan,
+    userRoute,
     departure,
     arrival,
     alternate,
@@ -134,6 +197,7 @@ const useNewPlanRoute = ({
     setUserAddedWpts((wpts) => {
       const clone = cloneDeep(wpts)
         .filter((w) => w.name !== name);
+
       return clone.reduce((wpts, w) => {
         const beforeIndex = wptNames.findIndex((wn) => wn === w.name) - 1;
         if (beforeIndex < 0) return wpts;

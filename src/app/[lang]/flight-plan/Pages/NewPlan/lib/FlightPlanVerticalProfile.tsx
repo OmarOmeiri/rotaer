@@ -161,19 +161,21 @@ const FlightPlanVerticalProfile = ({
                 </ReactD3TooltipSingle>
                 <ReactD3ChartOverlay>
                   {
-                  data.map((d) => (
-                    <ReactD3ChartOverlayElement
-                      key={d.name}
-                      dx={getLabelPositionX}
-                      dy={10}
-                      position={{ x: d.distance, y: d.altitude }}
-                      xScaleId='x-scale'
-                      yScaleId='y-scale'
-                    >
-                      <span className={classes.ProfilePointLabel}>{d.name}</span>
-                    </ReactD3ChartOverlayElement>
-                  ))
-                }
+                    data
+                      .filter((d) => d.showName !== false)
+                      .map((d, i) => (
+                        <ReactD3ChartOverlayElement
+                        key={`${d.name}-${i}`}
+                        dx={getLabelPositionX}
+                        dy={10}
+                        position={{ x: d.distance, y: d.altitude }}
+                        xScaleId='x-scale'
+                        yScaleId='y-scale'
+                      >
+                          <span className={classes.ProfilePointLabel}>{d.name}</span>
+                        </ReactD3ChartOverlayElement>
+                      ))
+                  }
                 </ReactD3ChartOverlay>
               </ReactD3Chart>
             </div>

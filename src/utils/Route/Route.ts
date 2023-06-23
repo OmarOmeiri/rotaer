@@ -2,7 +2,6 @@
 import { windowArray } from 'lullo-utils/Arrays';
 import geomag, { type MagneticModel } from 'geomagnetism';
 import { round } from 'lullo-utils/Math';
-import { cloneDeep } from 'lodash';
 import {
   getRouteAltitudeChangeTime, loxodromicBearing, loxodromicDistance, loxodromicMidPoint,
 } from './routeUtils';

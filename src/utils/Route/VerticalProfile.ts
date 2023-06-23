@@ -1,7 +1,8 @@
 /* eslint-disable max-classes-per-file */
 import { windowArray } from 'lullo-utils/Arrays';
-import { orderBy } from 'lodash';
-import type { LegWaypointTuple, RouteAcftData, TLeg } from './Route';
+import type {
+  LegWaypointTuple, RouteAcftData, TLeg, TRouteAdType,
+} from './Route';
 import { getRouteAltitudeChangeDistance, getRouteAltitudeChangeTime } from './routeUtils';
 import Translator from '../Translate/Translator';
 
@@ -10,11 +11,13 @@ export type RouteVProfile = {
   distance: number,
   time: number;
   altitude: number,
+  nextAltitude: number,
   gs: number,
   tod?: true,
   toc?: true,
-  ad?: boolean,
+  adType?: TRouteAdType,
   index: number
+  showName?: boolean
 }
 
 const translator = new Translator({
@@ -26,12 +29,23 @@ const objCumSum = <T extends object, K extends KeysOfType<T, number>>(obj: T[], 
   obj.reduce((sum, v) => sum + (v[key] as number), 0)
 );
 
+// const shouldAddTOC = (p1: RouteVProfile, p2: RouteVProfile) => {
+//   if (p1.altitude < p2.altitude) return true;
+//   return false;
+// };
+
+// const shouldAddTOD = (p1: RouteVProfile, p2: RouteVProfile) => {
+//   if (p1.altitude > p2.altitude) return true;
+//   return false;
+// };
+
 class RouteVerticalProfile {
   private todToc = {
     TOD: 0,
     TOC: 0,
   };
   private _errors: string[] = [];
+  private helperPointIndex = 1;
   constructor(
     private legs: TLeg[],
     private acft: RouteAcftData,
@@ -61,6 +75,12 @@ class RouteVerticalProfile {
     return `TOC${this.todToc.TOC}`;
   }
 
+  private getHelperPointName() {
+    const name = `WPT${this.helperPointIndex}`;
+    this.helperPointIndex += 1;
+    return name;
+  }
+
   private getTocTod(altitude1: number, altitude2: number, gs: number): RouteVProfile {
     if (altitude1 === altitude2) {
       throw new Error(`Altitudes cannot match: ${altitude1}`);
@@ -75,6 +95,7 @@ class RouteVerticalProfile {
       distance,
       altitude: isClimb ? altitude2 : altitude1,
       gs,
+      nextAltitude: NaN,
       index: NaN,
     };
     if (isClimb) todToc.toc = true;
@@ -138,8 +159,9 @@ class RouteVerticalProfile {
           time: 0,
           distance: 0,
           altitude: this.getWaypointAltitude(l, legs),
+          nextAltitude: legs[i + 1].altitude,
           gs: this.getWaypointGroundSpeed(l, legs),
-          ad: l.wptType === 'ad',
+          adType: l.adType,
           index: l.index,
         });
       } else {
@@ -152,94 +174,77 @@ class RouteVerticalProfile {
           time: lastLeg.distance / lastLeg.gs,
           distance: lastLeg.distance,
           altitude,
+          nextAltitude: legs[i + 1]?.altitude || altitude,
           gs: this.getWaypointGroundSpeed(l, legs),
-          ad: l.wptType === 'ad',
+          adType: l.adType,
           index: l.index,
         });
       }
       return p;
     }, [] as RouteVProfile[]);
-
-    return prof.flatMap((p, i) => {
-      const next = prof[i + 1];
-      if (!next) return p;
-      if (p.ad || next.ad) {
-        const helperleg = this.legs
-          .find((l) => (
-            l.index > p.index && l.type === 'leg'
-          )) as LegWaypointTuple[1];
-        const helperProfile: RouteVProfile = {
-          name: 'helper',
-          distance: NaN,
-          altitude: helperleg.altitude,
-          gs: helperleg.gs,
-          time: NaN,
-          index: NaN,
-        };
-        return [p, helperProfile];
-      }
-      return p;
-    });
+    return prof;
   }
 
   private cumSumPoints(vProf: RouteVProfile[]) {
     return vProf.map((p, i) => {
-      if (!p.tod && !p.toc) {
-        const before = vProf.slice(0, i + 1).filter((p) => !p.toc && !p.tod);
-        const distance = objCumSum(before, 'distance');
-        const time = objCumSum(before, 'time');
-        return {
-          ...p,
-          time,
-          distance,
-        };
-      }
-      return p;
+      const before = vProf.slice(0, i + 1).filter((p) => !p.toc && !p.tod);
+      const distance = objCumSum(before, 'distance');
+      const time = objCumSum(before, 'time');
+      return {
+        ...p,
+        time,
+        distance,
+      };
     });
-  }
-
-  private correctTodTocs(vProf: RouteVProfile[]) {
-    return vProf.map((p, i) => {
-      if (p.toc) {
-        const lastProf = vProf.slice(0, i)
-          .reverse().find((p) => !p.toc && !p.tod);
-        return {
-          ...p,
-          distance: p.distance + (lastProf?.distance || 0),
-          time: p.time + (lastProf?.time || 0),
-        };
-      } if (p.tod) {
-        const nextProf = vProf.slice(i, vProf.length).find((p) => !p.toc && !p.tod);
-        return {
-          ...p,
-          distance: (nextProf?.distance || 0) - p.distance,
-          time: (nextProf?.time || 0) - p.time,
-        };
-      }
-      return p;
-    });
-    // const cumSumTocTod = orderBy(, 'distance', 'asc');
-
-    // cumSumTocTod
-    //   .forEach((p, i) => {
-    //     if (p.toc || p.tod || !i) return;
-    //     const altitudeDiff = p.altitude - cumSumTocTod[i - 1].altitude;
-    //     console.log('altitudeDiff: ', altitudeDiff);
-    //   });
-
-    // return orderBy(cumSumTocTod, 'distance', 'asc');
   }
 
   private createTodTocs(prof: RouteVProfile[]) {
-    return prof.flatMap((p, i) => {
-      if (!i) return p;
-      const lastP = prof[i - 1];
-      if (lastP.altitude === p.altitude) return p;
-      if (lastP.altitude > p.altitude) {
-        return [this.getTocTod(lastP.altitude, p.altitude, lastP.gs), p];
+    const pr = prof.flatMap((p, i) => {
+      if (p.altitude === p.nextAltitude) return p;
+      const todToc = this.getTocTod(p.altitude, p.nextAltitude, p.gs);
+      if (todToc.toc) {
+        return [p, {
+          ...todToc,
+          distance: todToc.distance + p.distance,
+          time: todToc.time + p.time,
+        }];
       }
-      return [this.getTocTod(lastP.altitude, p.altitude, lastP.gs), p];
-    }).filter((p) => p.name !== 'helper');
+      const next = prof[i + 1];
+      return [p,
+        {
+          ...todToc,
+          name: this.getHelperPointName(),
+          altitude: p.nextAltitude,
+          distance: todToc.distance + p.distance,
+          time: todToc.time + p.time,
+          showName: false,
+        },
+        {
+          ...todToc,
+          altitude: p.nextAltitude,
+          distance: next.distance - todToc.distance,
+          time: next.time - todToc.time,
+        }];
+    });
+    return pr.flatMap((p, i) => {
+      if (!i) return p;
+      const last = pr[i - 1];
+      if (
+        (p.adType === 'arr' || p.adType === 'alt')
+        && !last.tod
+      ) {
+        const todToc = this.getTocTod(last.altitude, p.altitude, p.gs);
+        return [
+          {
+            ...todToc,
+            distance: p.distance - todToc.distance,
+            time: p.time - todToc.time,
+          },
+          p,
+        ];
+      }
+      return p;
+    });
   }
 
   getPoints() {
@@ -248,18 +253,10 @@ class RouteVerticalProfile {
       if (l.type === 'wpt') l.altitude = this.getWaypointAltitude(l, this.legs);
       return l;
     });
-    console.log(
-
-      this.legToProfile(
-        legsAltitudeCorrected,
-      ),
-    );
-    return this.correctTodTocs(
+    return this.createTodTocs(
       this.cumSumPoints(
-        this.createTodTocs(
-          this.legToProfile(
-            legsAltitudeCorrected,
-          ),
+        this.legToProfile(
+          legsAltitudeCorrected,
         ),
       ),
     );
